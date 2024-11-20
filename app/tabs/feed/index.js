@@ -7,11 +7,16 @@ import { Link } from "expo-router";
 import Theme from "@/assets/theme";
 import Feed from "@/components/Feed";
 
-export default function Home() {
+export default function Page() {
+  const CURRENT_TAB_DETAILS = "/tabs/feed/details";
   return (
     <View style={styles.container}>
       <StatusBar style="light" />
-      <Feed shouldNavigateToComments={true} fetchUsersPostsOnly={false} />
+      <Feed
+        shouldNavigateToComments={true}
+        fetchUsersPostsOnly={false}
+        currentTab={CURRENT_TAB_DETAILS}
+      />
       <Link href="/tabs/feed/newpost" style={styles.postButtonContainer}>
         <View style={styles.postButton}>
           <FontAwesome size={32} name="plus" color={Theme.colors.textPrimary} />

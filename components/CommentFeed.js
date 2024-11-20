@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { StyleSheet, FlatList, RefreshControl } from "react-native";
 
 import Theme from "@/assets/theme";
 import Comment from "./Comment";
 import Loading from "./Loading";
+import db from "../database/db";
 
 import timeAgo from "@/utils/timeAgo";
 
@@ -14,10 +15,28 @@ export default function CommentFeed({ postId }) {
 
   const fetchComments = async () => {
     setIsLoading(true);
-    // TODO
-    setIsLoading(false);
-    setIsRefreshing(false);
+    try {
+      // Fetch comments for the specific postId
+      const response = await db.from("comments").select().eq("post_id", postId);
+
+      if (response.error) {
+        throw response.error; // Handle any errors in the response
+      }
+
+      // Set the fetched comments in state
+      setComments(response.data);
+    } catch (err) {
+      console.error("Error fetching comments:", err);
+    } finally {
+      // End loading states
+      setIsLoading(false);
+      setIsRefreshing(false);
+    }
   };
+
+  useEffect(() => {
+    fetchComments();
+  }, []); // Dependency array is empty to run only once on mount
 
   if (isLoading && !isRefreshing) {
     return <Loading />;

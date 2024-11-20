@@ -29,7 +29,7 @@ export default function App() {
   }, []);
 
   if (session) {
-    return <Redirect href="/TODO/fill/in/route" />;
+    return <Redirect href="/tabs/feed" />;
   } else if (isLoading) {
     return <Loading />;
   } else {

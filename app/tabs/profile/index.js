@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, TouchableOpacity, Alert } from "react-native";
-
-import { useRouter } from "expo-router";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { useRouter, Link } from "expo-router";
 
 import Theme from "@/assets/theme";
 import Feed from "@/components/Feed";
@@ -8,10 +8,12 @@ import Loading from "@/components/Loading";
 
 import db from "@/database/db";
 import useSession from "@/utils/useSession";
+import MySvg from "./MySvg"; // Adjust the path based on the file location
 
 export default function Profile() {
   const session = useSession();
   const router = useRouter();
+  const CURRENT_TAB_DETAILS = "/tabs/profile/details";
 
   const signOut = async () => {
     try {
@@ -33,6 +35,7 @@ export default function Profile() {
 
   return (
     <View style={styles.container}>
+      {/*       
       <View style={styles.userContainer}>
         <View style={styles.userTextContainer}>
           <Text style={styles.title}>Logged in as: </Text>
@@ -43,7 +46,12 @@ export default function Profile() {
         <Text style={styles.text}>{session.user.email}</Text>
       </View>
       <Text style={[styles.title, styles.postTitle]}>My Posts</Text>
-      <Feed shouldNavigateToComments={false} fetchUsersPostsOnly={true} />
+      <Feed
+        shouldNavigateToComments={true}
+        currentTab={CURRENT_TAB_DETAILS}
+        fetchUsersPostsOnly={true}
+        uuid={session.user.id}
+      /> */}
     </View>
   );
 }
