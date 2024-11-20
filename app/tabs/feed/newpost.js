@@ -1,20 +1,57 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { StyleSheet, Text, View, TextInput } from "react-native";
-
+import { useNavigation } from "@react-navigation/native"; // To access the navigation object
+import { useRouter } from "expo-router";
+import HeaderButton from "../../../components/HeaderButton"; // Path to your custom HeaderButton component
 import Theme from "@/assets/theme";
+import useSession from "@/utils/useSession";
+import db from "../../../database/db";
 
 export default function NewPost() {
+  const session = useSession();
   const [username, setUsername] = useState(null);
   const [inputText, setInputText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [submitDisabled, setSubmitDisabled] = useState(true);
+  const navigation = useNavigation();
+  const router = useRouter();
 
   const submitPost = async () => {
     setIsLoading(true);
-    // TODO
+    const { data, error } = await db
+      .from("posts")
+      .insert({
+        username: "Anonymous",
+        text: inputText,
+        user_id: session.user.id,
+      })
+      .select();
+    if (error) {
+      console.error("Error inserting post:", error.message);
+      setIsLoading(false);
+      return;
+    }
     setIsLoading(false);
+    router.back();
   };
 
-  const submitDisabled = isLoading || inputText.length === 0;
+  useEffect(() => {
+    setSubmitDisabled(!inputText); // Disable button if inputs are empty
+  }, [inputText]);
+
+  // const submitDisabled = isLoading || inputText.length === 0;
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <HeaderButton
+          title="Submit"
+          onPress={submitPost}
+          disabled={submitDisabled}
+          colors={[Theme.colors.textHighlighted, Theme.colors.textSecondary]}
+        />
+      ),
+    });
+  }, [navigation, submitDisabled, inputText]);
 
   return (
     <View style={styles.container}>

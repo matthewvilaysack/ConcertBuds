@@ -3,13 +3,13 @@ import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Link } from "expo-router";
-
+import useSession from "@/utils/useSession";
+import db from "../database/db";
 import Theme from "@/assets/theme";
 
 export default function Post({
-  // TODO: Implement the functionality to navigate to the details/comments page when
-  // this prop is true.
   shouldNavigateOnPress = false,
+  currentTab,
   id,
   username,
   timestamp,
@@ -18,11 +18,37 @@ export default function Post({
   vote,
   commentCount,
 }) {
+  const session = useSession();
   const [isLoading, setIsLoading] = useState(false);
 
   const submitVote = async (vote) => {
     setIsLoading(true);
-    // TODO
+    const { data: likes, error: fetchError } = await db
+      .from("likes")
+      .select("vote")
+      .eq("post_id", id)
+      .eq("user_id", session.user.id);
+
+    if (fetchError && fetchError.message !== "No rows found") {
+      console.error("Error fetching current vote:", fetchError.message);
+      setIsLoading(false);
+      return;
+    }
+    updateVote = vote;
+    const { data, error } = await db.from("likes").upsert(
+      {
+        vote: updateVote,
+        post_id: id,
+        user_id: session.user.id,
+      },
+      { onConflict: ["post_id", "user_id"] }
+    );
+    if (error) {
+      console.error("Error submitting vote:", error.message);
+      setIsLoading(false);
+      return;
+    }
+
     setIsLoading(false);
   };
 
@@ -57,7 +83,7 @@ export default function Post({
     post = (
       <Link
         href={{
-          pathname: "/tabs/feed/details",
+          pathname: currentTab,
           params: {
             id: id,
             username: username,
