@@ -1,7 +1,6 @@
 import { Stack } from "expo-router";
 import { View, Text, Platform, TouchableOpacity } from "react-native";
 import theme from "../../../assets/theme";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useRouter } from "expo-router";
 import HeaderButton from "../../../components/HeaderButton"; // Path to your custom HeaderButton component
 
@@ -42,7 +41,13 @@ export default function Layout() {
                 justifyContent: "center",
               }}
             >
-              <Text style={{ color: "#fff", fontSize: 18, fontWeight: "bold" }}>
+              <Text
+                style={{
+                  color: "#fff",
+                  fontSize: 18,
+                  fontWeight: "bold",
+                }}
+              >
                 ConcertBuds
               </Text>
             </View>
@@ -53,9 +58,17 @@ export default function Layout() {
       <Stack.Screen
         name="details"
         options={{
-          headerTitle: "Comments",
+          headerTitle: "",
           headerTitleAlign: "center",
           headerBackTitle: "Back",
+          headerStyle: {
+            position: "absolute",
+            backgroundColor: "transparent", // Semi-transparent black
+            elevation: 0, // Removes shadow on Android
+            shadowOpacity: 0, // Removes shadow on iOS
+            borderBottomWidth: 0, // Removes border on both platforms
+          },
+          headerTransparent: true,
         }}
       />
       <Stack.Screen

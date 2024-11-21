@@ -7,6 +7,7 @@ import SearchComponent from "@/components/SearchComponent";
 import Feed from "@/components/Feed";
 
 export default function Page() {
+  const [artist, setArtist] = useState(null); // Shared state for artist
   const [concerts, setConcerts] = useState([]); // Shared state for concerts
 
   return (
@@ -15,8 +16,14 @@ export default function Page() {
       <StatusBar style="light" />
 
       <View style={styles.contentWrapper}>
-        <SearchComponent setConcerts={setConcerts} />
-        <Text style={styles.infoText}>Your upcoming concerts will show up{"\n"}here.</Text>
+        <SearchComponent
+          artist={artist}
+          setArtist={setArtist}
+          setConcerts={setConcerts}
+        />
+        <Text style={styles.infoText}>
+          Your upcoming concerts will show up{"\n"}here.
+        </Text>
         <Feed concerts={concerts} />
       </View>
     </View>
