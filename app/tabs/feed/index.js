@@ -21,9 +21,6 @@ export default function Page() {
           setArtist={setArtist}
           setConcerts={setConcerts}
         />
-        <Text style={styles.infoText}>
-          Your upcoming concerts will show up{"\n"}here.
-        </Text>
         <Feed concerts={concerts} />
       </View>
     </View>
