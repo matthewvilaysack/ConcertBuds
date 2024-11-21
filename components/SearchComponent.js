@@ -3,9 +3,11 @@ import {
   StyleSheet,
   View,
   TextInput,
+  Text,
   TouchableOpacity,
   ActivityIndicator,
 } from "react-native";
+import { useRouter } from "expo-router";
 import { Link } from "expo-router";
 import { BlurView } from "expo-blur";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
@@ -16,65 +18,73 @@ const SearchComponent = ({ artist, setArtist, setConcerts }) => {
   const DETAILS_PATH = "/tabs/feed/details";
   const [searchQuery, setSearchQuery] = useState(artist);
   const [isLoading, setIsLoading] = useState(false);
-
-  const handleSearch = async (text) => {
+  const [error, setError] = useState('');
+  const [hasResults, setHasResults] = useState(false);
+  const router = useRouter();
+ 
+  const handleSearch = (text) => {
     setArtist(text);
     setSearchQuery(text);
-
-    // if (text.length >= 2) {
-    //   setIsLoading(true);
-    //   try {
-    //     const results = await fetchConcerts(text);
-    //     setConcerts(results); // Update concerts in the parent component
-    //   } catch (error) {
-    //     console.error("Search error:", error);
-    //     setConcerts([]); // Clear results on error
-    //   } finally {
-    //     setIsLoading(false);
-    //   }
-    // } else {
-    //   setConcerts([]); // Clear results if query is too short
-    // }
+    setError('');
   };
-
+ 
+  const searchOnEnter = async () => {
+    if (!searchQuery || searchQuery.trim().length < 2) {
+      setError('Please enter at least 2 characters to search');
+      setHasResults(false);
+      return;
+    }
+ 
+    setIsLoading(true);
+    setError('');
+    
+    try {
+      const results = await fetchConcerts(searchQuery);
+      setConcerts(results);
+      setHasResults(results.length > 0);
+      
+      // Only navigate if we have valid results
+      if (results.length > 0) {
+        router.push({
+          pathname: DETAILS_PATH,
+          params: { artist: searchQuery }
+        });
+      } else {
+        setError('No concerts found for this artist');
+      }
+    } catch (error) {
+      console.error("Search error:", error);
+      setConcerts([]);
+      setHasResults(false);
+      setError('Failed to fetch concerts. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+ 
   return (
     <View style={styles.container}>
       <View style={styles.searchWrapper}>
-        <BlurView
-          intensity={80}
-          tint="light"
-          style={styles.searchInputContainer}
-        >
+        <BlurView intensity={80} tint="light" style={styles.searchInputContainer}>
           <TextInput
             style={styles.searchInput}
             placeholder="Search for artist, tour, etc."
             placeholderTextColor="rgba(0, 0, 0, 0.4)"
             value={searchQuery}
             onChangeText={handleSearch}
+            onSubmitEditing={searchOnEnter}
+            returnKeyType="search"
           />
         </BlurView>
-        <View style={styles.searchButton}>
-          <Link
-            href={{
-              pathname: DETAILS_PATH,
-              params: {
-                artist: artist,
-              },
-            }}
-            style={styles.linkWrapper}
-          >
-            <FontAwesome name="search" size={20} color="#FFFFFF" />
-          </Link>
-        </View>
+        <TouchableOpacity style={styles.searchButton} onPress={searchOnEnter}>
+          <FontAwesome name="search" size={20} color="#FFFFFF" />
+        </TouchableOpacity>
       </View>
-
+ 
       {isLoading && (
-        <ActivityIndicator
-          size="large"
-          color={Theme.colors.iconHighlighted}
-          style={styles.loader}
-        />
+        <ActivityIndicator size="large" color={Theme.colors.iconHighlighted} style={styles.loader} />
       )}
+      {error && <Text style={styles.errorText}>{error}</Text>}
     </View>
   );
 };
@@ -124,6 +134,19 @@ const styles = StyleSheet.create({
   loader: {
     marginTop: 10,
   },
+  errorText: {
+    color: '#ff4444',
+    textAlign: 'center',
+    marginTop: 10,
+    fontSize: 14
+  },
+  infoText: {
+  color: '#FFFFFF',
+  textAlign: 'center',
+  marginTop: 10,
+  fontSize: 14,
+  opacity: 0.8
+}
 });
 
 export default SearchComponent;

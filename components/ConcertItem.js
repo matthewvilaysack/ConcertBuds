@@ -3,14 +3,20 @@ import { View, Text, StyleSheet } from "react-native";
 import { Link } from "expo-router";
 
 const ConcertItem = ({ item }) => {
-  const { name, dates, _embedded } = item;
-  const venue = _embedded?.venues[0];
+  if (!item) return null;
+
+  const { name, dates, _embedded } = item || {};
+  const venue = _embedded?.venues?.[0];
   const city = venue?.city?.name;
   const state = venue?.state?.stateCode;
-
-  const eventDate = new Date(dates.start.localDate);
+  
+  // Check if dates exists before creating Date object
+  const eventDate = dates?.start?.localDate ? new Date(dates.start.localDate) : new Date();
   const month = eventDate.toLocaleString("en-US", { month: "short" });
   const day = eventDate.getDate();
+
+  // Add location fallback
+  const locationText = city && state ? `${city}, ${state}` : 'Location TBD';
 
   return (
     <View style={styles.artistContainer}>
@@ -22,11 +28,13 @@ const ConcertItem = ({ item }) => {
       <View style={styles.artistHeader}>
         <Link href="/tabs/feed/markgoing">
           <Text style={styles.location}>
-            {city}, {state}
+            {locationText}
           </Text>
         </Link>
 
-        <Text style={styles.artistName}>{name}</Text>
+        <Text style={styles.artistName} numberOfLines={2} ellipsizeMode="tail">
+          {name || 'Event Name TBD'}
+        </Text>
       </View>
     </View>
   );
@@ -40,6 +48,7 @@ const styles = StyleSheet.create({
     position: "relative",
     marginBottom: 45,
     padding: 10,
+    width: '100%',
   },
   dateContainer: {
     position: "absolute",

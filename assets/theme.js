@@ -1,4 +1,4 @@
-export default {
+const Theme = {
   // Feel free to customize these colors!
   colors: {
     backgroundPrimary: "#232323",
@@ -24,3 +24,6 @@ export default {
     textLarge: 20,
   },
 };
+
+
+export default Theme;

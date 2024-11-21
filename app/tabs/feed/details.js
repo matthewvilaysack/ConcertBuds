@@ -1,72 +1,90 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, View, Image, Text } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import Theme from "@/assets/theme";
 import Images from "@/assets/Images";
 import SearchComponent from "@/components/SearchComponent";
 import { useLocalSearchParams } from "expo-router";
+import { fetchConcerts } from "@/utils/api";
 import Feed from "@/components/Feed";
 
-const Details = () => {
-  const { artist, searchQuery } = useLocalSearchParams();
-  const exampleItem = {
-    id: "1", // Unique identifier
-    name: "Billie",
-    dates: {
-      start: {
-        localDate: "2024-11-30",
-      },
-    },
-    _embedded: {
-      venues: [
-        {
-          city: {
-            name: "Los Angeles",
-          },
-          state: {
-            stateCode: "CA",
-          },
-        },
-      ],
-    },
+// Details.js
+export default function Details() {
+  const { artist } = useLocalSearchParams();
+  const [artistQuery, setArtistQuery] = useState(artist);
+  const [concerts, setConcerts] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [searchKey, setSearchKey] = useState(0);
+  const [page, setPage] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
+
+  const loadConcerts = async (pageNum = 0, append = false) => {
+    if (!artistQuery || loading) return;
+    
+    setLoading(true);
+    if (!append) setError(null);
+    
+    try {
+      const events = await fetchConcerts(artistQuery, pageNum);
+      // Remove duplicates based on ID
+      const uniqueEvents = events.filter((event, index, self) =>
+        index === self.findIndex((e) => e.id === event.id)
+      );
+      
+      if (uniqueEvents.length === 0) {
+        setHasMore(false);
+      } else {
+        setConcerts(prev => append ? [...prev, ...uniqueEvents] : uniqueEvents);
+        setSearchKey(prev => prev + 1);
+      }
+    } catch (err) {
+      setError('Failed to fetch concerts');
+      if (!append) setConcerts([]);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const concerts = [exampleItem];
+  useEffect(() => {
+    setPage(0);
+    setHasMore(true);
+    loadConcerts(0, false);
+  }, [artistQuery]);
+
+  const handleLoadMore = () => {
+    if (!loading && hasMore) {
+      const nextPage = page + 1;
+      setPage(nextPage);
+      loadConcerts(nextPage, true);
+    }
+  };
 
   return (
     <View style={styles.container}>
       <Image source={Images.background} style={styles.background} />
       <StatusBar style="light" />
-
       <View style={styles.contentWrapper}>
-        <SearchComponent artist={artist} />
-        <Text style={styles.infoText}></Text>
-        <Feed concerts={concerts} />
+        <SearchComponent 
+          artist={artistQuery}
+          setArtist={setArtistQuery}
+          setConcerts={setConcerts}
+        />
+        {error && <Text style={[styles.infoText, styles.errorText]}>{error}</Text>}
+        {!loading && concerts.length === 0 && (
+          <Text style={styles.infoText}>No concerts found for '{artistQuery}.'</Text>
+        )}
+        <Feed 
+          concerts={concerts} 
+          key={searchKey}
+          onLoadMore={handleLoadMore}
+          loading={loading}
+          hasMore={hasMore}
+        />
       </View>
     </View>
-
-    // <View style={styles.container}>
-    //   <PostDetails
-    //     currentTab={CURRENT_TAB_DETAILS}
-    //     id={params.id}
-    //     username={params.username}
-    //     timestamp={params.timestamp}
-    //     text={params.text}
-    //     score={params.score}
-    //     vote={params.vote}
-    //     commentCount={params.commentCount}
-    //   />
-    //   <KeyboardAvoidingView
-    //     behavior={Platform.OS === "ios" ? "padding" : undefined}
-    //     keyboardVerticalOffset={Platform.OS === "ios" ? 65 : 0}
-    //     style={styles.keyboardContainer}
-    //   >
-    //     <CommentFeed postId={params.id} />
-    //     <CommentInput postId={params.id} />
-    //   </KeyboardAvoidingView>
-    // </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -81,9 +99,10 @@ const styles = StyleSheet.create({
   },
   contentWrapper: {
     position: "absolute",
-    top: "11%", // Adjust this value as needed
+    top: "11%",
     alignItems: "center",
     width: "100%",
+    height: "89%", // Add this line
     padding: 20,
   },
   infoText: {
@@ -94,6 +113,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     lineHeight: 22,
   },
+  errorText: {
+    color: Theme.colors.error || '#ff4444',
+  }
 });
-
-export default Details;
