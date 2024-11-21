@@ -19,15 +19,20 @@ export default function TabLayout() {
         },
         tabBarBackground: () => (
           <LinearGradient
-            colors={['rgba(132, 106, 227, 0.8)', 'rgba(132, 106, 227, 0.4)', 'transparent']} // Subtle gradient
+            colors={[
+              "rgba(132, 106, 227, 0.0)",
+              // temporarily making this transparent until we figure smth else better -sarah
+              "rgba(132, 106, 227, 0.0)",
+              "transparent",
+            ]} // Subtle gradient
             style={styles.gradient}
           />
         ),
         tabBarActiveTintColor: theme.colors.tabBarActive,
-        tabBarInactiveTintColor: theme.colors.tabBarInactive,
+        tabBarInactiveTintColor: theme.colors.tabBarActive,
         tabBarLabelStyle: {
           fontSize: 14,
-          marginBottom: 10,
+          // marginBottom: 10,
         },
         headerShown: false,
       }}
@@ -35,7 +40,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="feed"
         options={{
-          title: "Home",
+          title: "",
           tabBarIcon: ({ focused }) => (
             <Image
               source={Images.home}
@@ -44,7 +49,7 @@ export default function TabLayout() {
                 {
                   tintColor: focused
                     ? theme.colors.tabBarActive
-                    : theme.colors.tabBarInactive,
+                    : theme.colors.tabBarActive,
                 },
               ]}
             />
@@ -54,7 +59,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="map"
         options={{
-          title: "Map",
+          title: "",
           tabBarIcon: ({ focused }) => (
             <Image
               source={Images.map}
@@ -63,7 +68,7 @@ export default function TabLayout() {
                 {
                   tintColor: focused
                     ? theme.colors.tabBarActive
-                    : theme.colors.tabBarInactive,
+                    : theme.colors.tabBarActive,
                 },
               ]}
             />
@@ -73,7 +78,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="chat"
         options={{
-          title: "Chat",
+          title: "",
           tabBarIcon: ({ focused }) => (
             <Image
               source={Images.chat_icon}
@@ -82,7 +87,7 @@ export default function TabLayout() {
                 {
                   tintColor: focused
                     ? theme.colors.tabBarActive
-                    : theme.colors.tabBarInactive,
+                    : theme.colors.tabBarActive,
                 },
               ]}
             />
@@ -92,7 +97,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="profile"
         options={{
-          title: "Profile",
+          title: "",
           tabBarIcon: ({ focused }) => (
             <Image
               source={Images.profile_icon}
@@ -101,7 +106,7 @@ export default function TabLayout() {
                 {
                   tintColor: focused
                     ? theme.colors.tabBarActive
-                    : theme.colors.tabBarInactive,
+                    : theme.colors.tabBarActive,
                 },
               ]}
             />
