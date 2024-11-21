@@ -1,5 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
+import { Link } from "expo-router";
 
 const ConcertItem = ({ item }) => {
   const { name, dates, _embedded } = item;
@@ -19,9 +20,12 @@ const ConcertItem = ({ item }) => {
       </View>
 
       <View style={styles.artistHeader}>
-        <Text style={styles.location}>
-          {city}, {state}
-        </Text>
+        <Link href="/tabs/feed/markgoing">
+          <Text style={styles.location}>
+            {city}, {state}
+          </Text>
+        </Link>
+
         <Text style={styles.artistName}>{name}</Text>
       </View>
     </View>
@@ -30,7 +34,6 @@ const ConcertItem = ({ item }) => {
 
 const styles = StyleSheet.create({
   artistContainer: {
-    width: 336,
     height: 127.53,
     backgroundColor: "#FFFFFF",
     borderRadius: 20,

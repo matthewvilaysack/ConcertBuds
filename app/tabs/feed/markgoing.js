@@ -8,6 +8,7 @@ import { useLocalSearchParams } from "expo-router";
 import Feed from "@/components/Feed";
 
 const Details = () => {
+  const CURRENT_TAB_DETAILS = "/tabs/feed/details";
   const { artist, searchQuery } = useLocalSearchParams();
   const exampleItem = {
     id: "1", // Unique identifier
@@ -39,7 +40,6 @@ const Details = () => {
       <StatusBar style="light" />
 
       <View style={styles.contentWrapper}>
-        <SearchComponent artist={artist} />
         <Text style={styles.infoText}></Text>
         <Feed concerts={concerts} />
       </View>
