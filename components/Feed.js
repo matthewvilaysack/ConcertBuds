@@ -1,15 +1,21 @@
 import React from "react";
-import { FlatList, StyleSheet, Text, View, ActivityIndicator } from "react-native";
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  View,
+  ActivityIndicator,
+} from "react-native";
 import ConcertItem from "./ConcertItem";
 import { usePathname } from "expo-router";
 // Change the import to match the export in theme.js
-const Theme = require('@/assets/theme').default;
+const Theme = require("@/assets/theme").default;
 // OR if theme.js uses export default:
 // import Theme from '@/assets/theme';
 
 const Feed = ({ concerts, onLoadMore, loading, hasMore }) => {
   const pathname = usePathname();
-  const isDetailsPage = pathname.includes('details');
+  const isDetailsPage = pathname.includes("details");
 
   const renderFooter = () => {
     if (!loading) return null;
@@ -26,6 +32,7 @@ const Feed = ({ concerts, onLoadMore, loading, hasMore }) => {
     <View style={styles.container}>
       {concerts.length > 0 ? (
         <FlatList
+          variant={1}
           data={concerts}
           renderItem={({ item }) => <ConcertItem item={item} />}
           keyExtractor={(item) => item.id}
@@ -35,8 +42,12 @@ const Feed = ({ concerts, onLoadMore, loading, hasMore }) => {
           ListFooterComponent={renderFooter}
           scrollEventThrottle={16}
         />
-      ) : !isDetailsPage && (
-        <Text style={styles.emptyText}>Your upcoming concerts will show here.</Text>
+      ) : (
+        !isDetailsPage && (
+          <Text style={styles.emptyText}>
+            Your upcoming concerts will show here.
+          </Text>
+        )
       )}
     </View>
   );
@@ -46,13 +57,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: "100%",
-    paddingHorizontal: 20,
     paddingBottom: 140,
   },
   listContainer: {
     paddingTop: 20,
   },
-emptyText: {
+  emptyText: {
     textAlign: "center",
     color: "#FFFFFF",
     opacity: 0.8,
@@ -61,7 +71,7 @@ emptyText: {
   },
   loadingFooter: {
     paddingVertical: 20,
-  }
+  },
 });
 
 export default Feed;
