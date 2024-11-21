@@ -72,6 +72,22 @@ export default function Layout() {
         }}
       />
       <Stack.Screen
+        name="markgoing"
+        options={{
+          headerTitle: "",
+          headerTitleAlign: "center",
+          headerBackTitle: "Back",
+          headerStyle: {
+            position: "absolute",
+            backgroundColor: "transparent", // Semi-transparent black
+            elevation: 0, // Removes shadow on Android
+            shadowOpacity: 0, // Removes shadow on iOS
+            borderBottomWidth: 0, // Removes border on both platforms
+          },
+          headerTransparent: true,
+        }}
+      />
+      <Stack.Screen
         name="newpost"
         options={{
           headerTitle: "New Post",
