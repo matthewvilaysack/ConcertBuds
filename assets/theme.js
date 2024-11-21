@@ -14,6 +14,7 @@ export default {
     iconHighlighted: "#FF5C00",
 
     tabBarActive: "#FFFFFF",
+    tabBarInactive: "#333333", 
     tabBarBorder: "#747474",
   },
   sizes: {
