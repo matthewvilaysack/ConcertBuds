@@ -1,30 +1,24 @@
-import { StyleSheet, View, Image } from "react-native";
-
-import FontAwesome from "@expo/vector-icons/FontAwesome";
+import React, { useState } from "react";
+import { StyleSheet, View, Image, Text } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import { Link } from "expo-router";
-
 import Theme from "@/assets/theme";
-import Feed from "@/components/Feed";
 import Images from "@/assets/Images";
+import SearchComponent from "@/components/SearchComponent";
+import Feed from "@/components/Feed";
 
 export default function Page() {
-  const CURRENT_TAB_DETAILS = "/tabs/feed/details";
+  const [concerts, setConcerts] = useState([]); // Shared state for concerts
+
   return (
     <View style={styles.container}>
-      <Image source={Images.background} style={styles.background}></Image>
-
+      <Image source={Images.background} style={styles.background} />
       <StatusBar style="light" />
-      {/* <Feed
-        shouldNavigateToComments={true}
-        fetchUsersPostsOnly={false}
-        currentTab={CURRENT_TAB_DETAILS}
-      />
-      <Link href="/tabs/feed/newpost" style={styles.postButtonContainer}>
-        <View style={styles.postButton}>
-          <FontAwesome size={32} name="plus" color={Theme.colors.textPrimary} />
-        </View>
-      </Link> */}
+
+      <View style={styles.contentWrapper}>
+        <SearchComponent setConcerts={setConcerts} />
+        <Text style={styles.infoText}>Your upcoming concerts will show up{"\n"}here.</Text>
+        <Feed concerts={concerts} />
+      </View>
     </View>
   );
 }
@@ -36,25 +30,23 @@ const styles = StyleSheet.create({
     backgroundColor: Theme.colors.backgroundPrimary,
   },
   background: {
-    flex: 1,
+    position: "absolute",
     width: "100%",
     height: "100%",
   },
-  postButtonContainer: {
+  contentWrapper: {
     position: "absolute",
-    right: 8,
-    bottom: 8,
-  },
-  postButton: {
-    backgroundColor: Theme.colors.iconHighlighted,
-    height: 48,
-    width: 48,
-    borderRadius: 24,
+    top: 200, // Adjust this value as needed
     alignItems: "center",
-    justifyContent: "center",
-    // FontAwesome 'plus' icon is a bit off-center, so we manually center it by
-    // tweaking the padding
-    paddingTop: 2,
-    paddingLeft: 1,
+    width: "100%",
+    padding: 20,
+  },
+  infoText: {
+    fontSize: 15,
+    color: "#FFFFFF",
+    opacity: 0.8,
+    textAlign: "center",
+    marginTop: 10,
+    lineHeight: 22,
   },
 });

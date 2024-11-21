@@ -1,3 +1,9 @@
-export default {
+const Images = {
   background: require("./background-blurred.png"),
+  home: require("./home.png"),
+  chat_icon: require("./chat_icon.png"),
+  map: require("./map.png"),
+  profile_icon: require("./profile_icon.png"),
 };
+
+export default Images;
