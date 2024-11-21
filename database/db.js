@@ -1,12 +1,12 @@
-// utils/supabase.js
-import 'react-native-url-polyfill/auto';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { createClient } from '@supabase/supabase-js';
+import { AppState } from 'react-native'
+import 'react-native-url-polyfill/auto'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { createClient } from '@supabase/supabase-js'
 
-const supabaseUrl = 'https://cilmbyxvewqacopfupfm.supabase.co';
-const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNpbG1ieXh2ZXdxYWNvcGZ1cGZtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzE1NjM4NTYsImV4cCI6MjA0NzEzOTg1Nn0.4ozXxAGwVVGJGNRfqmHXpdkMwG7o8_q5CzNk19xuEXE';
+const supabaseUrl = "https://tcklrcucjstnykkjhiqt.supabase.co"
+const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRja2xyY3VjanN0bnlra2poaXF0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzAzMzY4NTEsImV4cCI6MjA0NTkxMjg1MX0.1K9WZKLAK6PJ1w2_x8Vwudc6UR0x2ip8S0V0TnFh9tQ"
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+const db = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
     storage: AsyncStorage,
     autoRefreshToken: true,
@@ -15,84 +15,17 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   },
 });
 
-// api/profile.js
-export async function getProfile(userId) {
-  const { data, error } = await supabase
-    .from('profiles')
-    .select('*')
-    .eq('id', userId)
-    .single();
+// Tells Supabase Auth to continuously refresh the session automatically
+// if the app is in the foreground. When this is added, you will continue
+// to receive `onAuthStateChange` events with the `TOKEN_REFRESHED` or
+// `SIGNED_OUT` event if the user's session is terminated. This should
+// only be registered once.
+AppState.addEventListener('change', (state) => {
+  if (state === 'active') {
+    db.auth.startAutoRefresh()
+  } else {
+    db.auth.stopAutoRefresh()
+  }
+});
 
-  if (error) throw error;
-  return data;
-}
-
-export async function updateProfile(userId, updates) {
-  const { data, error } = await supabase
-    .from('profiles')
-    .update(updates)
-    .eq('id', userId);
-
-  if (error) throw error;
-  return data;
-}
-
-export async function updatePreferences(userId, preferences) {
-  const { data, error } = await supabase
-    .from('profiles')
-    .update({ preferences })
-    .eq('id', userId);
-
-  if (error) throw error;
-  return data;
-}
-
-// api/concerts.js
-export async function getRSVPs(userId) {
-  const { data, error } = await supabase
-    .from('concert_rsvps')
-    .select('*')
-    .eq('user_id', userId)
-    .order('created_at', { ascending: false });
-
-  if (error) throw error;
-  return data;
-}
-
-export async function addRSVP(userId, concertId, concertData, status = 'interested') {
-  const { data, error } = await supabase
-    .from('concert_rsvps')
-    .insert([
-      {
-        user_id: userId,
-        concert_id: concertId,
-        concert_data: concertData,
-        status,
-      },
-    ]);
-
-  if (error) throw error;
-  return data;
-}
-
-export async function updateRSVPStatus(userId, concertId, status) {
-  const { data, error } = await supabase
-    .from('concert_rsvps')
-    .update({ status })
-    .eq('user_id', userId)
-    .eq('concert_id', concertId);
-
-  if (error) throw error;
-  return data;
-}
-
-export async function removeRSVP(userId, concertId) {
-  const { data, error } = await supabase
-    .from('concert_rsvps')
-    .delete()
-    .eq('user_id', userId)
-    .eq('concert_id', concertId);
-
-  if (error) throw error;
-  return data;
-}
+export default db;
