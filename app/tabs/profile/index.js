@@ -8,7 +8,6 @@ import Loading from "@/components/Loading";
 
 import db from "@/database/db";
 import useSession from "@/utils/useSession";
-import MySvg from "./MySvg"; // Adjust the path based on the file location
 
 export default function Profile() {
   const session = useSession();
@@ -35,7 +34,6 @@ export default function Profile() {
 
   return (
     <View style={styles.container}>
-      {/*       
       <View style={styles.userContainer}>
         <View style={styles.userTextContainer}>
           <Text style={styles.title}>Logged in as: </Text>
@@ -51,7 +49,7 @@ export default function Profile() {
         currentTab={CURRENT_TAB_DETAILS}
         fetchUsersPostsOnly={true}
         uuid={session.user.id}
-      /> */}
+      />
     </View>
   );
 }

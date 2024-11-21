@@ -8,17 +8,20 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: theme.colors.tabBarActive,
-        tabBarInactiveTintColor: theme.colors.tabBarInactiveTintColor,
+        tabBarInactiveTintColor: theme.colors.tabBarActive,
         tabBarStyle: {
-          backgroundColor: theme.colors.backgroundPrimary,
+          position: "absolute",
+          backgroundColor: "transparent",
+          elevation: 0,
+          borderTopWidth: 0,
         },
         headerStyle: {
-          backgroundColor: theme.colors.backgroundPrimary,
-          elevation: 0, // Android
-          shadowOpacity: 0, // iOS
-          borderBottomWidth: 0, // General
+          backgroundColor: "transparent", // Semi-transparent black
+          elevation: 0, // Removes shadow on Android
+          shadowOpacity: 0, // Removes shadow on iOS
+          borderBottomWidth: 0, // Removes border on both platforms
         },
-        headerTintColor: "#fff",
+        headerTransparent: true,
         headerTitleStyle: {
           fontWeight: "bold",
         },
@@ -27,13 +30,9 @@ export default function TabLayout() {
       <Tabs.Screen
         name="feed"
         options={{
-          title: "Feed",
+          title: "Home",
           tabBarIcon: ({ size, color }) => (
-            <MaterialCommunityIcons
-              size={size}
-              name="beehive-outline"
-              color={color}
-            />
+            <MaterialCommunityIcons size={size} name="home" color={color} />
           ),
           headerShown: false, // Hide the header for this screen
         }}
@@ -41,7 +40,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="profile"
         options={{
-          title: "My Profile",
+          title: "Profile",
           tabBarIcon: ({ size, color }) => (
             <FontAwesome size={size} name="user" color={color} />
           ),
