@@ -16,28 +16,34 @@ export default function Layout() {
         },
         headerTintColor: theme.colors.textPrimary,
         headerTitleStyle: {
+          backgroundColor: "transparent", // Transparent header background
           fontWeight: "bold",
         },
+        headerTransparent: true, // Enables true header transparency
       }}
     >
       <Stack.Screen
         name="index"
         options={{
+          headerStyle: {
+            position: "absolute",
+            backgroundColor: "transparent", // Semi-transparent black
+            elevation: 0, // Removes shadow on Android
+            shadowOpacity: 0, // Removes shadow on iOS
+            borderBottomWidth: 0, // Removes border on both platforms
+          },
+          headerTransparent: true,
           headerTitle: () => (
             <View
               style={{
+                backgroundColor: "transparent", // Transparent header background
                 flexDirection: "row",
                 alignItems: "center",
                 justifyContent: "center",
               }}
             >
-              <MaterialCommunityIcons
-                size={32}
-                name="bee"
-                color={theme.colors.iconHighlighted}
-              />
               <Text style={{ color: "#fff", fontSize: 18, fontWeight: "bold" }}>
-                Buzz
+                ConcertBuds
               </Text>
             </View>
           ),

@@ -1,4 +1,4 @@
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, Image } from "react-native";
 
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { StatusBar } from "expo-status-bar";
@@ -6,13 +6,16 @@ import { Link } from "expo-router";
 
 import Theme from "@/assets/theme";
 import Feed from "@/components/Feed";
+import Images from "@/assets/Images";
 
 export default function Page() {
   const CURRENT_TAB_DETAILS = "/tabs/feed/details";
   return (
     <View style={styles.container}>
+      <Image source={Images.background} style={styles.background}></Image>
+
       <StatusBar style="light" />
-      <Feed
+      {/* <Feed
         shouldNavigateToComments={true}
         fetchUsersPostsOnly={false}
         currentTab={CURRENT_TAB_DETAILS}
@@ -21,7 +24,7 @@ export default function Page() {
         <View style={styles.postButton}>
           <FontAwesome size={32} name="plus" color={Theme.colors.textPrimary} />
         </View>
-      </Link>
+      </Link> */}
     </View>
   );
 }
@@ -31,6 +34,11 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     backgroundColor: Theme.colors.backgroundPrimary,
+  },
+  background: {
+    flex: 1,
+    width: "100%",
+    height: "100%",
   },
   postButtonContainer: {
     position: "absolute",
