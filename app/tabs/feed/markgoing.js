@@ -5,14 +5,15 @@ import Theme from "@/assets/theme";
 import Images from "@/assets/Images";
 import SearchComponent from "@/components/SearchComponent";
 import { useLocalSearchParams } from "expo-router";
-import Feed from "@/components/Feed";
+import ConcertItem from "@/components/ConcertItem";
+import PostDetails from "@/components/PostDetails";
 
 const Details = () => {
   const CURRENT_TAB_DETAILS = "/tabs/feed/details";
   const { artist, searchQuery } = useLocalSearchParams();
   const exampleItem = {
     id: "1", // Unique identifier
-    name: "Billie",
+    name: "BILLIE EILISH",
     dates: {
       start: {
         localDate: "2024-11-30",
@@ -22,10 +23,10 @@ const Details = () => {
       venues: [
         {
           city: {
-            name: "Los Angeles",
+            name: "Vancouver",
           },
           state: {
-            stateCode: "CA",
+            stateCode: "BC",
           },
         },
       ],
@@ -41,7 +42,7 @@ const Details = () => {
 
       <View style={styles.contentWrapper}>
         <Text style={styles.infoText}></Text>
-        <Feed concerts={concerts} />
+        <ConcertItem item={concerts[0]} variant={2} />
       </View>
     </View>
 
