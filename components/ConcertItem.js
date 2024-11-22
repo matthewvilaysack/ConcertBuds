@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { router } from "expo-router";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 const windowWidth = Dimensions.get("window").width;
 
@@ -16,8 +17,8 @@ const ConcertItem = ({ item, variant, onRSVP, onRemove }) => {
 
   const { name, dates, _embedded, id } = item || {};
   const venue = _embedded?.venues?.[0];
-  const city = venue?.city?.name || "Unknown City";
-  const state = venue?.state?.stateCode || "Unknown State";
+  const city = venue?.city?.name || "San Jose";
+  const state = venue?.state?.stateCode || "CA";
 
   const eventDate = dates?.start?.localDate
     ? new Date(dates.start.localDate)
@@ -89,7 +90,7 @@ const ConcertItem = ({ item, variant, onRSVP, onRemove }) => {
             <Text style={styles.goingText}>Going</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={handleRemoveClick} style={styles.trashIcon}>
-            <Text style={styles.trashText}>🗑️</Text>
+            <Ionicons name="trash" size={20} color="#000" />
           </TouchableOpacity>
         </View>
       )}
@@ -184,9 +185,6 @@ const styles = StyleSheet.create({
   trashIcon: {
     marginLeft: 10,
     padding: 10,
-  },
-  trashText: {
-    fontSize: 20,
   },
 });
 
