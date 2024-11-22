@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   FlatList,
   StyleSheet,
@@ -6,48 +6,89 @@ import {
   View,
   ActivityIndicator,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import ConcertItem from "./ConcertItem";
-import { usePathname } from "expo-router";
-// Change the import to match the export in theme.js
-const Theme = require("@/assets/theme").default;
-// OR if theme.js uses export default:
-// import Theme from '@/assets/theme';
 
-const Feed = ({ concerts, onLoadMore, loading, hasMore }) => {
-  const pathname = usePathname();
-  const isDetailsPage = pathname.includes("details");
+const Feed = ({ concerts, onLoadMore, loading }) => {
+  const [rsvpConcerts, setRsvpConcerts] = useState([]);
+
+  // Load RSVP'd concerts from local storage on mount
+  useEffect(() => {
+    const loadRSVPs = async () => {
+      try {
+        const storedRSVPs = await AsyncStorage.getItem("rsvpConcerts");
+        if (storedRSVPs) {
+          setRsvpConcerts(JSON.parse(storedRSVPs));
+        }
+      } catch (error) {
+        console.error("Error loading RSVP'd concerts:", error);
+      }
+    };
+    loadRSVPs();
+  }, []);
+
+  // Save RSVP'd concerts to local storage whenever the state changes
+  useEffect(() => {
+    const saveRSVPs = async () => {
+      try {
+        await AsyncStorage.setItem("rsvpConcerts", JSON.stringify(rsvpConcerts));
+      } catch (error) {
+        console.error("Error saving RSVP'd concerts:", error);
+      }
+    };
+    saveRSVPs();
+  }, [rsvpConcerts]);
+
+  const handleRSVP = (concert) => {
+    setRsvpConcerts((prev) => {
+      if (!prev.some((item) => item.id === concert.id)) {
+        return [...prev, concert];
+      }
+      return prev;
+    });
+  };
+
+  const handleRemove = (concertId) => {
+    setRsvpConcerts((prev) => prev.filter((concert) => concert.id !== concertId));
+  };
 
   const renderFooter = () => {
     if (!loading) return null;
-    return (
-      <ActivityIndicator
-        size="large"
-        color={Theme.colors.textHighlighted} // Using orange accent color
-        style={styles.loadingFooter}
-      />
-    );
+    return <ActivityIndicator size="large" color="#846AE3" />;
   };
 
   return (
     <View style={styles.container}>
-      {concerts.length > 0 ? (
+      {/* RSVP'd concerts */}
+      {rsvpConcerts.length > 0 && (
+        <>
+          <Text style={styles.rsvpTitle}>Your RSVP'd Concerts</Text>
+          <FlatList
+            data={rsvpConcerts}
+            renderItem={({ item }) => (
+              <ConcertItem item={item} variant onRemove={handleRemove} />
+            )}
+            keyExtractor={(item) => `rsvp-${item.id}`}
+            contentContainerStyle={styles.listContainer}
+          />
+        </>
+      )}
+
+      {/* Available concerts */}
+      {concerts.length > 0 && (
         <FlatList
-          variant={1}
-          data={concerts}
-          renderItem={({ item }) => <ConcertItem item={item} />}
+          data={concerts.filter(
+            (concert) => !rsvpConcerts.some((rsvp) => rsvp.id === concert.id)
+          )}
+          renderItem={({ item }) => (
+            <ConcertItem item={item} onRSVP={() => handleRSVP(item)} />
+          )}
           keyExtractor={(item) => item.id}
           contentContainerStyle={styles.listContainer}
           onEndReached={onLoadMore}
           onEndReachedThreshold={0.5}
           ListFooterComponent={renderFooter}
-          scrollEventThrottle={16}
         />
-      ) : (
-        !isDetailsPage && (
-          <Text style={styles.emptyText}>
-            Your upcoming concerts will show here.
-          </Text>
-        )
       )}
     </View>
   );
@@ -62,15 +103,12 @@ const styles = StyleSheet.create({
   listContainer: {
     paddingTop: 20,
   },
-  emptyText: {
-    textAlign: "center",
+  rsvpTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
     color: "#FFFFFF",
-    opacity: 0.8,
-    fontSize: 15,
-    marginTop: 20,
-  },
-  loadingFooter: {
-    paddingVertical: 20,
+    paddingHorizontal: 20,
+    marginTop: 10,
   },
 });
 

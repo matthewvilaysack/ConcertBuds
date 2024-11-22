@@ -16,17 +16,17 @@ const Details = () => {
     name: "BILLIE EILISH",
     dates: {
       start: {
-        localDate: "2024-11-30",
+        localDate: "2024-12-10",
       },
     },
     _embedded: {
       venues: [
         {
           city: {
-            name: "Vancouver",
+            name: "San Jose",
           },
           state: {
-            stateCode: "BC",
+            stateCode: "CA",
           },
         },
       ],
