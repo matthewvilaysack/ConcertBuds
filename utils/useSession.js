@@ -6,7 +6,7 @@
 
 import { useEffect, useState } from "react";
 
-import db from "@/database/db";
+import db from "@/lib/supabase";
 
 export default function useSession() {
   const [session, setSession] = useState(null);
