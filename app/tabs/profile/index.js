@@ -6,7 +6,7 @@
   import Feed from "@/components/Feed";
   import Loading from "@/components/Loading";
 
-  import db from "@/database/db";
+  import db from "@/lib/supabase";
   import useSession from "@/utils/useSession";
 
   export default function Profile() {

@@ -75,7 +75,7 @@ export default function Layout() {
         options={{
           headerTitle: "",
           headerTitleAlign: "center",
-          headerBackTitle: "Back",
+          headerBackTitleVisible: "false",
           headerStyle: {
             position: "absolute",
             backgroundColor: "transparent", // Semi-transparent black

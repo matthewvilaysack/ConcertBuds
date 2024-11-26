@@ -4,7 +4,7 @@ import { Redirect } from "expo-router";
 import { useFonts } from "expo-font";
 
 import Login from "@/components/Login";
-import db from "@/database/db";
+import db from "@/lib/supabase";
 import Loading from "@/components/Loading";
 
 export default function App() {

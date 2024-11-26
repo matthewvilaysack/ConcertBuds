@@ -28,7 +28,7 @@ const ConcertItem = ({ item, variant, onRSVP, onRemove }) => {
   const locationText = `${city}, ${state}`;
 
   const handleNavigate = () => {
-    router.push(`/tabs/feed/concertbuds`);
+    router.push(`/tabs/feed/markgoing`);
   };
 
   const handleRSVPClick = (e) => {

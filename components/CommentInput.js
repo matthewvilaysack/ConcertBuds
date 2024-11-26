@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import Theme from "@/assets/theme";
-import db from "@/database/db";
+import db from "@/lib/supabase";
 import useSession from "@/utils/useSession";
 
 const CommentInput = ({ postId }) => {
