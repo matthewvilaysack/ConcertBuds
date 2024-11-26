@@ -5,7 +5,7 @@ import { useRouter } from "expo-router";
 import HeaderButton from "../../../components/HeaderButton"; // Path to your custom HeaderButton component
 import Theme from "@/assets/theme";
 import useSession from "@/utils/useSession";
-import db from "../../../database/db";
+import db from "@/lib/supabase";
 
 export default function NewPost() {
   const session = useSession();

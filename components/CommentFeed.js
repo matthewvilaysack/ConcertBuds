@@ -4,7 +4,7 @@ import { StyleSheet, FlatList, RefreshControl } from "react-native";
 import Theme from "@/assets/theme";
 import Comment from "./Comment";
 import Loading from "./Loading";
-import db from "../database/db";
+import db from "../lib/supabase";
 
 import timeAgo from "@/utils/timeAgo";
 
