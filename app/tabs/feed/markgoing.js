@@ -5,7 +5,7 @@ import Theme from "@/assets/theme";
 import Images from "@/assets/Images";
 import SearchComponent from "@/components/SearchComponent";
 import { useLocalSearchParams } from "expo-router";
-import ConcertItem from "@/components/ConcertItem";
+import ConcertCard from "@/components/ConcertCard";
 import PostDetails from "@/components/PostDetails";
 
 const Details = () => {
@@ -41,7 +41,7 @@ const Details = () => {
       <StatusBar style="light" />
 
       <View style={styles.contentWrapper}>
-        <Text style={styles.infoText}></Text>
+        <ConcertCard item={concerts[0]} variant={2} />
       </View>
     </View>
 

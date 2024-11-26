@@ -7,97 +7,70 @@ import {
   Dimensions,
   TouchableOpacity,
 } from "react-native";
-import { router } from "expo-router";
-import Ionicons from "react-native-vector-icons/Ionicons";
+import { Link } from "expo-router";
 
 const windowWidth = Dimensions.get("window").width;
+const windowHeight = Dimensions.get("window").height;
 
-const ConcertItem = ({ item, variant, onRSVP, onRemove }) => {
+const ConcertCard = ({ item }) => {
   if (!item) return null;
 
-  const { name, dates, _embedded, id } = item || {};
+  const { name, dates, _embedded } = item || {};
   const venue = _embedded?.venues?.[0];
-  const city = venue?.city?.name || "San Jose";
-  const state = venue?.state?.stateCode || "CA";
+  const city = venue?.city?.name;
+  const state = venue?.state?.stateCode;
 
+  // Check if dates exists before creating Date object
   const eventDate = dates?.start?.localDate
     ? new Date(dates.start.localDate)
     : new Date();
   const month = eventDate.toLocaleString("en-US", { month: "short" });
   const day = eventDate.getDate();
 
-  const locationText = `${city}, ${state}`;
-
-  const handleNavigate = () => {
-    router.push(`/tabs/feed/concertbuds`);
-  };
-
-  const handleRSVPClick = (e) => {
-    e.stopPropagation(); // Prevent navigation when RSVP button is clicked
-    if (onRSVP) {
-      const concertData = {
-        id,
-        name,
-        location: locationText,
-        date: `${month} ${day}`,
-      };
-      onRSVP(concertData);
-    }
-  };
-
-  const handleRemoveClick = (e) => {
-    e.stopPropagation(); // Prevent navigation when trash icon is clicked
-    if (onRemove) onRemove(id);
-  };
+  // Add location fallback
+  const locationText = city && state ? `${city}, ${state}` : "Location TBD";
 
   return (
-    <TouchableOpacity
-      onPress={handleNavigate}
-      style={[styles.artistImageContainer, variant && styles.containerOpacity]}
-    >
+    <View style={styles.artistImageContainer}>
       <View>
-        {variant && (
+        <View>
           <Image
             source={{
               uri: "https://media.pitchfork.com/photos/6614092742a7de97785c7a48/master/pass/Billie-Eilish-Hit-Me-Hard-and-Soft.jpg",
-            }}
+            }} // Replace with your image URL
             style={styles.image}
+            // resizeMode="cover"
           />
-        )}
+        </View>
       </View>
+      {/*       <Text style={[styles.text, isHighlighted && styles.highlightedText]}>
+       */}
       <View style={styles.artistContainer}>
         <View style={styles.dateContainer}>
           <Text style={styles.month}>{month}</Text>
           <Text style={styles.day}>{day}</Text>
+          <View>
+            <Text style={styles.artistName}>Wed 7 PM</Text>
+          </View>
         </View>
-        <View
-          style={[
-            styles.artistHeader,
-            !variant && styles.nonvariantOpacity,
-            variant && styles.variantRadius,
-          ]}
-        >
-          <Text style={styles.location}>{locationText}</Text>
+
+        <View style={styles.artistHeader}>
+          <Link href="/tabs/feed/markgoing">
+            <Text style={styles.location}>{locationText}</Text>
+          </Link>
+
           <Text style={styles.artistName}>{name || "Event Name TBD"}</Text>
+          <View>
+            <Text style={styles.artistName}>Frost Amphitheater</Text>
+          </View>
         </View>
       </View>
-      {variant && (
-        <View style={styles.goingContainer}>
-          <TouchableOpacity
-            style={styles.goingButton}
-            onPress={handleRSVPClick}
-          >
-            <Text style={styles.goingText}>Going</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={handleRemoveClick}
-            style={styles.trashIcon}
-          >
-            <Ionicons name="trash" size={20} color="#000" />
-          </TouchableOpacity>
-        </View>
-      )}
-    </TouchableOpacity>
+      <View style={styles.goingContainer}>
+        <TouchableOpacity style={styles.goingButton}>
+          <Text style={styles.goingText}>Going</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
   );
 };
 
@@ -122,18 +95,20 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(255, 255, 255, 0.75)",
   },
   dateContainer: {
-    marginLeft: 10,
+    marginTop: "5%",
+    marginLeft: "5%",
+    marginBottom: "5%",
     flexDirection: "column",
     alignItems: "center",
   },
   month: {
+    fontFamily: "Doppio",
     fontSize: 20,
-    fontWeight: "bold",
     color: "#000000",
   },
   day: {
+    fontFamily: "Doppio",
     fontSize: 40,
-    fontWeight: "bold",
     color: "#000000",
   },
   artistHeader: {
@@ -143,8 +118,8 @@ const styles = StyleSheet.create({
     marginLeft: "5%",
     paddingLeft: "5%",
     flex: 1,
-    borderBottomRightRadius: 20,
-    borderTopRightRadius: 20,
+    borderBottomRightRadius: 0,
+    borderTopRightRadius: 0,
   },
   nonvariantOpacity: {
     backgroundColor: "rgba(255, 255, 255, 0.5)",
@@ -154,12 +129,14 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 0,
   },
   location: {
-    fontSize: 18,
+    fontFamily: "Doppio",
+    fontSize: 28,
     color: "#000000",
   },
   artistName: {
+    fontFamily: "Doppio",
     fontSize: 16,
-    // fontWeight: "bold",
+    lineHeight: 20,
     color: "#000000",
     marginTop: 5,
   },
@@ -170,26 +147,25 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 20,
   },
   goingContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginTop: 10,
+    // backgroundColor: "rgba(255, 255, 255, 0.5)",
+    borderBottomRightRadius: 20,
+    borderBottomLeftRadius: 20,
+    paddingHorizontal: "10%",
+    paddingTop: 0,
+    alignSelf: "stretch",
+    paddingBottom: "8%",
   },
   goingButton: {
     backgroundColor: "#846AE3",
     borderRadius: 10,
     alignItems: "center",
     justifyContent: "center",
-    padding: 10,
+    padding: 20,
   },
   goingText: {
-    color: "#FFFFFF",
-    fontSize: 16,
-  },
-  trashIcon: {
-    marginLeft: 10,
-    padding: 10,
+    color: "white",
+    fontSize: 20,
   },
 });
 
-export default ConcertItem;
+export default ConcertCard;

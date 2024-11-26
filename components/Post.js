@@ -4,7 +4,7 @@ import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Link } from "expo-router";
 import useSession from "@/utils/useSession";
-import db from "../database/db";
+import db from "../lib/supabase";
 import Theme from "@/assets/theme";
 
 export default function Post({
