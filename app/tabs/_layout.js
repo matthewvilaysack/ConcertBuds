@@ -12,19 +12,12 @@ export default function TabLayout() {
         tabBarStyle: {
           position: "absolute",
           backgroundColor: "transparent", // Transparent to allow gradient
-          elevation: 0,
           borderTopWidth: 0,
-          height: 110,
           paddingHorizontal: 10,
         },
         tabBarBackground: () => (
           <LinearGradient
-            colors={[
-              "rgba(132, 106, 227, 0.0)",
-              // temporarily making this transparent until we figure smth else better -sarah
-              "rgba(132, 106, 227, 0.0)",
-              "transparent",
-            ]} // Subtle gradient
+            colors={["rgba(132, 106, 227, 0.0)", "transparent"]} // Subtle gradient
             style={styles.gradient}
           />
         ),

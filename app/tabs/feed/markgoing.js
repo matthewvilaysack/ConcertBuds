@@ -16,17 +16,17 @@ const Details = () => {
     name: "BILLIE EILISH",
     dates: {
       start: {
-        localDate: "2024-12-10",
+        localDate: "2024-11-30",
       },
     },
     _embedded: {
       venues: [
         {
           city: {
-            name: "San Jose",
+            name: "Vancouver",
           },
           state: {
-            stateCode: "CA",
+            stateCode: "BC",
           },
         },
       ],
@@ -42,7 +42,6 @@ const Details = () => {
 
       <View style={styles.contentWrapper}>
         <Text style={styles.infoText}></Text>
-        <ConcertItem item={concerts[0]} variant={2} />
       </View>
     </View>
 

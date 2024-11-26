@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { Redirect } from "expo-router";
+import { useFonts } from "expo-font";
 
 import Login from "@/components/Login";
 import db from "@/database/db";
@@ -9,6 +10,9 @@ import Loading from "@/components/Loading";
 export default function App() {
   const [session, setSession] = useState(null);
   const [isLoading, setIsLoading] = useState(true); // Default to true for initial load
+  const [fontsLoaded] = useFonts({
+    Doppio: require("../assets/Fonts/DoppioOne-Regular.ttf"),
+  });
 
   useEffect(() => {
     setIsLoading(true);

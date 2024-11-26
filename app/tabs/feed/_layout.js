@@ -60,9 +60,8 @@ export default function Layout() {
         options={{
           headerTitle: "",
           headerTitleAlign: "center",
-          headerBackTitle: "Back",
+          headerBackTitleVisible: "false",
           headerStyle: {
-            position: "absolute",
             backgroundColor: "transparent", // Semi-transparent black
             elevation: 0, // Removes shadow on Android
             shadowOpacity: 0, // Removes shadow on iOS
