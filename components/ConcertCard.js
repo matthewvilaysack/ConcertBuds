@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { router } from "expo-router";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 const windowWidth = Dimensions.get("window").width;
 
@@ -44,21 +45,58 @@ const ConcertItem = ({ item, variant, onRSVP, onRemove }) => {
     }
   };
 
+  const handleRemoveClick = (e) => {
+    e.stopPropagation(); // Prevent navigation when trash icon is clicked
+    if (onRemove) onRemove(id);
+  };
+
   return (
     <TouchableOpacity
       onPress={handleNavigate}
-      style={styles.artistImageContainer}
+      style={[styles.artistImageContainer, variant && styles.containerOpacity]}
     >
+      <View>
+        {variant && (
+          <Image
+            source={{
+              uri: "https://media.pitchfork.com/photos/6614092742a7de97785c7a48/master/pass/Billie-Eilish-Hit-Me-Hard-and-Soft.jpg",
+            }}
+            style={styles.image}
+          />
+        )}
+      </View>
       <View style={styles.artistContainer}>
         <View style={styles.dateContainer}>
           <Text style={styles.month}>{month}</Text>
           <Text style={styles.day}>{day}</Text>
         </View>
-        <View style={styles.artistHeader}>
+        <View
+          style={[
+            styles.artistHeader,
+            !variant && styles.nonvariantOpacity,
+            variant && styles.variantRadius,
+          ]}
+        >
           <Text style={styles.location}>{locationText}</Text>
           <Text style={styles.artistName}>{name || "Event Name TBD"}</Text>
         </View>
       </View>
+      {variant && (
+        <View style={styles.goingContainer}>
+          <TouchableOpacity
+            style={styles.goingButton}
+            onPress={handleRSVPClick}
+          >
+            <Text style={styles.goingText}>Going</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={handleRemoveClick}
+            style={styles.trashIcon}
+          >
+            <Ionicons name="trash" size={20} color="#000" />
+          </TouchableOpacity>
+        </View>
+      )}
     </TouchableOpacity>
   );
 };
@@ -84,54 +122,69 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(255, 255, 255, 0.75)",
   },
   dateContainer: {
-    marginHorizontal: "5%",
-    marginVertical: "5%",
+    marginLeft: 10,
     flexDirection: "column",
     alignItems: "center",
-    justifyContent: "center",
   },
   month: {
-    fontSize: 18,
+    fontSize: 20,
+    fontWeight: "bold",
     color: "#000000",
-    fontFamily: "Doppio",
   },
   day: {
-    fontSize: 36,
+    fontSize: 40,
+    fontWeight: "bold",
     color: "#000000",
-    fontFamily: "Doppio",
   },
   artistHeader: {
     alignSelf: "stretch",
     flexDirection: "column",
     justifyContent: "center",
+    marginLeft: "5%",
     paddingLeft: "5%",
     flex: 1,
     borderBottomRightRadius: 20,
     borderTopRightRadius: 20,
+  },
+  nonvariantOpacity: {
     backgroundColor: "rgba(255, 255, 255, 0.5)",
-    padding: "6%",
   },
   variantRadius: {
     borderBottomRightRadius: 0,
     borderTopRightRadius: 0,
   },
   location: {
-    fontSize: 28,
+    fontSize: 18,
     color: "#000000",
-    fontWeight: "bold",
-    fontFamily: "Doppio",
   },
   artistName: {
     fontSize: 16,
+    // fontWeight: "bold",
     color: "#000000",
     marginTop: 5,
-    fontFamily: "Doppio",
   },
   image: {
     width: windowWidth * 0.9,
     height: windowWidth * 0.7,
     borderTopRightRadius: 20,
     borderTopLeftRadius: 20,
+  },
+  goingContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginTop: 10,
+  },
+  goingButton: {
+    backgroundColor: "#846AE3",
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 10,
+  },
+  goingText: {
+    color: "#FFFFFF",
+    fontSize: 16,
   },
   trashIcon: {
     marginLeft: 10,

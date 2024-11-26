@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ConcertItem from "./ConcertItem";
-import Theme from '../assets/theme';
+import Theme from "../assets/theme";
 
 const Feed = ({ concerts, onLoadMore, loading }) => {
   const [rsvpConcerts, setRsvpConcerts] = useState([]);
@@ -32,7 +32,10 @@ const Feed = ({ concerts, onLoadMore, loading }) => {
   useEffect(() => {
     const saveRSVPs = async () => {
       try {
-        await AsyncStorage.setItem("rsvpConcerts", JSON.stringify(rsvpConcerts));
+        await AsyncStorage.setItem(
+          "rsvpConcerts",
+          JSON.stringify(rsvpConcerts)
+        );
       } catch (error) {
         console.error("Error saving RSVP'd concerts:", error);
       }
@@ -50,7 +53,9 @@ const Feed = ({ concerts, onLoadMore, loading }) => {
   };
 
   const handleRemove = (concertId) => {
-    setRsvpConcerts((prev) => prev.filter((concert) => concert.id !== concertId));
+    setRsvpConcerts((prev) =>
+      prev.filter((concert) => concert.id !== concertId)
+    );
   };
 
   const renderFooter = () => {
@@ -61,13 +66,13 @@ const Feed = ({ concerts, onLoadMore, loading }) => {
   return (
     <View style={styles.container}>
       {/* RSVP'd concerts */}
-      {rsvpConcerts.length > 0 ? (
+      {/* {rsvpConcerts.length > 0 ? (
         <>
           <Text style={styles.rsvpTitle}>Your RSVP'd Concerts</Text>
           <FlatList
             data={rsvpConcerts}
             renderItem={({ item }) => (
-              <ConcertItem item={item} variant onRemove={handleRemove} />
+              <ConcertItem item={item} onRemove={handleRemove} />
             )}
             keyExtractor={(item) => `rsvp-${item.id}`}
             contentContainerStyle={styles.listContainer}
@@ -77,8 +82,8 @@ const Feed = ({ concerts, onLoadMore, loading }) => {
         <Text style={styles.emptyText}>
           Your upcoming concerts will show here.
         </Text>
-      )}
-  
+      )} */}
+
       {/* Available concerts */}
       {concerts.length > 0 && (
         <FlatList
@@ -97,14 +102,13 @@ const Feed = ({ concerts, onLoadMore, loading }) => {
       )}
     </View>
   );
-  
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: "100%",
-    paddingBottom: 140,
+    paddingBottom: 85,
   },
   listContainer: {
     paddingTop: 20,
@@ -117,13 +121,12 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   emptyText: {
-  textAlign: "center",
-  color: Theme.colors.textPrimary,
-  fontSize: 16,
-  marginTop: 20,
-  opacity: 0.8,
-},
-
+    textAlign: "center",
+    color: Theme.colors.textPrimary,
+    fontSize: 16,
+    marginTop: 20,
+    opacity: 0.8,
+  },
 });
 
 export default Feed;

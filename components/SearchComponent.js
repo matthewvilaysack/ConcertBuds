@@ -18,54 +18,58 @@ const SearchComponent = ({ artist, setArtist, setConcerts }) => {
   const DETAILS_PATH = "/tabs/feed/details";
   const [searchQuery, setSearchQuery] = useState(artist);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [hasResults, setHasResults] = useState(false);
   const router = useRouter();
- 
+
   const handleSearch = (text) => {
     setArtist(text);
     setSearchQuery(text);
-    setError('');
+    setError("");
   };
- 
+
   const searchOnEnter = async () => {
     if (!searchQuery || searchQuery.trim().length < 2) {
-      setError('Please enter at least 2 characters to search');
+      setError("Please enter at least 2 characters to search");
       setHasResults(false);
       return;
     }
- 
+
     setIsLoading(true);
-    setError('');
-    
+    setError("");
+
     try {
       const results = await fetchConcerts(searchQuery);
       setConcerts(results);
       setHasResults(results.length > 0);
-      
+
       // Only navigate if we have valid results
       if (results.length > 0) {
         router.push({
           pathname: DETAILS_PATH,
-          params: { artist: searchQuery }
+          params: { artist: searchQuery },
         });
       } else {
-        setError('No concerts found for this artist');
+        setError("No concerts found for this artist");
       }
     } catch (error) {
       console.error("Search error:", error);
       setConcerts([]);
       setHasResults(false);
-      setError('Failed to fetch concerts. Please try again.');
+      setError("Failed to fetch concerts. Please try again.");
     } finally {
       setIsLoading(false);
     }
   };
- 
+
   return (
     <View style={styles.container}>
       <View style={styles.searchWrapper}>
-        <BlurView intensity={80} tint="light" style={styles.searchInputContainer}>
+        <BlurView
+          intensity={80}
+          tint="light"
+          style={styles.searchInputContainer}
+        >
           <TextInput
             style={styles.searchInput}
             placeholder="Search for artist, tour, etc."
@@ -80,9 +84,13 @@ const SearchComponent = ({ artist, setArtist, setConcerts }) => {
           <FontAwesome name="search" size={20} color="#FFFFFF" />
         </TouchableOpacity>
       </View>
- 
+
       {isLoading && (
-        <ActivityIndicator size="large" color={Theme.colors.iconHighlighted} style={styles.loader} />
+        <ActivityIndicator
+          size="large"
+          color={Theme.colors.iconHighlighted}
+          style={styles.loader}
+        />
       )}
       {error && <Text style={styles.errorText}>{error}</Text>}
     </View>
@@ -115,6 +123,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: "#1A1A1A",
     height: "100%",
+    fontFamily: "Doppio",
   },
   searchButton: {
     width: 63,
@@ -135,18 +144,18 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   errorText: {
-    color: '#ff4444',
-    textAlign: 'center',
+    color: "#ff4444",
+    textAlign: "center",
     marginTop: 10,
-    fontSize: 14
+    fontSize: 14,
   },
   infoText: {
-  color: '#FFFFFF',
-  textAlign: 'center',
-  marginTop: 10,
-  fontSize: 14,
-  opacity: 0.8
-}
+    color: "#FFFFFF",
+    textAlign: "center",
+    marginTop: 10,
+    fontSize: 14,
+    opacity: 0.8,
+  },
 });
 
 export default SearchComponent;
