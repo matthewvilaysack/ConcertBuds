@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, View, Image, Text } from "react-native";
+import { StyleSheet, View, Image, Text, Dimensions } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import Theme from "@/assets/theme";
 import Images from "@/assets/Images";
@@ -7,6 +7,8 @@ import SearchComponent from "@/components/SearchComponent";
 import { useLocalSearchParams } from "expo-router";
 import { fetchConcerts } from "@/utils/api";
 import Feed from "@/components/Feed";
+
+const windowHeight = Dimensions.get("window").height;
 
 export default function SearchResults() {
   const { artist } = useLocalSearchParams();
@@ -85,6 +87,7 @@ export default function SearchResults() {
           onLoadMore={handleLoadMore}
           loading={loading}
           hasMore={hasMore}
+          destination={"/tabs/feed/markgoing"}
         />
       </View>
     </View>
@@ -107,7 +110,7 @@ const styles = StyleSheet.create({
     top: "11%",
     alignItems: "center",
     width: "100%",
-    height: "89%", // Add this line
+    height: windowHeight - 90, // Add this line
     padding: 20,
   },
   infoText: {

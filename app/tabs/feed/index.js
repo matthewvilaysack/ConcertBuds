@@ -1,14 +1,17 @@
 import React, { useState } from "react";
-import { StyleSheet, View, Image, Text } from "react-native";
+import { StyleSheet, View, Image, Dimensions } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import Theme from "@/assets/theme";
 import Images from "@/assets/Images";
 import SearchComponent from "@/components/SearchComponent";
 import Feed from "@/components/Feed";
 
+const windowHeight = Dimensions.get("window").height;
+
 export default function Page() {
   const [artist, setArtist] = useState(null); // Shared state for artist
   const [concerts, setConcerts] = useState([]); // Shared state for concerts
+  const [myConcerts, setMyConcerts] = useState([]); // Shared state for concerts
 
   return (
     <View style={styles.container}>
@@ -20,8 +23,13 @@ export default function Page() {
           artist={artist}
           setArtist={setArtist}
           setConcerts={setConcerts}
+          setMyConcerts={setMyConcerts}
         />
-        <Feed concerts={concerts} />
+        <Feed
+          concerts={concerts}
+          destination={"/tabs/feed/concertbuds"}
+          style={styles.feed}
+        />
       </View>
     </View>
   );
