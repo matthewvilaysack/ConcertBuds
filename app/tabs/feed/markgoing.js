@@ -15,19 +15,21 @@ const Details = () => {
     name: params.name,
     dates: {
       start: {
-        localDate: params.date
-      }
+        localDate: params.date,
+      },
     },
     _embedded: {
-      venues: [{
-        city: {
-          name: params.city
+      venues: [
+        {
+          city: {
+            name: params.city,
+          },
+          state: {
+            stateCode: params.state,
+          },
         },
-        state: {
-          stateCode: params.state
-        }
-      }]
-    }
+      ],
+    },
   };
 
   return (
@@ -36,7 +38,7 @@ const Details = () => {
       <StatusBar style="light" />
 
       <View style={styles.contentWrapper}>
-        <ConcertCard item={concertData} variant={2} />
+        <ConcertCard item={concertData} />
       </View>
     </View>
   );

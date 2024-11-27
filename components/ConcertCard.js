@@ -7,7 +7,7 @@ import {
   Dimensions,
   TouchableOpacity,
 } from "react-native";
-import { Link } from "expo-router";
+import { router, Link } from "expo-router";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -15,7 +15,7 @@ const windowHeight = Dimensions.get("window").height;
 const ConcertCard = ({ item }) => {
   if (!item) return null;
 
-  const { name, dates, _embedded, id} = item || {};
+  const { name, dates, _embedded, id } = item || {};
   const venue = _embedded?.venues?.[0];
   const city = venue?.city?.name;
   const state = venue?.state?.stateCode;
@@ -29,6 +29,20 @@ const ConcertCard = ({ item }) => {
 
   // Add location fallback
   const locationText = city && state ? `${city}, ${state}` : "Location TBD";
+  const handleGoing = () => {
+    // const handleNavigate = () => {
+    //   navigation.navigate("MarkGoing", {
+    //     id: 123,
+    //     username: "JohnDoe",
+    //     timestamp: "2024-11-26T15:00:00Z",
+    //     text: "This is a post",
+    //     score: 100,
+    //     commentCount: 5,
+    //     vote: true,
+    //   });
+    // };
+    router.push("/tabs/feed/concertbuds");
+  };
 
   return (
     <View style={styles.artistImageContainer}>
@@ -66,7 +80,7 @@ const ConcertCard = ({ item }) => {
         </View>
       </View>
       <View style={styles.goingContainer}>
-        <TouchableOpacity style={styles.goingButton}>
+        <TouchableOpacity style={styles.goingButton} onPress={handleGoing}>
           <Text style={styles.goingText}>Going</Text>
         </TouchableOpacity>
       </View>
@@ -159,6 +173,7 @@ const styles = StyleSheet.create({
   goingText: {
     color: "white",
     fontSize: 20,
+    fontFamily: "Doppio",
   },
 });
 

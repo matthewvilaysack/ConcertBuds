@@ -10,7 +10,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import ConcertItem from "./ConcertItem";
 import Theme from "../assets/theme";
 
-const Feed = ({ concerts, onLoadMore, loading }) => {
+const Feed = ({ concerts, onLoadMore, loading, destination }) => {
   const [rsvpConcerts, setRsvpConcerts] = useState([]);
 
   // Load RSVP'd concerts from local storage on mount
@@ -91,7 +91,11 @@ const Feed = ({ concerts, onLoadMore, loading }) => {
             (concert) => !rsvpConcerts.some((rsvp) => rsvp.id === concert.id)
           )}
           renderItem={({ item }) => (
-            <ConcertItem item={item} onRSVP={() => handleRSVP(item)} />
+            <ConcertItem
+              item={item}
+              onRSVP={() => handleRSVP(item)}
+              destination={destination}
+            />
           )}
           keyExtractor={(item) => item.id}
           contentContainerStyle={styles.listContainer}

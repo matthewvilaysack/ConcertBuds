@@ -12,7 +12,7 @@ import { useNavigation } from "@react-navigation/native";
 
 const windowWidth = Dimensions.get("window").width;
 
-const ConcertItem = ({ item, variant, onRSVP, onRemove }) => {
+const ConcertItem = ({ item, destination, variant, onRSVP, onRemove }) => {
   if (!item) return null;
 
   const { name, dates, _embedded, id } = item || {};
@@ -41,7 +41,7 @@ const ConcertItem = ({ item, variant, onRSVP, onRemove }) => {
     //   });
     // };
 
-    router.push(`/tabs/feed/concertbuds`);
+    router.push(destination);
   };
 
   const handleRSVPClick = (e) => {

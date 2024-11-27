@@ -31,7 +31,7 @@ export default function ConcertBudsScreen() {
     },
   };
   const handlePress = () => {
-    Alert.alert("Button pressed!");
+    // TODO: route to chats page
   };
 
   const concerts = [exampleItem];
