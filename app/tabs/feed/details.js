@@ -8,7 +8,6 @@ import { useLocalSearchParams } from "expo-router";
 import { fetchConcerts } from "@/utils/api";
 import Feed from "@/components/Feed";
 
-// Details.js
 export default function Details() {
   const { artist } = useLocalSearchParams();
   const [artistQuery, setArtistQuery] = useState(artist);
@@ -27,7 +26,6 @@ export default function Details() {
     
     try {
       const events = await fetchConcerts(artistQuery, pageNum);
-      // Remove duplicates based on ID
       const uniqueEvents = events.filter((event, index, self) =>
         index === self.findIndex((e) => e.id === event.id)
       );
