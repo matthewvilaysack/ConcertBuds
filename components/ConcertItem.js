@@ -27,10 +27,6 @@ const ConcertItem = ({ item, variant, onRSVP, onRemove }) => {
 
   const locationText = `${city}, ${state}`;
 
-  const handleNavigate = () => {
-    router.push(`/tabs/feed/markgoing`);
-  };
-
   const handleRSVPClick = (e) => {
     e.stopPropagation(); // Prevent navigation when RSVP button is clicked
     if (onRSVP) {
@@ -43,7 +39,18 @@ const ConcertItem = ({ item, variant, onRSVP, onRemove }) => {
       onRSVP(concertData);
     }
   };
-
+  const handleNavigate = () => {
+    router.push({
+      pathname: '/tabs/feed/markgoing',
+      params: {
+        id: id,
+        name: name,
+        date: dates?.start?.localDate,
+        city: city,
+        state: state,
+      }
+    });
+  };
   return (
     <TouchableOpacity
       onPress={handleNavigate}
