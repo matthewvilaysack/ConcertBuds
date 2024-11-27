@@ -1,39 +1,34 @@
-import React, { useState } from "react";
-import { StyleSheet, View, Image, Text } from "react-native";
+// Details.js
+import React from "react";
+import { StyleSheet, View, Image } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import Theme from "@/assets/theme";
 import Images from "@/assets/Images";
-import SearchComponent from "@/components/SearchComponent";
 import { useLocalSearchParams } from "expo-router";
 import ConcertCard from "@/components/ConcertCard";
-import PostDetails from "@/components/PostDetails";
 
 const Details = () => {
-  const CURRENT_TAB_DETAILS = "/tabs/feed/details";
-  const { artist, searchQuery } = useLocalSearchParams();
-  const exampleItem = {
-    id: "1", // Unique identifier
-    name: "BILLIE EILISH",
+  // Get concert data from route params
+  const params = useLocalSearchParams();
+  const concertData = {
+    id: params.id,
+    name: params.name,
     dates: {
       start: {
-        localDate: "2024-11-30",
-      },
+        localDate: params.date
+      }
     },
     _embedded: {
-      venues: [
-        {
-          city: {
-            name: "Vancouver",
-          },
-          state: {
-            stateCode: "BC",
-          },
+      venues: [{
+        city: {
+          name: params.city
         },
-      ],
-    },
+        state: {
+          stateCode: params.state
+        }
+      }]
+    }
   };
-
-  const concerts = [exampleItem];
 
   return (
     <View style={styles.container}>
@@ -41,30 +36,9 @@ const Details = () => {
       <StatusBar style="light" />
 
       <View style={styles.contentWrapper}>
-        <ConcertCard item={concerts[0]} variant={2} />
+        <ConcertCard item={concertData} variant={2} />
       </View>
     </View>
-
-    // <View style={styles.container}>
-    //   <PostDetails
-    //     currentTab={CURRENT_TAB_DETAILS}
-    //     id={params.id}
-    //     username={params.username}
-    //     timestamp={params.timestamp}
-    //     text={params.text}
-    //     score={params.score}
-    //     vote={params.vote}
-    //     commentCount={params.commentCount}
-    //   />
-    //   <KeyboardAvoidingView
-    //     behavior={Platform.OS === "ios" ? "padding" : undefined}
-    //     keyboardVerticalOffset={Platform.OS === "ios" ? 65 : 0}
-    //     style={styles.keyboardContainer}
-    //   >
-    //     <CommentFeed postId={params.id} />
-    //     <CommentInput postId={params.id} />
-    //   </KeyboardAvoidingView>
-    // </View>
   );
 };
 
@@ -81,7 +55,7 @@ const styles = StyleSheet.create({
   },
   contentWrapper: {
     position: "absolute",
-    top: "11%", // Adjust this value as needed
+    top: "11%",
     alignItems: "center",
     width: "100%",
     padding: 20,
