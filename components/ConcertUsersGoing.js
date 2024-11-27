@@ -78,18 +78,11 @@ const ConcertUsersGoing = () => {
 };
 
 const styles = StyleSheet.create({
-  backgroundImage: {
-    position: "absolute",
-    width: "100%",
-    height: "100%",
-    resizeMode: "cover",
-  },
   attendeesSection: {
     width: windowWidth * 0.9,
     height: windowHeight * 0.5,
     borderRadius: 20,
     backgroundColor: "rgba(255, 255, 255, 0.8)",
-    marginVertical: 15,
     paddingBottom: 20,
   },
   attendeesHeader: {
