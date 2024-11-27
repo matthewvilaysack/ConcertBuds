@@ -8,14 +8,13 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { useRouter } from "expo-router";
-import { Link } from "expo-router";
 import { BlurView } from "expo-blur";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import Theme from "@/assets/theme";
 import { fetchConcerts } from "../utils/api";
 
 const SearchComponent = ({ artist, setArtist, setConcerts }) => {
-  const DETAILS_PATH = "/tabs/feed/details";
+  const DETAILS_PATH = "/tabs/feed/searchresults";
   const [searchQuery, setSearchQuery] = useState(artist);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");

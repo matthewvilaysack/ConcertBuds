@@ -5,6 +5,7 @@ import ConcertBudsPage from "@/components/ConcertBudsPage";
 import ConcertItem from "@/components/ConcertItem";
 import Images from "@/assets/Images";
 import ConcertUsersGoing from "@/components/ConcertUsersGoing";
+import Button from "@/components/Button";
 
 export default function ConcertBudsScreen() {
   const router = useRouter();
@@ -29,6 +30,9 @@ export default function ConcertBudsScreen() {
       ],
     },
   };
+  const handlePress = () => {
+    Alert.alert("Button pressed!");
+  };
 
   const concerts = [exampleItem];
 
@@ -39,6 +43,9 @@ export default function ConcertBudsScreen() {
       <View style={styles.contentWrapper}>
         <ConcertItem item={exampleItem}></ConcertItem>
         <ConcertUsersGoing router={router}></ConcertUsersGoing>
+        <View style={styles.button}>
+          <Button label="Join the Chat" onPress={handlePress} />
+        </View>
       </View>
     </View>
   );
@@ -61,5 +68,10 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "89%", // Add this line
     padding: 20,
+  },
+  button: {
+    marginTop: 20,
+    height: "10%",
+    width: "100%",
   },
 });

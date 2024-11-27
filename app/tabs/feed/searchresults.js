@@ -8,7 +8,7 @@ import { useLocalSearchParams } from "expo-router";
 import { fetchConcerts } from "@/utils/api";
 import Feed from "@/components/Feed";
 
-export default function Details() {
+export default function SearchResults() {
   const { artist } = useLocalSearchParams();
   const [artistQuery, setArtistQuery] = useState(artist);
   const [concerts, setConcerts] = useState([]);
@@ -20,24 +20,27 @@ export default function Details() {
 
   const loadConcerts = async (pageNum = 0, append = false) => {
     if (!artistQuery || loading) return;
-    
+
     setLoading(true);
     if (!append) setError(null);
-    
+
     try {
       const events = await fetchConcerts(artistQuery, pageNum);
-      const uniqueEvents = events.filter((event, index, self) =>
-        index === self.findIndex((e) => e.id === event.id)
+      const uniqueEvents = events.filter(
+        (event, index, self) =>
+          index === self.findIndex((e) => e.id === event.id)
       );
-      
+
       if (uniqueEvents.length === 0) {
         setHasMore(false);
       } else {
-        setConcerts(prev => append ? [...prev, ...uniqueEvents] : uniqueEvents);
-        setSearchKey(prev => prev + 1);
+        setConcerts((prev) =>
+          append ? [...prev, ...uniqueEvents] : uniqueEvents
+        );
+        setSearchKey((prev) => prev + 1);
       }
     } catch (err) {
-      setError('Failed to fetch concerts');
+      setError("Failed to fetch concerts");
       if (!append) setConcerts([]);
     } finally {
       setLoading(false);
@@ -63,17 +66,21 @@ export default function Details() {
       <Image source={Images.background} style={styles.background} />
       <StatusBar style="light" />
       <View style={styles.contentWrapper}>
-        <SearchComponent 
+        <SearchComponent
           artist={artistQuery}
           setArtist={setArtistQuery}
           setConcerts={setConcerts}
         />
-        {error && <Text style={[styles.infoText, styles.errorText]}>{error}</Text>}
-        {!loading && concerts.length === 0 && (
-          <Text style={styles.infoText}>No concerts found for '{artistQuery}.'</Text>
+        {error && (
+          <Text style={[styles.infoText, styles.errorText]}>{error}</Text>
         )}
-        <Feed 
-          concerts={concerts} 
+        {!loading && concerts.length === 0 && (
+          <Text style={styles.infoText}>
+            No concerts found for '{artistQuery}.'
+          </Text>
+        )}
+        <Feed
+          concerts={concerts}
           key={searchKey}
           onLoadMore={handleLoadMore}
           loading={loading}
@@ -112,6 +119,6 @@ const styles = StyleSheet.create({
     lineHeight: 22,
   },
   errorText: {
-    color: Theme.colors.error || '#ff4444',
-  }
+    color: Theme.colors.error || "#ff4444",
+  },
 });

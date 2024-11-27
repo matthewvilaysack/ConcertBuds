@@ -56,7 +56,7 @@ export default function Layout() {
       />
 
       <Stack.Screen
-        name="details"
+        name="searchresults"
         options={{
           headerTitle: "",
           headerTitleAlign: "center",
@@ -100,33 +100,6 @@ export default function Layout() {
             borderBottomWidth: 0, // Removes border on both platforms
           },
           headerTransparent: true,
-        }}
-      />
-
-      <Stack.Screen
-        name="newpost"
-        options={{
-          headerTitle: "New Post",
-          headerLeft: () => (
-            <HeaderButton
-              title="Cancel"
-              onPress={() => router.back()}
-              disabled={false}
-              colors={[theme.colors.textPrimary, theme.colors.textPrimary]}
-            />
-          ),
-          headerRight: () => (
-            <HeaderButton
-              title="Submit"
-              onPress={() => router.back()}
-              disabled={true}
-              colors={[
-                theme.colors.textSecondary,
-                theme.colors.textHighlighted,
-              ]}
-            />
-          ),
-          presentation: "modal",
         }}
       />
     </Stack>
