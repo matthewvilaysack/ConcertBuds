@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { router } from "expo-router";
+import { useNavigation } from "@react-navigation/native";
 
 const windowWidth = Dimensions.get("window").width;
 
@@ -18,6 +19,7 @@ const ConcertItem = ({ item, variant, onRSVP, onRemove }) => {
   const venue = _embedded?.venues?.[0];
   const city = venue?.city?.name || "San Jose";
   const state = venue?.state?.stateCode || "CA";
+  const navigation = useNavigation();
 
   const eventDate = dates?.start?.localDate
     ? new Date(dates.start.localDate)
@@ -28,7 +30,19 @@ const ConcertItem = ({ item, variant, onRSVP, onRemove }) => {
   const locationText = `${city}, ${state}`;
 
   const handleNavigate = () => {
-    router.push(`/tabs/feed/markgoing`);
+    // const handleNavigate = () => {
+    //   navigation.navigate("MarkGoing", {
+    //     id: 123,
+    //     username: "JohnDoe",
+    //     timestamp: "2024-11-26T15:00:00Z",
+    //     text: "This is a post",
+    //     score: 100,
+    //     commentCount: 5,
+    //     vote: true,
+    //   });
+    // };
+
+    router.push(`/tabs/feed/concertbuds`);
   };
 
   const handleRSVPClick = (e) => {
@@ -45,10 +59,7 @@ const ConcertItem = ({ item, variant, onRSVP, onRemove }) => {
   };
 
   return (
-    <TouchableOpacity
-      onPress={handleNavigate}
-      style={styles.artistImageContainer}
-    >
+    <TouchableOpacity onPress={handleNavigate}>
       <View style={styles.artistContainer}>
         <View style={styles.dateContainer}>
           <Text style={styles.month}>{month}</Text>
@@ -64,21 +75,13 @@ const ConcertItem = ({ item, variant, onRSVP, onRemove }) => {
 };
 
 const styles = StyleSheet.create({
-  artistImageContainer: {
-    flexDirection: "column",
-    alignItems: "center",
-    borderRadius: 20,
-    position: "relative",
-    width: windowWidth * 0.9,
-    backgroundColor: "rgba(255, 255, 255, 0.5)",
-    marginBottom: 20,
-  },
   artistContainer: {
     width: windowWidth * 0.9,
     flexDirection: "row",
     alignItems: "flex-start",
     justifyContent: "flex-start",
     borderRadius: 20,
+    backgroundColor: "rgba(255, 255, 255, 0.5)",
   },
   containerOpacity: {
     backgroundColor: "rgba(255, 255, 255, 0.75)",
