@@ -4,12 +4,14 @@ import { Redirect } from "expo-router";
 import { useFonts } from "expo-font";
 
 import Login from "@/components/Login";
-import db from "@/lib/supabase";
+import supabase from "@/lib/supabase";
 import Loading from "@/components/Loading";
+import Account from "@/components/Account";
+import Auth from "@/components/Auth";
 
 export default function App() {
   const [session, setSession] = useState(null);
-  const [isLoading, setIsLoading] = useState(true); // Default to true for initial load
+  const [isLoading, setIsLoading] = useState(true);
   const [fontsLoaded] = useFonts({
     Doppio: require("../assets/Fonts/DoppioOne-Regular.ttf"),
   });
@@ -17,14 +19,14 @@ export default function App() {
   useEffect(() => {
     setIsLoading(true);
 
-    db.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setIsLoading(false);
     });
 
     const {
       data: { subscription },
-    } = db.auth.onAuthStateChange((_event, session) => {
+    } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
       setIsLoading(false);
     });

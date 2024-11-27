@@ -15,7 +15,7 @@ const windowHeight = Dimensions.get("window").height;
 const ConcertCard = ({ item }) => {
   if (!item) return null;
 
-  const { name, dates, _embedded } = item || {};
+  const { name, dates, _embedded, id} = item || {};
   const venue = _embedded?.venues?.[0];
   const city = venue?.city?.name;
   const state = venue?.state?.stateCode;
@@ -55,7 +55,7 @@ const ConcertCard = ({ item }) => {
         </View>
 
         <View style={styles.artistHeader}>
-          <Link href="/tabs/feed/markgoing">
+          <Link href={`/tabs/feed/markgoing?id=${id}`}>
             <Text style={styles.location}>{locationText}</Text>
           </Link>
 
