@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     position: "relative",
     width: windowWidth * 0.9,
-    backgroundColor: "rgba(255, 255, 255, 0.5)",
+    backgroundColor: "rgba(255, 255, 255, 0.75)",
     marginBottom: 20,
   },
   artistContainer: {
@@ -90,9 +90,6 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     justifyContent: "flex-start",
     borderRadius: 20,
-  },
-  containerOpacity: {
-    backgroundColor: "rgba(255, 255, 255, 0.75)",
   },
   dateContainer: {
     marginTop: "5%",
@@ -120,9 +117,6 @@ const styles = StyleSheet.create({
     flex: 1,
     borderBottomRightRadius: 0,
     borderTopRightRadius: 0,
-  },
-  nonvariantOpacity: {
-    backgroundColor: "rgba(255, 255, 255, 0.5)",
   },
   variantRadius: {
     borderBottomRightRadius: 0,
