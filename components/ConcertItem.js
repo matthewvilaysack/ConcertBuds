@@ -28,7 +28,6 @@ const ConcertItem = ({ item, variant, onRSVP, onRemove }) => {
   const day = eventDate.getDate();
 
   const locationText = `${city}, ${state}`;
-
   const handleNavigate = () => {
     // const handleNavigate = () => {
     //   navigation.navigate("MarkGoing", {
