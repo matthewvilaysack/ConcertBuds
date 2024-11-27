@@ -71,7 +71,7 @@ const ConcertUsersGoing = () => {
         persistentScrollbar={true}
         data={groupedData}
         renderItem={renderItem}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item, index) => index.toString()}
       />
     </View>
   );

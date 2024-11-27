@@ -32,7 +32,7 @@ export default function App() {
     return () => subscription.unsubscribe();
   }, []);
 
-  if (session) {
+  if (true) {
     return <Redirect href="/tabs/feed" />;
   } else if (isLoading) {
     return <Loading />;

@@ -82,6 +82,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     borderRadius: 20,
     backgroundColor: "rgba(255, 255, 255, 0.5)",
+    marginVertical: 10,
   },
   containerOpacity: {
     backgroundColor: "rgba(255, 255, 255, 0.75)",
