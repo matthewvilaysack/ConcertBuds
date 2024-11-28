@@ -1,64 +1,109 @@
-import React from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  Dimensions,
-  TouchableOpacity,
-} from "react-native";
-import { router, Link } from "expo-router";
-
+import React, { useState, useEffect } from "react";
+import { View, Text, StyleSheet, Image, TouchableOpacity, Alert, Dimensions } from "react-native";
+import { router } from "expo-router";
+import supabase from '@/lib/supabase';
+import { RSVPForConcert, unRSVPFromConcert, getUserConcerts } from '@/lib/concert-db';
 const windowWidth = Dimensions.get("window").width;
-const windowHeight = Dimensions.get("window").height;
 
 const ConcertCard = ({ item }) => {
-  if (!item) return null;
+  const [isRSVPed, setIsRSVPed] = useState(false);
+  const [loading, setLoading] = useState(false);
+   
+  console.log("Full item data from Ticketmaster:", JSON.stringify(item, null, 2));
 
   const { name, dates, _embedded, id } = item || {};
   const venue = _embedded?.venues?.[0];
   const city = venue?.city?.name;
   const state = venue?.state?.stateCode;
+  const artistName = name ? name.split(' at ')[0] : "Unknown Artist"; 
 
-  // Check if dates exists before creating Date object
+  console.log("Extracted main fields:", {
+    id,
+    name,
+    artistName, 
+    dates: dates?.start,
+    venue: venue
+  });
+
   const eventDate = dates?.start?.localDate
     ? new Date(dates.start.localDate)
     : new Date();
   const month = eventDate.toLocaleString("en-US", { month: "short" });
   const day = eventDate.getDate();
 
-  // Add location fallback
   const locationText = city && state ? `${city}, ${state}` : "Location TBD";
-  const handleGoing = () => {
-    // const handleNavigate = () => {
-    //   navigation.navigate("MarkGoing", {
-    //     id: 123,
-    //     username: "JohnDoe",
-    //     timestamp: "2024-11-26T15:00:00Z",
-    //     text: "This is a post",
-    //     score: 100,
-    //     commentCount: 5,
-    //     vote: true,
-    //   });
-    // };
-    router.push("/tabs/feed/concertbuds");
+
+
+  useEffect(() => {
+    const checkRSVPStatus = async () => {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          const userConcerts = await getUserConcerts(user.id);
+          const hasRSVPed = userConcerts?.some(concert => concert.concert_id === id);
+          setIsRSVPed(hasRSVPed);
+        }
+      } catch (error) {
+        console.error("Error checking RSVP status:", error);
+      }
+    };
+    checkRSVPStatus();
+  }, [id]);
+
+  const handleRSVP = async () => {
+    try {
+      setLoading(true);
+      const { data: { user } } = await supabase.auth.getUser();
+      console.log("User", user);
+      
+      if (!user) {
+        Alert.alert("Error", "Please sign in to RSVP for concerts");
+        return;
+      }
+
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('username, avatar_url')
+        .eq('id', user.id)
+        .single();
+
+      if (isRSVPed) {
+        await unRSVPFromConcert(user.id, id);
+        setIsRSVPed(false);
+        Alert.alert("Success", "You've removed your RSVP");
+      } else {
+        console.log("profile", profile)
+        await RSVPForConcert({
+          userId: user.id,
+          username: profile?.username || user.email,
+          concertId: id,
+          concertName: name || "Untitled Event",
+          artist: artistName,
+          location: locationText,
+          concertDate: dates?.start?.localDate || new Date().toISOString(),
+          avatarUrl: profile?.avatar_url
+        });
+        setIsRSVPed(true);
+        Alert.alert("Success", "You're now going to this concert!");
+      }
+    } catch (error) {
+      console.error("Error handling RSVP:", error);
+      Alert.alert("Error", "Failed to update RSVP status");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <View style={styles.artistImageContainer}>
       <View>
-        <View>
-          <Image
-            source={{
-              uri: "https://media.pitchfork.com/photos/6614092742a7de97785c7a48/master/pass/Billie-Eilish-Hit-Me-Hard-and-Soft.jpg",
-            }} // Replace with your image URL
-            style={styles.image}
-            // resizeMode="cover"
-          />
-        </View>
+        <Image
+          source={{
+            uri: "https://media.pitchfork.com/photos/6614092742a7de97785c7a48/master/pass/Billie-Eilish-Hit-Me-Hard-and-Soft.jpg",
+          }}
+          style={styles.image}
+        />
       </View>
-      {/*       <Text style={[styles.text, isHighlighted && styles.highlightedText]}>
-       */}
       <View style={styles.artistContainer}>
         <View style={styles.dateContainer}>
           <Text style={styles.month}>{month}</Text>
@@ -69,10 +114,7 @@ const ConcertCard = ({ item }) => {
         </View>
 
         <View style={styles.artistHeader}>
-          <Link href={`/tabs/feed/markgoing?id=${id}`}>
-            <Text style={styles.location}>{locationText}</Text>
-          </Link>
-
+          <Text style={styles.location}>{locationText}</Text>
           <Text style={styles.artistName}>{name || "Event Name TBD"}</Text>
           <View>
             <Text style={styles.artistName}>Frost Amphitheater</Text>
@@ -80,8 +122,18 @@ const ConcertCard = ({ item }) => {
         </View>
       </View>
       <View style={styles.goingContainer}>
-        <TouchableOpacity style={styles.goingButton} onPress={handleGoing}>
-          <Text style={styles.goingText}>Going</Text>
+        <TouchableOpacity 
+          style={[
+            styles.goingButton,
+            isRSVPed && styles.goingButtonRSVPed,
+            loading && styles.goingButtonDisabled
+          ]} 
+          onPress={handleRSVP}
+          disabled={loading}
+        >
+          <Text style={styles.goingText}>
+            {loading ? 'Loading...' : isRSVPed ? 'Cancel RSVP' : 'Going'}
+          </Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -175,6 +227,12 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontFamily: "Doppio",
   },
+  goingButtonRSVPed: {
+    backgroundColor: '#ff4444',
+  },
+  goingButtonDisabled: {
+    opacity: 0.5,
+  }
 });
 
 export default ConcertCard;

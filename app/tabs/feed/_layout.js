@@ -15,10 +15,10 @@ export default function Layout() {
         },
         headerTintColor: theme.colors.textPrimary,
         headerTitleStyle: {
-          backgroundColor: "transparent", // Transparent header background
+          backgroundColor: "transparent", 
           fontWeight: "bold",
         },
-        headerTransparent: true, // Enables true header transparency
+        headerTransparent: true,
       }}
     >
       <Stack.Screen
@@ -26,16 +26,16 @@ export default function Layout() {
         options={{
           headerStyle: {
             position: "absolute",
-            backgroundColor: "transparent", // Semi-transparent black
-            elevation: 0, // Removes shadow on Android
-            shadowOpacity: 0, // Removes shadow on iOS
-            borderBottomWidth: 0, // Removes border on both platforms
+            backgroundColor: "transparent", 
+            elevation: 0,
+            shadowOpacity: 0,
+            borderBottomWidth: 0,
           },
           headerTransparent: true,
           headerTitle: () => (
             <View
               style={{
-                backgroundColor: "transparent", // Transparent header background
+                backgroundColor: "transparent",
                 flexDirection: "row",
                 alignItems: "center",
                 justifyContent: "center",
@@ -62,10 +62,10 @@ export default function Layout() {
           headerTitleAlign: "center",
           headerBackTitleVisible: "false",
           headerStyle: {
-            backgroundColor: "transparent", // Semi-transparent black
-            elevation: 0, // Removes shadow on Android
-            shadowOpacity: 0, // Removes shadow on iOS
-            borderBottomWidth: 0, // Removes border on both platforms
+            backgroundColor: "transparent", 
+            elevation: 0,
+            shadowOpacity: 0,
+            borderBottomWidth: 0,
           },
           headerTransparent: true,
         }}
