@@ -77,7 +77,9 @@ const ConcertUsersGoing = ({ concertId }) => {
     <View style={styles.attendeesSection}>
       <View style={styles.attendeesHeader}>
         <Text style={styles.attendeesTitle}>
-          {attendees.length} ConcertBuds Going
+        {attendees.length === 1
+        ? "1 ConcertBud Going"
+        : `${attendees.length} ConcertBuds Going`}
         </Text>
       </View>
       <FlatList
