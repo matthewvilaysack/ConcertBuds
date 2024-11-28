@@ -12,7 +12,7 @@ import { useNavigation } from "@react-navigation/native";
 
 const windowWidth = Dimensions.get("window").width;
 
-const ConcertItem = ({ item, destination, variant, onRSVP, onRemove }) => {
+const ConcertItem = ({ item, destination}) => {
   if (!item) return null;
 
   const { name, dates, _embedded, id } = item || {};
@@ -26,35 +26,21 @@ const ConcertItem = ({ item, destination, variant, onRSVP, onRemove }) => {
     : new Date();
   const month = eventDate.toLocaleString("en-US", { month: "short" });
   const day = eventDate.getDate();
-
+  console.log("city", city)
   const locationText = `${city}, ${state}`;
   const handleNavigate = () => {
-    // const handleNavigate = () => {
-    //   navigation.navigate("MarkGoing", {
-    //     id: 123,
-    //     username: "JohnDoe",
-    //     timestamp: "2024-11-26T15:00:00Z",
-    //     text: "This is a post",
-    //     score: 100,
-    //     commentCount: 5,
-    //     vote: true,
-    //   });
-    // };
-
-    router.push(destination);
-  };
-
-  const handleRSVPClick = (e) => {
-    e.stopPropagation(); // Prevent navigation when RSVP button is clicked
-    if (onRSVP) {
-      const concertData = {
-        id,
-        name,
-        location: locationText,
-        date: `${month} ${day}`,
-      };
-      onRSVP(concertData);
-    }
+      router.push({
+        pathname: destination,
+        params: {
+          id: item.id,
+          name: item.name,
+          date: item.dates?.start?.localDate,
+          city: item._embedded?.venues?.[0]?.city?.name,
+          state: item._embedded?.venues?.[0]?.state?.stateCode,
+          artist: item.formattedData?.artist,
+          venue: item._embedded?.venues?.[0]?.name
+        }
+      });
   };
 
   return (

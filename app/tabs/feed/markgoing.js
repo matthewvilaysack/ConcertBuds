@@ -1,4 +1,3 @@
-// Details.js
 import React from "react";
 import { StyleSheet, View, Image } from "react-native";
 import { StatusBar } from "expo-status-bar";
@@ -7,8 +6,7 @@ import Images from "@/assets/Images";
 import { useLocalSearchParams } from "expo-router";
 import ConcertCard from "@/components/ConcertCard";
 
-const Details = () => {
-  // Get concert data from route params
+const MarkGoing = () => {
   const params = useLocalSearchParams();
   const concertData = {
     id: params.id,
@@ -27,6 +25,9 @@ const Details = () => {
           state: {
             stateCode: params.state,
           },
+          address: {
+            line1: params.address,
+          }
         },
       ],
     },
@@ -36,13 +37,13 @@ const Details = () => {
     <View style={styles.container}>
       <Image source={Images.background} style={styles.background} />
       <StatusBar style="light" />
-
       <View style={styles.contentWrapper}>
         <ConcertCard item={concertData} />
       </View>
     </View>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {
@@ -72,4 +73,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Details;
+export default MarkGoing;

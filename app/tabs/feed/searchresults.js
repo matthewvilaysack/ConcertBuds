@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, View, Image, Text, Dimensions } from "react-native";
+import { StyleSheet, View, Image, Text, Dimensions, FlatList, ActivityIndicator } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import Theme from "@/assets/theme";
 import Images from "@/assets/Images";
 import SearchComponent from "@/components/SearchComponent";
 import { useLocalSearchParams } from "expo-router";
 import { fetchConcerts } from "@/utils/api";
-import Feed from "@/components/Feed";
+import ConcertItem from "@/components/ConcertItem";
 
 const windowHeight = Dimensions.get("window").height;
 
@@ -16,7 +16,6 @@ export default function SearchResults() {
   const [concerts, setConcerts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [searchKey, setSearchKey] = useState(0);
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
 
@@ -39,7 +38,6 @@ export default function SearchResults() {
         setConcerts((prev) =>
           append ? [...prev, ...uniqueEvents] : uniqueEvents
         );
-        setSearchKey((prev) => prev + 1);
       }
     } catch (err) {
       setError("Failed to fetch concerts");
@@ -63,6 +61,28 @@ export default function SearchResults() {
     }
   };
 
+  const renderConcertItem = ({ item }) => {
+    const formattedData = {
+      id: item.id,
+      name: item.name,
+      artist: artistQuery || item.name?.split(' at ')?.[0] || item.name,
+      concertName: item.name,
+      date: item.dates?.start?.localDate,
+      location: `${item._embedded?.venues?.[0]?.city?.name || ''}, ${item._embedded?.venues?.[0]?.state?.stateCode || ''}`,
+      city: item._embedded?.venues?.[0]?.city?.name,
+      state: item._embedded?.venues?.[0]?.state?.stateCode,
+      venue: item._embedded?.venues?.[0]?.name,
+      imageUrl: item.images?.[0]?.url,
+    };
+
+    return (
+      <ConcertItem
+        item={{ ...item, formattedData }}
+        destination={"/tabs/feed/markgoing"}
+      />
+    );
+  };
+
   return (
     <View style={styles.container}>
       <Image source={Images.background} style={styles.background} />
@@ -76,19 +96,23 @@ export default function SearchResults() {
         {error && (
           <Text style={[styles.infoText, styles.errorText]}>{error}</Text>
         )}
-        {!loading && concerts.length === 0 && (
+        {!loading && concerts.length === 0 ? (
           <Text style={styles.infoText}>
             No concerts found for '{artistQuery}.'
           </Text>
+        ) : (
+          <FlatList
+            data={concerts}
+            renderItem={renderConcertItem}
+            keyExtractor={(item) => item.id}
+            contentContainerStyle={styles.listContainer}
+            onEndReached={handleLoadMore}
+            onEndReachedThreshold={0.5}
+            ListFooterComponent={
+              loading && <ActivityIndicator size="large" color="#846AE3" />
+            }
+          />
         )}
-        <Feed
-          concerts={concerts}
-          key={searchKey}
-          onLoadMore={handleLoadMore}
-          loading={loading}
-          hasMore={hasMore}
-          destination={"/tabs/feed/markgoing"}
-        />
       </View>
     </View>
   );
@@ -110,8 +134,11 @@ const styles = StyleSheet.create({
     top: "11%",
     alignItems: "center",
     width: "100%",
-    height: windowHeight - 90, // Add this line
+    height: windowHeight - 90,
     padding: 20,
+  },
+  listContainer: {
+    paddingTop: 20,
   },
   infoText: {
     fontSize: 15,

@@ -6,104 +6,89 @@ import {
   View,
   ActivityIndicator,
 } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import ConcertItem from "./ConcertItem";
 import Theme from "../assets/theme";
+import { getUserConcerts } from "@/lib/concert-db";
+import supabase from "@/lib/supabase";
 
-const Feed = ({ concerts, onLoadMore, loading, destination }) => {
-  const [rsvpConcerts, setRsvpConcerts] = useState([]);
+const Feed = ({ concerts,destination }) => {
+  const [userConcerts, setUserConcerts] = useState([]);
+  const [loadingUserConcerts, setLoadingUserConcerts] = useState(true);
 
-  // Load RSVP'd concerts from local storage on mount
   useEffect(() => {
-    const loadRSVPs = async () => {
+    const loadUserConcerts = async () => {
       try {
-        const storedRSVPs = await AsyncStorage.getItem("rsvpConcerts");
-        if (storedRSVPs) {
-          setRsvpConcerts(JSON.parse(storedRSVPs));
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          const concertData = await getUserConcerts(user.id);
+          setUserConcerts(concertData || []);
         }
       } catch (error) {
-        console.error("Error loading RSVP'd concerts:", error);
+        console.error("Error loading user concerts:", error);
+      } finally {
+        setLoadingUserConcerts(false);
       }
     };
-    loadRSVPs();
+
+    loadUserConcerts();
   }, []);
 
-  // Save RSVP'd concerts to local storage whenever the state changes
-  useEffect(() => {
-    const saveRSVPs = async () => {
-      try {
-        await AsyncStorage.setItem(
-          "rsvpConcerts",
-          JSON.stringify(rsvpConcerts)
-        );
-      } catch (error) {
-        console.error("Error saving RSVP'd concerts:", error);
-      }
-    };
-    saveRSVPs();
-  }, [rsvpConcerts]);
+  if (loadingUserConcerts) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#846AE3" />
+      </View>
+    );
+  }
 
-  const handleRSVP = (concert) => {
-    setRsvpConcerts((prev) => {
-      if (!prev.some((item) => item.id === concert.id)) {
-        return [...prev, concert];
+  const handleNavigate = (item) => {
+    router.push({
+      pathname: "/tabs/feed/concertbuds",
+      params: {
+        id: item.id,
+        name: item.name,
+        date: item.dates?.start?.localDate,
+        city: item._embedded?.venues?.[0]?.city?.name,
+        state: item._embedded?.venues?.[0]?.state?.stateCode,
+        artist: item.formattedData?.artist,
+        venue: item._embedded?.venues?.[0]?.name
       }
-      return prev;
     });
   };
-
-  const handleRemove = (concertId) => {
-    setRsvpConcerts((prev) =>
-      prev.filter((concert) => concert.id !== concertId)
-    );
-  };
-
-  const renderFooter = () => {
-    if (!loading) return null;
-    return <ActivityIndicator size="large" color="#846AE3" />;
-  };
-
   return (
     <View style={styles.container}>
-      {/* RSVP'd concerts */}
-      {/* {rsvpConcerts.length > 0 ? (
-        <>
-          <Text style={styles.rsvpTitle}>Your RSVP'd Concerts</Text>
-          <FlatList
-            data={rsvpConcerts}
-            renderItem={({ item }) => (
-              <ConcertItem item={item} onRemove={handleRemove} />
-            )}
-            keyExtractor={(item) => `rsvp-${item.id}`}
-            contentContainerStyle={styles.listContainer}
+      <FlatList
+        data={userConcerts}
+        renderItem={({ item }) => (
+          <ConcertItem
+            item={{
+              id: item.concert_id,
+              name: item.concert_name,
+              dates: {
+                start: {
+                  localDate: item.concert_date
+                }
+              },
+              _embedded: {
+                venues: [{
+                  city: {
+                    name: item.location.split(', ')[0]
+                  },
+                  state: {
+                    stateCode: item.location.split(', ')[1]
+                  }
+                }]
+              }
+            }}
+            destination={destination}
           />
-        </>
-      ) : (
-        <Text style={styles.emptyText}>
-          Your upcoming concerts will show here.
-        </Text>
-      )} */}
-
-      {/* Available concerts */}
-      {concerts.length > 0 && (
-        <FlatList
-          data={concerts.filter(
-            (concert) => !rsvpConcerts.some((rsvp) => rsvp.id === concert.id)
-          )}
-          renderItem={({ item }) => (
-            <ConcertItem
-              item={item}
-              onRSVP={() => handleRSVP(item)}
-              destination={destination}
-            />
-          )}
-          keyExtractor={(item) => item.id}
-          contentContainerStyle={styles.listContainer}
-          onEndReached={onLoadMore}
-          onEndReachedThreshold={0.5}
-          ListFooterComponent={renderFooter}
-        />
-      )}
+        )}
+        keyExtractor={(item) => item.concert_id}
+        contentContainerStyle={styles.listContainer}
+        ListEmptyComponent={
+          <Text style={styles.emptyText}>You haven't RSVPed to any concerts yet.</Text>
+        }
+      />
     </View>
   );
 };
@@ -114,15 +99,13 @@ const styles = StyleSheet.create({
     width: "100%",
     paddingBottom: 85,
   },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   listContainer: {
     paddingTop: 20,
-  },
-  rsvpTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: Theme.colors.textPrimary,
-    paddingHorizontal: 20,
-    marginTop: 10,
   },
   emptyText: {
     textAlign: "center",

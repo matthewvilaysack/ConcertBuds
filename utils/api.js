@@ -7,7 +7,7 @@ export const fetchConcerts = async (query, page = 0) => {
         keyword: query,
         apikey: ENV.TICKETMASTER_API_KEY,
         page: page,
-        size: 20, // Number of results per page
+        size: 20, 
       },
     });
     return response.data._embedded?.events || [];
