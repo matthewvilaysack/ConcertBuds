@@ -39,6 +39,6 @@ export default function App() {
   } else if (isLoading) {
     return <Loading />;
   } else {
-    return <Login />;
+    return <Auth />;
   }
 }

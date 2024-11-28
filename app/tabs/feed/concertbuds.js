@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from "react";
-import { StyleSheet, View, Image, StatusBar, ActivityIndicator} from "react-native";
+import React, { useState, useEffect } from "react";
+import { StyleSheet, View, Image, StatusBar, ActivityIndicator } from "react-native";
 import { useRouter } from "expo-router";
 import ConcertBudsPage from "@/components/ConcertBudsPage";
 import ConcertItem from "@/components/ConcertItem";
@@ -7,31 +7,24 @@ import Images from "@/assets/Images";
 import ConcertUsersGoing from "@/components/ConcertUsersGoing";
 import Button from "@/components/Button";
 import { supabase } from '@/lib/supabase';
-
+import { getUserConcerts, getConcertAttendees } from '@/lib/concert-db';
 export default function ConcertBudsScreen() {
   const router = useRouter();
   const [attendees, setAttendees] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [concertData, setConcertData] = useState(null);
+  const [concert, setConcert] = useState(null);
 
-  // Load current user's concert and attendees
   useEffect(() => {
     const loadConcertData = async () => {
       try {
         const { data: { user } } = await supabase.auth.getUser();
-        if (!user) return;
-
-        // Get user's RSVPed concerts
-        const concerts = await getUserConcerts(user.id);
-        console.log("User concerts:", concerts);
-
-        if (concerts && concerts.length > 0) {
-          // Set the concert data
-          setConcertData(concerts[0]); // Using the first concert for now
-
-          // Get attendees for this concert
-          const attendeeData = await getConcertAttendees(concerts[0].concert_id);
-          setAttendees(attendeeData || []);
+        if (user) {
+          const concerts = await getUserConcerts(user.id);
+          if (concerts && concerts.length > 0) {
+            setConcert(concerts[0]);
+            const attendeeData = await getConcertAttendees(concerts[0].concert_id);
+            setAttendees(attendeeData || []);
+          }
         }
       } catch (error) {
         console.error("Error loading concert data:", error);
@@ -44,13 +37,13 @@ export default function ConcertBudsScreen() {
   }, []);
 
   const handlePress = () => {
-    if (concertData) {
+    if (concert) {
       router.push({
         pathname: "/tabs/chat",
         params: {
-          concertId: concertData.concert_id,
-          concertName: concertData.concert_name,
-          artist: concertData.artist
+          concertId: concert.concert_id,
+          concertName: concert.concert_name,
+          artist: concert.artist
         }
       });
     }
@@ -69,18 +62,36 @@ export default function ConcertBudsScreen() {
       <Image source={Images.background} style={styles.background} />
       <StatusBar style="light" />
       <View style={styles.contentWrapper}>
-        {concertData && (
-          <ConcertItem 
-            item={concertData}
+        {concert && (
+          <ConcertItem
+            item={{
+              id: concert.concert_id,
+              name: concert.concert_name,
+              dates: {
+                start: {
+                  localDate: concert.concert_date
+                }
+              },
+              _embedded: {
+                venues: [{
+                  city: {
+                    name: concert.location.split(', ')[0]
+                  },
+                  state: {
+                    stateCode: concert.location.split(', ')[1]
+                  }
+                }]
+              }
+            }}
             destination="/tabs/feed/concertbuds"
           />
         )}
-        <ConcertUsersGoing 
+        <ConcertUsersGoing
           attendees={attendees}
-          concertId={concertData?.concert_id}
+          concertId={concert?.concert_id}
         />
         <View style={styles.button}>
-          <Button 
+          <Button
             label={`Join the Chat`}
             onPress={handlePress}
           />
