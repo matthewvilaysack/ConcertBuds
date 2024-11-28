@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Image, TouchableOpacity, Alert, Dimensions } fr
 import { router } from "expo-router";
 import supabase from '@/lib/supabase';
 import { RSVPForConcert, unRSVPFromConcert, getUserConcerts } from '@/lib/concert-db';
+import Theme from '../assets/theme';
 const windowWidth = Dimensions.get("window").width;
 
 const ConcertCard = ({ item }) => {
@@ -228,7 +229,7 @@ const styles = StyleSheet.create({
     fontFamily: "Doppio",
   },
   goingButtonRSVPed: {
-    backgroundColor: '#ff4444',
+    backgroundColor: "#a390e8",
   },
   goingButtonDisabled: {
     opacity: 0.5,
