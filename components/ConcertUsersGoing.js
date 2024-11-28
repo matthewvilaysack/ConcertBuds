@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -5,29 +6,13 @@ import {
   Text,
   FlatList,
   Dimensions,
+  ActivityIndicator,
 } from "react-native";
+import supabase from "@/lib/supabase";
+import { getConcertAttendees } from "@/lib/concert-db";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
-
-const MOCK_ATTENDEES = [
-  { id: 1, name: "Izzy", uri: "" },
-  { id: 2, name: "Abby", uri: "" },
-  { id: 3, name: "Natalia", uri: "" },
-  { id: 4, name: "Diego", uri: "" },
-  { id: 5, name: "Matt", uri: "" },
-  {
-    id: 6,
-    name: "Sarah",
-    uri: "https://adobe.design/stories/community/media_1c16716150c58f613fabac586a799f543bd967c70.jpeg?width=750&format=jpeg&optimize=medium",
-  },
-  { id: 7, name: "Eli", uri: "" },
-  { id: 8, name: "Henry", uri: "" },
-  { id: 9, name: "Grace", uri: "" },
-  { id: 10, name: "Eli", uri: "" },
-  { id: 11, name: "Henry", uri: "" },
-  { id: 12, name: "Grace", uri: "" },
-];
 
 const chunkArray = (array, size) => {
   const chunks = [];
@@ -37,8 +22,36 @@ const chunkArray = (array, size) => {
   return chunks;
 };
 
-const ConcertUsersGoing = () => {
-  const groupedData = chunkArray(MOCK_ATTENDEES, 3);
+const ConcertUsersGoing = ({ concertId }) => {
+  const [attendees, setAttendees] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchAttendees = async () => {
+      try {
+        const attendeeData = await getConcertAttendees(concertId);
+        setAttendees(attendeeData || []);
+      } catch (error) {
+        console.error("Error fetching attendees:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (concertId) {
+      fetchAttendees();
+    }
+  }, [concertId]);
+
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#846AE3" />
+      </View>
+    );
+  }
+
+  const groupedData = chunkArray(attendees, 3);
 
   const renderItem = ({ item }) => (
     <View style={styles.attendeesRow}>
@@ -47,13 +60,13 @@ const ConcertUsersGoing = () => {
           <Image
             style={styles.avatarCircle}
             source={
-              attendee.uri
-                ? { uri: attendee.uri, width: 65, height: 65 }
-                : require("../assets/Images/profile-icon-1.png")
+              attendee.avatar_url
+                ? { uri: attendee.avatar_url, width: 65, height: 65 }
+                : require("../assets/Images/profile-icon-1.png") // default to anon photo
             }
-          ></Image>
+          />
           <Text style={styles.attendeeName} numberOfLines={1}>
-            {attendee.name}
+            {attendee.username || "Unknown"}
           </Text>
         </View>
       ))}
@@ -64,7 +77,7 @@ const ConcertUsersGoing = () => {
     <View style={styles.attendeesSection}>
       <View style={styles.attendeesHeader}>
         <Text style={styles.attendeesTitle}>
-          {MOCK_ATTENDEES.length} ConcertBuds Going
+          {attendees.length} ConcertBuds Going
         </Text>
       </View>
       <FlatList
@@ -91,7 +104,6 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 20,
     backgroundColor: "rgba(255, 255, 255, 0.8)",
   },
-
   attendeesRow: {
     flexDirection: "row",
     justifyContent: "space-evenly",
@@ -122,6 +134,11 @@ const styles = StyleSheet.create({
     marginTop: 5,
     textAlign: "center",
     fontFamily: "Doppio",
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 
