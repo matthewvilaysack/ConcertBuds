@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -6,41 +6,98 @@ import {
   Image,
   Dimensions,
   TouchableOpacity,
+  Alert,
 } from "react-native";
-import { router } from "expo-router";
-import { useNavigation } from "@react-navigation/native";
+import { useRouter } from "expo-router";
+import supabase from "@/lib/supabase";
+import { unRSVPFromConcert } from "@/lib/concert-db";
 
 const windowWidth = Dimensions.get("window").width;
 
-const ConcertItem = ({ item, destination}) => {
+const ConcertItem = ({ item, destination, hasRSVPed = false, onRSVPChange }) => {
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
   if (!item) return null;
 
-  const { name, dates, _embedded, id } = item || {};
+  const { name, dates, _embedded, id, formattedData } = item || {};
   const venue = _embedded?.venues?.[0];
   const city = venue?.city?.name || "San Jose";
-  const state = venue?.state?.stateCode || "CA";
-  const navigation = useNavigation();
+  const state = venue?.state?.stateCode;
+  const artist = formattedData?.artist;
 
   const eventDate = dates?.start?.localDate
-    ? new Date(dates.start.localDate)
+    ? new Date(dates.start.localDate + 'T00:00:00')
     : new Date();
   const month = eventDate.toLocaleString("en-US", { month: "short" });
   const day = eventDate.getDate();
-  console.log("city", city)
-  const locationText = `${city}, ${state}`;
+  const locationText = city && state ? `${city}, ${state}` : `${city}`;
+
   const handleNavigate = () => {
-      router.push({
-        pathname: destination,
-        params: {
-          id: item.id,
-          name: item.name,
-          date: item.dates?.start?.localDate,
-          city: item._embedded?.venues?.[0]?.city?.name,
-          state: item._embedded?.venues?.[0]?.state?.stateCode,
-          artist: item.formattedData?.artist,
-          venue: item._embedded?.venues?.[0]?.name
-        }
-      });
+    router.push({
+      pathname: destination,
+      params: getParams(item),
+    });
+  };
+
+  const getParams = (item) => ({
+    ...getBasicDetails(item),
+    ...getDateTimeDetails(item),
+    ...getLocationDetails(item),
+    ...getAdditionalDetails(item),
+  });
+
+  const getBasicDetails = (item) => ({
+    id: item.id,
+    name: item.name,
+    artist: formattedData?.artist,
+    concertName: formattedData?.concertName,
+  });
+
+  const getDateTimeDetails = (item) => ({
+    date: item.dates?.start?.localDate,
+    time: formattedData?.time,
+    dayOfWeek: formattedData?.dayOfWeek,
+    concertTime: formattedData?.concertTime,
+    dateTime: item.dates?.start?.dateTime,
+  });
+
+  const getLocationDetails = (item) => {
+    const venue = item._embedded?.venues?.[0];
+    return {
+      location: formattedData?.location,
+      city: venue?.city?.name,
+      state: venue?.state?.stateCode,
+      venue: venue?.name,
+    };
+  };
+
+  const getAdditionalDetails = (item) => ({
+    imageUrl: formattedData?.imageUrl,
+    timezone: formattedData?.timezone,
+    address: item._embedded?.venues?.[0]?.address?.line1,
+  });
+
+  const handleUnRSVP = async (e) => {
+    e.stopPropagation(); // Prevent navigation
+    try {
+      setLoading(true);
+      const { data: { user } } = await supabase.auth.getUser();
+
+      if (!user) {
+        Alert.alert("Error", "Please sign in first");
+        return;
+      }
+      await unRSVPFromConcert(user.id, id);
+      if (onRSVPChange) {
+        onRSVPChange(id, false); // Notify parent about RSVP change
+      }
+      Alert.alert("Success", "You've removed your RSVP");
+    } catch (error) {
+      console.error("Error removing RSVP:", error);
+      Alert.alert("Error", "Failed to remove RSVP");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -50,82 +107,121 @@ const ConcertItem = ({ item, destination}) => {
           <Text style={styles.month}>{month}</Text>
           <Text style={styles.day}>{day}</Text>
         </View>
-        <View style={styles.artistHeader}>
+        <View style={styles.contentContainer}>
+        <View style={styles.headerRow}>
           <Text style={styles.location}>{locationText}</Text>
+          <View style={styles.actionsContainer}>
+            {hasRSVPed ? (
+              <>
+                <View style={styles.goingButton}>
+                  <Text style={styles.goingText}>Going</Text>
+                </View>
+                <TouchableOpacity
+                  onPress={handleUnRSVP}
+                  disabled={loading}
+                  style={styles.trashContainer}
+                >
+                  <Image
+                    source={require('@/assets/Images/trash.png')}
+                    style={styles.trashIcon}
+                  />
+                </TouchableOpacity>
+              </>
+            ) : (
+              <View style={styles.notGoingButton}>
+                <Text style={styles.notGoingText}>Not Going</Text>
+              </View>
+            )}
+          </View>
+        </View>
           <Text style={styles.artistName}>{name || "Event Name TBD"}</Text>
         </View>
       </View>
     </TouchableOpacity>
   );
 };
-
 const styles = StyleSheet.create({
   artistContainer: {
-    width: windowWidth * 0.9,
-    flexDirection: "row",
-    alignItems: "flex-start",
-    justifyContent: "flex-start",
-    borderRadius: 20,
-    backgroundColor: "rgba(255, 255, 255, 0.5)",
-    marginBottom: 20,
-  },
-  containerOpacity: {
-    backgroundColor: "rgba(255, 255, 255, 0.75)",
+    width: '92%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    marginVertical: 8,
+    marginHorizontal: '4%',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
   },
   dateContainer: {
-    marginHorizontal: "5%",
-    marginVertical: "5%",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
+    width: 65,
+    padding: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRightWidth: 1,
+    borderRightColor: '#F0F0F0',
   },
   month: {
-    fontSize: 18,
-    color: "#000000",
-    fontFamily: "Doppio",
+    fontSize: 16,
+    fontFamily: 'Doppio',
+    color: '#333333',
+    marginBottom: 2,
   },
   day: {
-    fontSize: 36,
-    color: "#000000",
-    fontFamily: "Doppio",
+    fontSize: 24,
+    fontFamily: 'Doppio',
+    color: '#333333',
+    fontWeight: '500',
   },
-  artistHeader: {
-    alignSelf: "stretch",
-    flexDirection: "column",
-    justifyContent: "center",
-    paddingLeft: "5%",
+  contentContainer: {
     flex: 1,
-    borderBottomRightRadius: 20,
-    borderTopRightRadius: 20,
-    backgroundColor: "rgba(255, 255, 255, 0.5)",
-    padding: "6%",
+    padding: 16,
   },
-  variantRadius: {
-    borderBottomRightRadius: 0,
-    borderTopRightRadius: 0,
+  headerRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   location: {
-    fontSize: 28,
-    color: "#000000",
-    fontWeight: "bold",
-    fontFamily: "Doppio",
+    fontSize: 18,
+    fontFamily: 'Doppio',
+    color: '#333333',
+    flex: 1,
+    marginRight: 8,
   },
   artistName: {
-    fontSize: 16,
-    color: "#000000",
-    marginTop: 5,
-    fontFamily: "Doppio",
+    fontSize: 14,
+    fontFamily: 'Doppio',
+    color: '#666666',
+    marginTop: 4,
   },
-  image: {
-    width: windowWidth * 0.9,
-    height: windowWidth * 0.7,
-    borderTopRightRadius: 20,
-    borderTopLeftRadius: 20,
+  actionsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  goingButton: {
+    backgroundColor: '#846AE3',
+    borderRadius: 12,
+    paddingVertical: 6,
+    paddingHorizontal: 14,
+  },
+  goingText: {
+    color: '#FFFFFF',
+    fontFamily: 'Doppio',
+    fontSize: 14,
+  },
+  trashContainer: {
+    padding: 6,
   },
   trashIcon: {
-    marginLeft: 10,
-    padding: 10,
-  },
+    width: 16,
+    height: 16,
+    tintColor: '#666666',
+    resizeMode: 'contain',
+  }
 });
-
 export default ConcertItem;
+

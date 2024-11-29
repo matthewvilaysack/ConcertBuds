@@ -8,6 +8,7 @@ import supabase from "@/lib/supabase";
 import Loading from "@/components/Loading";
 import Account from "@/components/Account";
 import Auth from "@/components/Auth";
+import { session } from '@supabase/supabase-js';
 
 export default function App() {
   const [session, setSession] = useState(null);
@@ -34,11 +35,12 @@ export default function App() {
     return () => subscription.unsubscribe();
   }, []);
 
-  if (session) {
+  if (session && session.user) {
     return <Redirect href="/tabs/feed" />;
+    // return <Account key={session.user.id} session={session} />
   } else if (isLoading) {
     return <Loading />;
   } else {
-    return <Login />;
+    return <Auth />;
   }
 }
