@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useImperativeHandle, forwardRef } from "react";
 import {
   StyleSheet,
   View,
@@ -13,7 +13,7 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import Theme from "@/assets/theme";
 import { fetchConcerts } from "../utils/api";
 
-const SearchComponent = ({ artist, setArtist, setConcerts }) => {
+const SearchComponent = forwardRef(({ artist, setArtist, setConcerts }, ref) => {
   const DETAILS_PATH = "/tabs/feed/searchresults";
   const [searchQuery, setSearchQuery] = useState(artist);
   const [isLoading, setIsLoading] = useState(false);
@@ -61,6 +61,13 @@ const SearchComponent = ({ artist, setArtist, setConcerts }) => {
     }
   };
 
+  useImperativeHandle(ref, () => ({
+    clearSearch: () => {
+      setSearchQuery("");
+      setArtist("");
+    }
+  }));
+
   return (
     <View style={styles.container}>
       <View style={styles.searchWrapper}>
@@ -94,7 +101,7 @@ const SearchComponent = ({ artist, setArtist, setConcerts }) => {
       {error && <Text style={styles.errorText}>{error}</Text>}
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: {

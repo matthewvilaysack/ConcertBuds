@@ -2,46 +2,49 @@ import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity, Alert, Dimensions } from "react-native";
 import { router } from "expo-router";
 import supabase from '@/lib/supabase';
-import { RSVPForConcert, unRSVPFromConcert, getUserConcerts } from '@/lib/concert-db';
+import { RSVPForConcert, unRSVPFromConcert, getUserConcerts, checkUserRSVPStatus } from '@/lib/concert-db'; // Update this import
 import Theme from '../assets/theme';
 const windowWidth = Dimensions.get("window").width;
 
-const ConcertCard = ({ item }) => {
+const ConcertCard = ({ item, onRSVPChange }) => {
   const [isRSVPed, setIsRSVPed] = useState(false);
   const [loading, setLoading] = useState(false);
-   
-  console.log("Full item data from Ticketmaster:", JSON.stringify(item, null, 2));
+  const { 
+    id, 
+    name, 
+    artist,
+    concertName, 
+    date,
+    dayOfWeek,
+    concertTime,
+    dateTime,
+    address,
+    location,
+    city,
+    state,
+    venue,
+    imageUrl,
+    timezone 
+  } = item || {};
 
-  const { name, dates, _embedded, id } = item || {};
-  const venue = _embedded?.venues?.[0];
-  const city = venue?.city?.name;
-  const state = venue?.state?.stateCode;
-  const artistName = name ? name.split(' at ')[0] : "Unknown Artist"; 
-
-  console.log("Extracted main fields:", {
-    id,
-    name,
-    artistName, 
-    dates: dates?.start,
-    venue: venue
-  });
-
-  const eventDate = dates?.start?.localDate
-    ? new Date(dates.start.localDate)
+  // Format the date correctly
+  const eventDate = date
+    ? new Date(date + 'T00:00:00') // Add time component to preserve local date
     : new Date();
+  
   const month = eventDate.toLocaleString("en-US", { month: "short" });
   const day = eventDate.getDate();
 
-  const locationText = city && state ? `${city}, ${state}` : "Location TBD";
-
+  // Use the passed dayOfWeek and concertTime or format from date if not provided
+  const displayTime = concertTime || "Time TBD";
+  const locationText = city && state ? `${city}, ${state}` : `${city}`;
 
   useEffect(() => {
     const checkRSVPStatus = async () => {
       try {
         const { data: { user } } = await supabase.auth.getUser();
         if (user) {
-          const userConcerts = await getUserConcerts(user.id);
-          const hasRSVPed = userConcerts?.some(concert => concert.concert_id === id);
+          const hasRSVPed = await checkUserRSVPStatus(user.id, id);
           setIsRSVPed(hasRSVPed);
         }
       } catch (error) {
@@ -71,6 +74,9 @@ const ConcertCard = ({ item }) => {
       if (isRSVPed) {
         await unRSVPFromConcert(user.id, id);
         setIsRSVPed(false);
+        if (onRSVPChange) {
+          onRSVPChange(false); // Notify parent about RSVP change
+        }
         Alert.alert("Success", "You've removed your RSVP");
       } else {
         console.log("profile", profile)
@@ -79,12 +85,16 @@ const ConcertCard = ({ item }) => {
           username: profile?.username || user.email,
           concertId: id,
           concertName: name || "Untitled Event",
-          artist: artistName,
+          artistName: artist,
           location: locationText,
-          concertDate: dates?.start?.localDate || new Date().toISOString(),
+          concertDate: date || new Date().toISOString(),
+          concertTime: concertTime,
           avatarUrl: profile?.avatar_url
         });
         setIsRSVPed(true);
+        if (onRSVPChange) {
+          onRSVPChange(true); // Notify parent about RSVP change
+        }
         Alert.alert("Success", "You're now going to this concert!");
       }
     } catch (error) {
@@ -100,7 +110,7 @@ const ConcertCard = ({ item }) => {
       <View>
         <Image
           source={{
-            uri: "https://media.pitchfork.com/photos/6614092742a7de97785c7a48/master/pass/Billie-Eilish-Hit-Me-Hard-and-Soft.jpg",
+            uri: imageUrl,
           }}
           style={styles.image}
         />
@@ -110,7 +120,7 @@ const ConcertCard = ({ item }) => {
           <Text style={styles.month}>{month}</Text>
           <Text style={styles.day}>{day}</Text>
           <View>
-            <Text style={styles.artistName}>Wed 7 PM</Text>
+            <Text style={styles.artistName}>{concertTime}</Text>
           </View>
         </View>
 
@@ -118,7 +128,7 @@ const ConcertCard = ({ item }) => {
           <Text style={styles.location}>{locationText}</Text>
           <Text style={styles.artistName}>{name || "Event Name TBD"}</Text>
           <View>
-            <Text style={styles.artistName}>Frost Amphitheater</Text>
+            <Text style={styles.artistName}>{address}</Text>
           </View>
         </View>
       </View>

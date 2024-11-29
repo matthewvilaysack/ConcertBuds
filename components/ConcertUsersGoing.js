@@ -62,10 +62,14 @@ const ConcertUsersGoing = ({ concertId }) => {
             source={
               attendee.avatar_url
                 ? { uri: attendee.avatar_url, width: 65, height: 65 }
-                : require("../assets/Images/profile-icon-1.png") // default to anon photo
+                : require("../assets/Images/profile-icon-1.png")
             }
           />
-          <Text style={styles.attendeeName} numberOfLines={1}>
+          <Text 
+            style={styles.attendeeName} 
+            numberOfLines={1}
+            ellipsizeMode="tail"
+          >
             {attendee.username || "Unknown"}
           </Text>
         </View>
@@ -111,6 +115,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly",
     width: "100%",
     marginTop: 10,
+    paddingHorizontal: 10,
   },
   attendeesTitle: {
     color: "#846AE3",
@@ -120,8 +125,10 @@ const styles = StyleSheet.create({
     fontFamily: "Doppio",
   },
   attendeeContainer: {
+    flex: 1,
     alignItems: "center",
-    margin: 2.5,
+    maxWidth: windowWidth * 0.9 / 3, // Divide container width by 3
+    paddingHorizontal: 5,
   },
   avatarCircle: {
     width: 65,
@@ -136,6 +143,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
     textAlign: "center",
     fontFamily: "Doppio",
+    width: '100%',
   },
   loadingContainer: {
     flex: 1,

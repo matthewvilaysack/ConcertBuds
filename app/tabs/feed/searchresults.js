@@ -1,14 +1,74 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { StyleSheet, View, Image, Text, Dimensions, FlatList, ActivityIndicator } from "react-native";
 import { StatusBar } from "expo-status-bar";
+import { useFocusEffect } from '@react-navigation/native';
 import Theme from "@/assets/theme";
 import Images from "@/assets/Images";
 import SearchComponent from "@/components/SearchComponent";
 import { useLocalSearchParams } from "expo-router";
 import { fetchConcerts } from "@/utils/api";
 import ConcertItem from "@/components/ConcertItem";
+import { checkUserRSVPStatus, getUserConcerts } from "@/lib/concert-db"; // Update this import
+import { supabase } from '@/lib/supabase';
 
 const windowHeight = Dimensions.get("window").height;
+
+const formatTime = (dateObj) => {
+  const hours = dateObj.getUTCHours();
+  const minutes = dateObj.getUTCMinutes();
+  const period = hours >= 12 ? 'PM' : 'AM';
+  const formattedHours = ((hours + 11) % 12 + 1);
+  
+  return minutes === 0 
+      ? `${formattedHours} ${period}`
+      : `${formattedHours}:${minutes.toString().padStart(2, '0')} ${period}`;
+};
+
+const ConcertItemWrapper = React.memo(({ item, artistQuery, userConcerts, onRSVPChange }) => {
+  const hasRSVPed = userConcerts?.some(concert => concert.concert_id === item.id);
+
+  const eventDate = item.dates?.start?.localDate
+    ? new Date(`${item.dates.start.localDate}T00:00:00Z`)
+    : null;
+
+  const time = item.dates?.start?.localTime
+    ? formatTime(new Date(`${item.dates.start.localDate}T${item.dates.start.localTime}Z`))
+    : "Time TBD";
+
+  const dayOfWeek = eventDate
+    ? eventDate.toLocaleString("en-US", { weekday: "short", timeZone: "UTC" })
+    : "";
+
+  const artist = item._embedded?.attractions?.[0]?.name || 
+                artistQuery || 
+                item.name?.split(' at ')?.[0] || 
+                item.name;
+
+  const formattedData = {
+    id: item.id,
+    name: item.name,
+    artist,
+    concertName: item.name,
+    date: item.dates?.start?.localDate,
+    dayOfWeek,
+    concertTime: `${dayOfWeek} ${time}`,
+    location: `${item._embedded?.venues?.[0]?.city?.name || ''}, ${item._embedded?.venues?.[0]?.state?.stateCode || ''}`,
+    city: item._embedded?.venues?.[0]?.city?.name,
+    state: item._embedded?.venues?.[0]?.state?.stateCode,
+    venue: item._embedded?.venues?.[0]?.name,
+    imageUrl: item.images?.[1]?.url,
+    timezone: item.dates?.timezone
+  };
+
+  return (
+    <ConcertItem
+      item={{ ...item, formattedData }}
+      destination={"/tabs/feed/markgoing"}
+      hasRSVPed={hasRSVPed}
+      onRSVPChange={onRSVPChange}
+    />
+  );
+});
 
 export default function SearchResults() {
   const { artist } = useLocalSearchParams();
@@ -18,6 +78,7 @@ export default function SearchResults() {
   const [error, setError] = useState(null);
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
+  const [userConcerts, setUserConcerts] = useState([]);
 
   const loadConcerts = async (pageNum = 0, append = false) => {
     if (!artistQuery || loading) return;
@@ -47,11 +108,40 @@ export default function SearchResults() {
     }
   };
 
+  const loadUserConcerts = useCallback(async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const concerts = await getUserConcerts(user.id);
+        setUserConcerts(concerts);
+      }
+    } catch (error) {
+      console.error("Error fetching user concerts:", error);
+    }
+  }, []);
+
+  const handleRSVPChange = (concertId, isRSVPed) => {
+    setUserConcerts(prevConcerts => {
+      if (isRSVPed) {
+        return [...prevConcerts, { concert_id: concertId }];
+      } else {
+        return prevConcerts.filter(concert => concert.concert_id !== concertId);
+      }
+    });
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      loadUserConcerts();
+    }, [loadUserConcerts])
+  );
+
   useEffect(() => {
     setPage(0);
     setHasMore(true);
     loadConcerts(0, false);
-  }, [artistQuery]);
+    loadUserConcerts();
+  }, [artistQuery, loadUserConcerts]);
 
   const handleLoadMore = () => {
     if (!loading && hasMore) {
@@ -59,28 +149,6 @@ export default function SearchResults() {
       setPage(nextPage);
       loadConcerts(nextPage, true);
     }
-  };
-
-  const renderConcertItem = ({ item }) => {
-    const formattedData = {
-      id: item.id,
-      name: item.name,
-      artist: artistQuery || item.name?.split(' at ')?.[0] || item.name,
-      concertName: item.name,
-      date: item.dates?.start?.localDate,
-      location: `${item._embedded?.venues?.[0]?.city?.name || ''}, ${item._embedded?.venues?.[0]?.state?.stateCode || ''}`,
-      city: item._embedded?.venues?.[0]?.city?.name,
-      state: item._embedded?.venues?.[0]?.state?.stateCode,
-      venue: item._embedded?.venues?.[0]?.name,
-      imageUrl: item.images?.[0]?.url,
-    };
-
-    return (
-      <ConcertItem
-        item={{ ...item, formattedData }}
-        destination={"/tabs/feed/markgoing"}
-      />
-    );
   };
 
   return (
@@ -103,9 +171,10 @@ export default function SearchResults() {
         ) : (
           <FlatList
             data={concerts}
-            renderItem={renderConcertItem}
-            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => <ConcertItemWrapper item={item} artistQuery={artistQuery} userConcerts={userConcerts} onRSVPChange={handleRSVPChange} />}
+            keyExtractor={(item) => `${item.id} + $[]`}
             contentContainerStyle={styles.listContainer}
+            showsVerticalScrollIndicator={false} // Hide scroll indicator
             onEndReached={handleLoadMore}
             onEndReachedThreshold={0.5}
             ListFooterComponent={
@@ -121,34 +190,35 @@ export default function SearchResults() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
     backgroundColor: Theme.colors.backgroundPrimary,
   },
   background: {
     position: "absolute",
     width: "100%",
     height: "100%",
+    resizeMode: "cover",
   },
   contentWrapper: {
     position: "absolute",
     top: "11%",
-    alignItems: "center",
     width: "100%",
-    height: windowHeight - 90,
-    padding: 20,
+    height: windowHeight - 200,
   },
   listContainer: {
-    paddingTop: 20,
+    width: '100%',
+    paddingVertical: 8,
   },
   infoText: {
-    fontSize: 15,
+    fontSize: 16,
     color: "#FFFFFF",
-    opacity: 0.8,
+    fontFamily: "Doppio",
+    opacity: 0.9,
     textAlign: "center",
-    marginTop: 10,
-    lineHeight: 22,
+    marginTop: 16,
+    paddingHorizontal: 20,
   },
   errorText: {
     color: Theme.colors.error || "#ff4444",
+    fontFamily: "Doppio",
   },
 });

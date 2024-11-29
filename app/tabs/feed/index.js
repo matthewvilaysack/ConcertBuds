@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { StyleSheet, View, Image, Dimensions } from "react-native";
+import { useFocusEffect } from '@react-navigation/native';
 import { StatusBar } from "expo-status-bar";
 import Theme from "@/assets/theme";
 import Images from "@/assets/Images";
@@ -14,14 +15,40 @@ export default function Page() {
   const [artist, setArtist] = useState("");
   const [userConcerts, setUserConcerts] = useState([]);
   const [loading, setLoading] = useState(true);
-  // Load user's RSVPed concerts
+  const searchComponentRef = useRef(null);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const loadUserConcerts = async () => {
+        try {
+          const { data: { user } } = await supabase.auth.getUser();
+          if (user) {
+            const concerts = await getUserConcerts(user.id);
+            setUserConcerts(concerts || []);
+          }
+        } catch (error) {
+          console.error("Error loading user concerts:", error);
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      if (searchComponentRef.current) {
+        searchComponentRef.current.clearSearch();
+      }
+      loadUserConcerts();
+      return () => {};
+    }, [])
+  );
   useEffect(() => {
     const loadUserConcerts = async () => {
       try {
         const { data: { user } } = await supabase.auth.getUser();
         if (user) {
           const concerts = await getUserConcerts(user.id);
-          setUserConcerts(concerts || []);
+          if (JSON.stringify(userConcerts) !== JSON.stringify(concerts)) {
+            setUserConcerts(concerts || []);
+          }
         }
       } catch (error) {
         console.error("Error loading user concerts:", error);
@@ -31,7 +58,12 @@ export default function Page() {
     };
 
     loadUserConcerts();
-  }, []);
+  }, [userConcerts]);
+
+  const handleRSVPChange = (concertId) => {
+    setUserConcerts((prevConcerts) => prevConcerts.filter(concert => concert.concert_id !== concertId));
+  };
+
   return (
     <View style={styles.container}>
       <Image source={Images.background} style={styles.background} />
@@ -39,13 +71,15 @@ export default function Page() {
 
       <View style={styles.contentWrapper}>
         <SearchComponent
+          ref={searchComponentRef}
           artist={artist}
           setArtist={setArtist}
           setConcerts={() => {}} 
         />
         <Feed
-          concerts={userConcerts} // Pass user's concerts from database
+          concerts={userConcerts}
           destination={"/tabs/feed/concertbuds"}
+          onRSVPChange={handleRSVPChange}
           style={styles.feed}
         />
       </View>

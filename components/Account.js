@@ -10,7 +10,6 @@ export default function Account({ session }: { session: Session }) {
   const [username, setUsername] = useState('')
   const [avatarUrl, setAvatarUrl] = useState('')
 
-  // Fetch profile when component mounts or session changes
   useEffect(() => {
     if (session) getProfile()
   }, [session])
@@ -30,13 +29,12 @@ export default function Account({ session }: { session: Session }) {
         throw error
       }
   
-      console.log('Profile data from database:', data) // Log raw data
+      console.log('Profile data from database:', data) 
   
       if (data) {
         setUsername(data.username)
         setAvatarUrl(data.avatar_url)
         
-        // Use setTimeout to check the state after update
         setTimeout(() => {
           console.log('Avatar URL after state update:', avatarUrl)
         }, 100)
@@ -59,7 +57,7 @@ export default function Account({ session }: { session: Session }) {
       if (!session?.user) throw new Error('No user on the session!')
 
       const updates = {
-        id: session.user.id,
+        id: session?.user.id,
         username,
         avatar_url,
         updated_at: new Date().toISOString(),
