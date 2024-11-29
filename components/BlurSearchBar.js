@@ -1,6 +1,7 @@
 import { StyleSheet, TextInput, View } from 'react-native';
 import { BlurView } from 'expo-blur';
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { Button } from 'your-button-component-library';
 
 export default function BlurSearchBar() {
   return (
@@ -13,7 +14,11 @@ export default function BlurSearchBar() {
         />
       </BlurView>
       <View style={styles.searchButton}>
-        <FontAwesome name="search" size={20} color="#FFFFFF" />
+        <Button
+          label="Search"
+          onPress={() => {}}
+          variant="primary"
+        />
       </View>
     </View>
   );

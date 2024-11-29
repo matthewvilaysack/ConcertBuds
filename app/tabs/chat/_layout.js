@@ -51,6 +51,14 @@ export default function Layout() {
           headerTitle: "Chat Details",
           headerTitleAlign: "center",
           headerBackTitle: "Back",
+          headerTintColor: theme.colors.backgroundPrimary, // Set back button color to white
+          headerRight: () => (
+            <Button
+              label="Right Button"
+              onPress={() => {}}
+              variant="primary"
+            />
+          ),
         }}
       />
     </Stack>

@@ -101,14 +101,19 @@ export default function Account({ session }: { session: Session }) {
 
       <View style={[styles.verticallySpaced, styles.mt20]}>
         <Button
-          title={loading ? 'Loading ...' : 'Update Profile'}
+          label={loading ? 'Loading ...' : 'Update Profile'}
           onPress={() => updateProfile({ username, avatar_url: avatarUrl })}
           disabled={loading}
+          variant="primary"
         />
       </View>
 
       <View style={styles.verticallySpaced}>
-        <Button title="Sign Out" onPress={() => supabase.auth.signOut()} />
+        <Button
+          label="Sign Out"
+          onPress={() => supabase.auth.signOut()}
+          variant="danger"
+        />
       </View>
     </View>
   )

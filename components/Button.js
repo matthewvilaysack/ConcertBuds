@@ -1,6 +1,6 @@
 import React from "react";
 import { TouchableOpacity, Text, StyleSheet } from "react-native";
-
+import Theme from "@/assets/theme";
 const Button = ({
   label,
   onPress,
@@ -36,38 +36,37 @@ const Button = ({
 // Styles
 const styles = StyleSheet.create({
   primaryButton: {
-    backgroundColor: "#FFFFFF",
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 20,
-    width: "100%",
-    height: "100%",
-    flex: "column",
-    justifyContent: "center",
+    backgroundColor: Theme.colors.primary, // Use primary color from theme
+    paddingVertical: 12,
+    paddingHorizontal: 25,
+    borderRadius: 5,
+    alignItems: "center",
   },
   secondaryButton: {
-    backgroundColor: "#6C757D",
-    paddingVertical: 10,
-    paddingHorizontal: 20,
+    backgroundColor: Theme.colors.secondary, // Use secondary color from theme
+    paddingVertical: 12,
+    paddingHorizontal: 25,
     borderRadius: 5,
+    alignItems: "center",
   },
   dangerButton: {
-    backgroundColor: "#DC3545",
-    paddingVertical: 10,
-    paddingHorizontal: 20,
+    backgroundColor: Theme.colors.danger, // Use danger color from theme
+    paddingVertical: 12,
+    paddingHorizontal: 25,
     borderRadius: 5,
+    alignItems: "center",
   },
   disabledButton: {
-    backgroundColor: "#E0E0E0",
+    backgroundColor: Theme.colors.disabled, // Use disabled color from theme
   },
   buttonText: {
-    color: "#000000",
-    fontSize: 24,
+    color: Theme.colors.text.button, // Use button text color from theme
+    fontSize: 16,
     textAlign: "center",
-    fontFamily: "Doppio",
+    fontFamily: "Arial",
   },
   disabledText: {
-    color: "#B0B0B0",
+    color: Theme.colors.text.disabled, // Use disabled text color from theme
   },
 });
 
