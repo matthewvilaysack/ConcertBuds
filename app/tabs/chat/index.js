@@ -1,15 +1,13 @@
+// app/tabs/chat/index.js
 import React from 'react';
 import { View, StyleSheet, Dimensions, Text, Image } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import CommuteChats from './CommuteChats';
-import ConcertChats from './ConcertChats';
+import CommuteChats from '@/components/CommuteChats';
+import ConcertChats from '@/components/ConcertChats';
 import Theme from '@/assets/theme';
 import Images from '@/assets/Images';
 
-const windowWidth = Dimensions.get("window").width;
-const windowHeight = Dimensions.get("window").height;
-
-const ChatScreen = () => {
+export default function ChatScreen() {
   return (
     <View style={styles.container}>
       <Image source={Images.background} style={styles.background} />
@@ -26,7 +24,7 @@ const ChatScreen = () => {
       </View>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -44,14 +42,14 @@ const styles = StyleSheet.create({
     top: "11%",
     alignItems: "center",
     width: "100%",
-    height: "78%", // Adjust height to squish vertically
+    height: "78%",
     padding: 20,
   },
   chatSection: {
     flex: 1,
-    width: '90%', // Adjust width to fit within the screen
-    backgroundColor: 'transparent', // Make background transparent
-    borderColor: '#FFFFFF', // Add a white border
+    width: '90%',
+    backgroundColor: 'transparent',
+    borderColor: '#FFFFFF',
     borderWidth: 1,
     borderRadius: 20,
     margin: 10,
@@ -66,5 +64,3 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
 });
-
-export default ChatScreen;
