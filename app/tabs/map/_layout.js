@@ -51,6 +51,7 @@ export default function Layout() {
           headerTitle: "Map Details",
           headerTitleAlign: "center",
           headerBackTitle: "Back",
+          headerTintColor: theme.colors.backgroundPrimary, // Set back button color to white
         }}
       />
     </Stack>

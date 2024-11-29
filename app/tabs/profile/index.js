@@ -74,17 +74,14 @@
     },
     title: {
       color: Theme.colors.textPrimary,
-      fontSize: Theme.sizes.textMedium,
       fontWeight: "bold",
     },
     text: {
       color: Theme.colors.textPrimary,
-      fontSize: Theme.sizes.textMedium,
       paddingLeft: 8,
     },
     buttonText: {
       fontWeight: "bold",
       color: Theme.colors.textHighlighted,
-      fontSize: Theme.sizes.textMedium,
     },
   });

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, View, Image, StatusBar, ActivityIndicator } from "react-native";
+import { StyleSheet, View, Image, StatusBar, ActivityIndicator, TouchableOpacity, Text } from "react-native";
 import { useRouter } from "expo-router";
 import ConcertBudsPage from "@/components/ConcertBudsPage";
 import ConcertItem from "@/components/ConcertItem";
@@ -8,6 +8,8 @@ import ConcertUsersGoing from "@/components/ConcertUsersGoing";
 import Button from "@/components/Button";
 import { supabase } from '@/lib/supabase';
 import { getUserConcerts, getConcertAttendees } from '@/lib/concert-db';
+import Theme from "@/assets/theme";
+
 export default function ConcertBudsScreen() {
   const router = useRouter();
   const [attendees, setAttendees] = useState([]);
@@ -85,17 +87,18 @@ export default function ConcertBudsScreen() {
             }}
             destination="/tabs/feed/concertbuds"
             hasRSVPed={true}
+            style={styles.itemSpacing}
           />
         )}
         <ConcertUsersGoing
           attendees={attendees}
           concertId={concert?.concert_id}
+          style={styles.itemSpacing}
         />
-        <View style={styles.button}>
-          <Button
-            label={`Join the Chat`}
-            onPress={handlePress}
-          />
+        <View style={{ alignItems: "center", width: "100%", marginTop: 20 }}>
+          <TouchableOpacity style={styles.joinChatButton} onPress={handlePress}>
+            <Text style={styles.joinChatButtonText}>Join the Chat</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </View>
@@ -117,12 +120,45 @@ const styles = StyleSheet.create({
     top: "11%",
     alignItems: "center",
     width: "100%",
-    height: "89%", // Add this line
+    height: "89%",
     padding: 20,
   },
-  button: {
-    marginTop: 20,
-    height: "10%",
+  itemSpacing: {
+    marginBottom: 20, // Adjust this value to match the spacing of the join chat button
+  },
+  joinChatButton: {
+    backgroundColor: "#FFFFFF",
+    paddingVertical: 15, // Thicker padding
+    paddingHorizontal: 20,
+    borderRadius: 20,
     width: "100%",
+    height: 70, // Slightly taller height
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 20, // Ensure correct vertical spacing
+  },
+  joinChatButtonText: {
+    color: "#000000",
+    fontSize: 24,
+    textAlign: "center",
+    fontFamily: "Doppio",
+  },
+  button: {
+    backgroundColor: Theme.colors.primary, // Use theme primary color
+    borderRadius: 10, // Match the rounded corners of the concert section
+    alignItems: "center",
+    justifyContent: "center",
+    height: 50, // Fixed height
+    marginTop: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5, // Shadow for Android
+  },
+  buttonText: {
+    color: Theme.colors.text.black, // White text
+    fontSize: 16,
+    fontWeight: "bold",
   },
 });

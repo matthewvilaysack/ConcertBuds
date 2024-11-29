@@ -1,4 +1,4 @@
-  import { useState } from "react";
+import { useState } from "react";
   import {
     Text,
     Alert,
@@ -70,19 +70,12 @@
           style={styles.input}
         />
         <View style={styles.buttonContainer}>
-          <TouchableOpacity
+          <Button
+            label="Sign in"
             onPress={() => signInWithEmail()}
             disabled={isSignInDisabled}
-          >
-            <Text
-              style={[
-                styles.button,
-                isSignInDisabled ? styles.buttonDisabled : undefined,
-              ]}
-            >
-              Sign in
-            </Text>
-          </TouchableOpacity>
+            variant="primary"
+          />
         </View>
       </View>
     );

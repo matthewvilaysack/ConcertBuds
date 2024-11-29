@@ -181,7 +181,6 @@ const styles = StyleSheet.create({
   text: {
     color: Theme.colors.textPrimary,
     fontWeight: "bold",
-    fontSize: Theme.sizes.textMedium,
   },
   username: {
     color: Theme.colors.textSecondary,
@@ -203,7 +202,6 @@ const styles = StyleSheet.create({
   score: {
     color: Theme.colors.textHighlighted,
     fontWeight: "bold",
-    fontSize: Theme.sizes.textLarge,
   },
   // Make sure the buttons have a lot of padding to increase the area of the touch target.
   upvoteButton: {

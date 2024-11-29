@@ -55,7 +55,7 @@ const Feed = ({ concerts, destination, onRSVPChange }) => {
             onRSVPChange={onRSVPChange}
           />
         )}
-        keyExtractor={(item) => item.concert_id.toString()} // Ensure each item has a unique key
+        keyExtractor={(item) => item.concert_id.toString()}
         contentContainerStyle={styles.listContainer}
         ListEmptyComponent={
           <Text style={styles.emptyText}>Your upcoming concerts will show here.</Text>
@@ -76,10 +76,13 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     textAlign: "center",
-    color: Theme.colors.textPrimary,
+    color: Theme.colors.text.white,
     fontSize: 16,
     marginTop: 20,
     opacity: 0.8,
+  },
+  profilePicturesSection: {
+    marginTop: 20, // Add margin to the section where profile pictures are shown
   },
 });
 

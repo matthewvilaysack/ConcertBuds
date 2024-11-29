@@ -54,7 +54,6 @@ const styles = StyleSheet.create({
   text: {
     color: Theme.colors.textPrimary,
     fontWeight: "bold",
-    fontSize: Theme.sizes.textMedium,
   },
   username: {
     color: Theme.colors.textSecondary,

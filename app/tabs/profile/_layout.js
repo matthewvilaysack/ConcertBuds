@@ -48,6 +48,7 @@ export default function Layout() {
           headerTitle: "Comments",
           headerTitleAlign: "center",
           headerBackTitle: "Back",
+          headerTintColor: theme.colors.backgroundPrimary, // Set back button color to white
         }}
       />
     </Stack>

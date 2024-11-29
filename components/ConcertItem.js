@@ -11,6 +11,7 @@ import {
 import { useRouter } from "expo-router";
 import supabase from "@/lib/supabase";
 import { unRSVPFromConcert } from "@/lib/concert-db";
+import Theme from "../assets/theme";
 
 const windowWidth = Dimensions.get("window").width;
 
@@ -145,7 +146,7 @@ const styles = StyleSheet.create({
     width: '92%',
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Theme.colors.background.primary,
     borderRadius: 16,
     marginVertical: 8,
     marginHorizontal: '4%',
@@ -165,14 +166,14 @@ const styles = StyleSheet.create({
   },
   month: {
     fontSize: 16,
-    fontFamily: 'Doppio',
-    color: '#333333',
+    fontFamily: Theme.typography.fontFamilies.primary,
+    color: Theme.colors.text.primary,
     marginBottom: 2,
   },
   day: {
     fontSize: 24,
-    fontFamily: 'Doppio',
-    color: '#333333',
+    fontFamily: Theme.typography.fontFamilies.primary,
+    color: Theme.colors.text.primary,
     fontWeight: '500',
   },
   contentContainer: {
@@ -186,15 +187,15 @@ const styles = StyleSheet.create({
   },
   location: {
     fontSize: 18,
-    fontFamily: 'Doppio',
-    color: '#333333',
+    fontFamily: Theme.typography.fontFamilies.primary,
+    color: Theme.colors.text.secondary,
     flex: 1,
     marginRight: 8,
   },
   artistName: {
     fontSize: 14,
-    fontFamily: 'Doppio',
-    color: '#666666',
+    fontFamily: Theme.typography.fontFamilies.primary,
+    color: Theme.colors.text.primary,
     marginTop: 4,
   },
   actionsContainer: {
@@ -203,14 +204,14 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   goingButton: {
-    backgroundColor: '#846AE3',
-    borderRadius: 12,
+    backgroundColor: Theme.colors.primary.main,
+    borderRadius: Theme.borderRadius.sm,
     paddingVertical: 6,
     paddingHorizontal: 14,
   },
   goingText: {
-    color: '#FFFFFF',
-    fontFamily: 'Doppio',
+    color: Theme.colors.text.white,
+    fontFamily: Theme.typography.fontFamilies.primary,
     fontSize: 14,
   },
   trashContainer: {
@@ -221,6 +222,10 @@ const styles = StyleSheet.create({
     height: 16,
     tintColor: '#666666',
     resizeMode: 'contain',
+  },
+  notGoingText: {
+    color: Theme.colors.text.tertiary,
+    fontSize: Theme.typography.sizes.sm,
   }
 });
 export default ConcertItem;

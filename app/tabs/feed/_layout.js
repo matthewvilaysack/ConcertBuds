@@ -13,7 +13,7 @@ export default function Layout() {
         headerStyle: {
           backgroundColor: theme.colors.backgroundPrimary,
         },
-        headerTintColor: theme.colors.textPrimary,
+        headerTintColor: theme.colors.backgroundPrimary,
         headerTitleStyle: {
           backgroundColor: "transparent", 
           fontWeight: "bold",
@@ -61,6 +61,7 @@ export default function Layout() {
           headerTitle: "",
           headerTitleAlign: "center",
           headerBackTitleVisible: "false",
+          headerTintColor: theme.colors.backgroundPrimary, // Set back button color to white
           headerStyle: {
             backgroundColor: "transparent", 
             elevation: 0,
@@ -76,6 +77,7 @@ export default function Layout() {
           headerTitle: "",
           headerTitleAlign: "center",
           headerBackTitleVisible: "false",
+          headerTintColor: theme.colors.backgroundPrimary, // Set back button color to white
           headerStyle: {
             position: "absolute",
             backgroundColor: "transparent", // Semi-transparent black
@@ -92,6 +94,7 @@ export default function Layout() {
           headerTitle: "",
           headerTitleAlign: "center",
           headerBackTitleVisible: "false",
+          headerTintColor: theme.colors.backgroundPrimary, // Set back button color to white
           headerStyle: {
             position: "absolute",
             backgroundColor: "transparent", // Semi-transparent black

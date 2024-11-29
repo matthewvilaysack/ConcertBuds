@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import supabase from "@/lib/supabase";
 import { getConcertAttendees } from "@/lib/concert-db";
+import Theme from "../assets/theme";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -46,7 +47,7 @@ const ConcertUsersGoing = ({ concertId }) => {
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#846AE3" />
+        <ActivityIndicator size="large" color={Theme.colors.primary.main} />
       </View>
     );
   }
@@ -100,12 +101,13 @@ const styles = StyleSheet.create({
   attendeesSection: {
     width: windowWidth * 0.9,
     height: windowHeight * 0.5,
-    borderRadius: 20,
+    borderRadius: Theme.borderRadius.lg,
     backgroundColor: "rgba(255, 255, 255, 0.8)",
-    paddingBottom: 20,
+    paddingBottom: Theme.spacing.md,
+    marginTop: Theme.spacing.md,
   },
   attendeesHeader: {
-    paddingTop: 20,
+    paddingTop: Theme.spacing.md,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     backgroundColor: "rgba(255, 255, 255, 0.8)",
@@ -114,21 +116,22 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-evenly",
     width: "100%",
-    marginTop: 10,
-    paddingHorizontal: 10,
+    marginTop: Theme.spacing.sm,
+    paddingHorizontal: Theme.spacing.sm,
   },
   attendeesTitle: {
-    color: "#846AE3",
-    fontSize: 20,
+    color: Theme.colors.primary.main,
+    fontSize: Theme.typography.sizes['2xl'],
     textAlign: "center",
-    marginBottom: 15,
-    fontFamily: "Doppio",
+    marginBottom: Theme.spacing.md,
+    fontFamily: Theme.typography.fontFamilies.primary,
   },
   attendeeContainer: {
     flex: 1,
     alignItems: "center",
-    maxWidth: windowWidth * 0.9 / 3, // Divide container width by 3
-    paddingHorizontal: 5,
+    maxWidth: windowWidth * 0.9 / 3,
+    paddingHorizontal: Theme.spacing.xs,
+    marginTop: Theme.spacing.md, // Add spacing from the top
   },
   avatarCircle: {
     width: 65,
@@ -138,9 +141,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   attendeeName: {
-    color: "#846AE3",
-    fontSize: 20,
-    marginTop: 5,
+    color: Theme.colors.primary.main,
+    fontSize: Theme.typography.sizes.sm,
+    marginTop: Theme.spacing.xs,
     textAlign: "center",
     fontFamily: "Doppio",
     width: '100%',
