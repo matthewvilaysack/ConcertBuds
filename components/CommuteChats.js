@@ -1,11 +1,13 @@
-
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React from "react";
+import { View, Text, StyleSheet, Dimensions } from "react-native";
+const windowWidth = Dimensions.get("window").width;
 
 const CommuteChats = () => {
   return (
     <View style={styles.container}>
-      <Text>Commute Chats</Text>
+      <Text style={styles.chatTitle}>
+        Your upcoming Commute Chats will display here.
+      </Text>
       {/* Add your commute chat UI components here */}
     </View>
   );
@@ -13,9 +15,18 @@ const CommuteChats = () => {
 
 const styles = StyleSheet.create({
   container: {
+    width: windowWidth,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  chatTitle: {
+    fontFamily: "Doppio One",
+    fontSize: 15,
+    color: "#FFFFFF",
+    marginBottom: 20,
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    flexWrap: "wrap",
   },
 });
 
