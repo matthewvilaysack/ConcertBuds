@@ -87,6 +87,7 @@ const ConcertCard = ({ item, onRSVPChange }) => {
           concertName: name || "Untitled Event",
           artistName: artist,
           location: locationText,
+          address: address,
           concertDate: date || new Date().toISOString(),
           concertTime: concertTime,
           avatarUrl: profile?.avatar_url
