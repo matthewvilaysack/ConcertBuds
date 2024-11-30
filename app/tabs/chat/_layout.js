@@ -1,7 +1,7 @@
 // app/tabs/chat/_layout.js
 import { Stack } from "expo-router";
 import { View, Text } from "react-native";
-import theme from "../../../assets/theme";
+import theme from "@/assets/theme";
 
 export default function Layout() {
   return (
@@ -38,11 +38,20 @@ export default function Layout() {
                 justifyContent: "center",
               }}
             >
-              <Text style={{ color: "#fff", fontSize: 18, fontWeight: "bold" }}>
+              <Text style={{ color: theme.colors.text.primary, fontSize: 18, fontWeight: "bold" }}>
                 Chat
               </Text>
             </View>
           ),
+        }}
+      />
+      <Stack.Screen
+        name="channel"
+        options={{
+          headerTitle: "Channel",
+          headerTitleAlign: "center",
+          headerBackTitle: "Back",
+          headerTintColor: theme.colors.backgroundPrimary, 
         }}
       />
       <Stack.Screen
@@ -51,6 +60,7 @@ export default function Layout() {
           headerTitle: "Chat Details",
           headerTitleAlign: "center",
           headerBackTitle: "Back",
+          headerTintColor: theme.colors.backgroundPrimary, 
         }}
       />
     </Stack>

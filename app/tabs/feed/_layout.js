@@ -2,7 +2,7 @@ import { Stack } from "expo-router";
 import { View, Text, Platform, TouchableOpacity } from "react-native";
 import theme from "../../../assets/theme";
 import { useRouter } from "expo-router";
-import HeaderButton from "../../../components/HeaderButton"; // Path to your custom HeaderButton component
+import HeaderButton from "../../../components/HeaderButton";
 
 export default function Layout() {
   const router = useRouter();

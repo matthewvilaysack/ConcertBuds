@@ -10,6 +10,14 @@ import Account from "@/components/Account";
 import Auth from "@/components/Auth";
 import { session } from '@supabase/supabase-js';
 
+
+import Theme from '@/assets/theme';
+import Images from '@/assets/Images';
+import { StreamChat } from "stream-chat";
+import { OverlayProvider, ChannelList, MessageList, MessageInput, Chat, Channel } from "stream-chat-expo";
+
+const client = StreamChat.getInstance("94bmdhqrnsxy");
+
 export default function App() {
   const [session, setSession] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -35,8 +43,30 @@ export default function App() {
     return () => subscription.unsubscribe();
   }, []);
 
+  useEffect(() => {
+    const initializeChat = async () => {
+      try {
+        await client.connectUser(
+          {
+            id: "jlahey",
+            name: "Jim Lahey",
+            image: "https://i.imgur.com/fR9Jz14.png",
+          },
+          client.devToken('jlahey')
+        );
+
+      } catch (error) {
+        console.error("Error initializing chat:", error);
+      }
+    };
+
+    initializeChat();
+  }, []);
+
+ 
+
   if (session && session.user) {
-    return <Redirect href="/tabs/feed" />;
+    return <Redirect href="/tabs/chat" />;
     // return <Account key={session.user.id} session={session} />
   } else if (isLoading) {
     return <Loading />;

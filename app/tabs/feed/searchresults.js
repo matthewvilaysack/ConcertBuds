@@ -59,6 +59,7 @@ const ConcertItemWrapper = React.memo(({ item, artistQuery, userConcerts, onRSVP
     imageUrl: item.images?.[1]?.url,
     timezone: item.dates?.timezone
   };
+  console.log(formattedData);
 
   return (
     <ConcertItem
@@ -174,7 +175,7 @@ export default function SearchResults() {
             renderItem={({ item }) => <ConcertItemWrapper item={item} artistQuery={artistQuery} userConcerts={userConcerts} onRSVPChange={handleRSVPChange} />}
             keyExtractor={(item) => `${item.id} + $[]`}
             contentContainerStyle={styles.listContainer}
-            showsVerticalScrollIndicator={false} // Hide scroll indicator
+            showsVerticalScrollIndicator={false} 
             onEndReached={handleLoadMore}
             onEndReachedThreshold={0.5}
             ListFooterComponent={

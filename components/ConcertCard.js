@@ -38,7 +38,7 @@ const ConcertCard = ({ item, onRSVPChange }) => {
   // Use the passed dayOfWeek and concertTime or format from date if not provided
   const displayTime = concertTime || "Time TBD";
   const locationText = city && state ? `${city}, ${state}` : `${city}`;
-
+console.log("address", address);
   useEffect(() => {
     const checkRSVPStatus = async () => {
       try {
@@ -87,10 +87,12 @@ const ConcertCard = ({ item, onRSVPChange }) => {
           concertName: name || "Untitled Event",
           artistName: artist,
           location: locationText,
+          address: address,
           concertDate: date || new Date().toISOString(),
           concertTime: concertTime,
           avatarUrl: profile?.avatar_url
         });
+        console.log("address added", address);
         setIsRSVPed(true);
         if (onRSVPChange) {
           onRSVPChange(true); // Notify parent about RSVP change

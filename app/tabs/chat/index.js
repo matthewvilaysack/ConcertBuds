@@ -1,28 +1,50 @@
-// app/tabs/chat/index.js
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Dimensions, Text, Image } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import CommuteChats from '@/components/CommuteChats';
-import ConcertChats from '@/components/ConcertChats';
 import Theme from '@/assets/theme';
 import Images from '@/assets/Images';
+import { StreamChat } from "stream-chat";
+import { OverlayProvider, ChannelList, MessageList, MessageInput, Chat, Channel } from "stream-chat-expo";
+import { router } from 'expo-router';
+import { useNavigation } from '@react-navigation/native';
+
+const client = StreamChat.getInstance("94bmdhqrnsxy");
+const windowHeight = Dimensions.get("window").height;
 
 export default function ChatScreen() {
+  const [channel, setChannel] = useState(null);
+  const [thread, setThread] = useState(null);
+  const navigation = useNavigation();
+
   return (
-    <View style={styles.container}>
-      <Image source={Images.background} style={styles.background} />
-      <StatusBar style="light" />
-      <View style={styles.contentWrapper}>
-        <View style={styles.chatSection}>
-          <Text style={styles.chatTitle}>Commute Chats</Text>
-          <CommuteChats />
-        </View>
-        <View style={styles.chatSection}>
-          <Text style={styles.chatTitle}>Concert Chats</Text>
-          <ConcertChats />
-        </View>
-      </View>
-    </View>
+    <OverlayProvider>
+      <Chat client={client}>
+        {channel ? (
+          <Channel
+            channel={channel}
+            keyboardVerticalOffset={0}
+            thread={thread}
+            threadList={!!thread}
+          >
+            {thread ? (
+              <Thread />
+            ) : (
+              <>
+                <MessageList onThreadSelect={setThread} />
+                <View style={styles.messageInputWrapper}>
+                  <MessageInput />
+                </View>
+              </>
+            )}
+          </Channel>
+        ) : (
+          <ChannelList onSelect={(channel) => {
+            console.log("channel", channel.cid);
+            navigation.navigate('channel', { cid: channel.cid });
+          }} />
+        )}
+      </Chat>
+    </OverlayProvider>
   );
 }
 
@@ -39,11 +61,21 @@ const styles = StyleSheet.create({
   },
   contentWrapper: {
     position: "absolute",
-    top: "11%",
+    top: "20%",
     alignItems: "center",
     width: "100%",
-    height: "78%",
+    height: windowHeight - 400,
     padding: 20,
+  },
+  messageInputWrapper: {
+    position: 'absolute',
+    bottom: 100, // Move the MessageInput up by 100 units to avoid overlap with tabs
+    width: '100%',
+    backgroundColor: Theme.colors.backgroundPrimary,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderTopWidth: 1,
+    borderTopColor: Theme.colors.border,
   },
   chatSection: {
     flex: 1,
