@@ -66,7 +66,7 @@ export default function App() {
  
 
   if (session && session.user) {
-    return <Redirect href="/tabs/chat" />;
+    return <Redirect href="/tabs/feed" />;
     // return <Account key={session.user.id} session={session} />
   } else if (isLoading) {
     return <Loading />;

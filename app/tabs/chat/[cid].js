@@ -9,14 +9,12 @@ import {
   useChatContext,
   Chat,
 } from 'stream-chat-expo';
-import { useNavigation } from '@react-navigation/native';
 
 export default function ChannelScreen() {
-  const [channel, setChannel] = useState(null);
+  const [channel, setChannel] = useState<ChannelType | null>(null);
   const { cid } = useLocalSearchParams();
 
   const { client } = useChatContext();
-  const navigation = useNavigation();
 
   useEffect(() => {
     const fetchChannel = async () => {
@@ -37,12 +35,7 @@ export default function ChannelScreen() {
 
   return (
     <Chat client={client}>
-      <Channel channel={channel} audioRecordingEnabled>
-        <Stack.Screen
-          options={{
-            title: 'Channel',
-          }}
-        />
+      <Channel channel={channel}>
         <MessageList />
         <View edges={['bottom']}>
           <MessageInput />

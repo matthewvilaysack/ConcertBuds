@@ -5,9 +5,9 @@ import ChatProvider from "@/providers/ChatProvider";
 export default function RootLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <ChatProvider>
+      {/* <ChatProvider> */}
         <Slot />
-      </ChatProvider>
+      {/* </ChatProvider> */}
     </GestureHandlerRootView>
   );
 }

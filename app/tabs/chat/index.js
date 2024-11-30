@@ -6,7 +6,6 @@ import Images from '@/assets/Images';
 import { StreamChat } from "stream-chat";
 import { OverlayProvider, ChannelList, MessageList, MessageInput, Chat, Channel } from "stream-chat-expo";
 import { router } from 'expo-router';
-import { useNavigation } from '@react-navigation/native';
 
 const client = StreamChat.getInstance("94bmdhqrnsxy");
 const windowHeight = Dimensions.get("window").height;
@@ -14,7 +13,6 @@ const windowHeight = Dimensions.get("window").height;
 export default function ChatScreen() {
   const [channel, setChannel] = useState(null);
   const [thread, setThread] = useState(null);
-  const navigation = useNavigation();
 
   return (
     <OverlayProvider>
@@ -40,7 +38,7 @@ export default function ChatScreen() {
         ) : (
           <ChannelList onSelect={(channel) => {
             console.log("channel", channel.cid);
-            navigation.navigate('channel', { cid: channel.cid });
+            router.push(`${channel.cid}`);
           }} />
         )}
       </Chat>

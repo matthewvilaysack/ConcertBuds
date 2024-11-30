@@ -4,109 +4,109 @@ import { Image, StyleSheet } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import theme from "@/assets/theme";
 import Images from "@/assets/Images";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
 
-export default function SlotLayout() {
+export default function TabLayout() {
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <Tabs
-        screenOptions={{
-          tabBarStyle: {
-            position: "absolute",
-            backgroundColor: "transparent",
-            borderTopWidth: 0,
-            paddingHorizontal: 10,
-          },
-          tabBarBackground: () => (
-            <LinearGradient
-              colors={["rgba(132, 106, 227, 0.0)", "transparent"]}
-              style={styles.gradient}
+    <Tabs
+      screenOptions={{
+        tabBarStyle: {
+          position: "absolute",
+          backgroundColor: "transparent", 
+          borderTopWidth: 0,
+          paddingHorizontal: 10,
+        },
+        tabBarBackground: () => (
+          <LinearGradient
+            colors={["rgba(132, 106, 227, 0.0)", "transparent"]} // Subtle gradient
+            style={styles.gradient}
+          />
+        ),
+        tabBarActiveTintColor: theme.colors.tabBarActive,
+        tabBarInactiveTintColor: theme.colors.tabBarActive,
+        tabBarLabelStyle: {
+          fontSize: 14,
+          // marginBottom: 10,
+        },
+        headerShown: false,
+      }}
+    >
+      <Tabs.Screen
+        name="feed"
+        options={{
+          title: "",
+          tabBarIcon: ({ focused }) => (
+            <Image
+              source={Images.home}
+              style={[
+                styles.icon,
+                {
+                  tintColor: focused
+                    ? theme.colors.tabBarActive
+                    : theme.colors.tabBarActive,
+                },
+              ]}
             />
           ),
-          tabBarActiveTintColor: theme.colors.tabBarActive,
-          tabBarInactiveTintColor: theme.colors.tabBarInactive,
-          tabBarLabelStyle: { fontSize: 14 },
-          headerShown: false,
         }}
-      >
-        <Tabs.Screen
-          name="feed"
-          options={{
-            title: "",
-            tabBarIcon: ({ focused }) => (
-              <Image
-                source={Images.home}
-                style={[
-                  styles.icon,
-                  {
-                    tintColor: focused
-                      ? theme.colors.tabBarActive
-                      : theme.colors.tabBarInactive,
-                  },
-                ]}
-              />
-            ),
-          }}
-        />
-        <Tabs.Screen
-          name="map"
-          options={{
-            title: "",
-            tabBarIcon: ({ focused }) => (
-              <Image
-                source={Images.map}
-                style={[
-                  styles.icon,
-                  {
-                    tintColor: focused
-                      ? theme.colors.tabBarActive
-                      : theme.colors.tabBarInactive,
-                  },
-                ]}
-              />
-            ),
-          }}
-        />
-        <Tabs.Screen
-          name="chat"
-          options={{
-            title: "",
-            tabBarIcon: ({ focused }) => (
-              <Image
-                source={Images.chat_icon}
-                style={[
-                  styles.icon,
-                  {
-                    tintColor: focused
-                      ? theme.colors.tabBarActive
-                      : theme.colors.tabBarInactive,
-                  },
-                ]}
-              />
-            ),
-          }}
-        />
-        <Tabs.Screen
-          name="profile"
-          options={{
-            title: "",
-            tabBarIcon: ({ focused }) => (
-              <Image
-                source={Images.profile_icon}
-                style={[
-                  styles.icon,
-                  {
-                    tintColor: focused
-                      ? theme.colors.tabBarActive
-                      : theme.colors.tabBarInactive,
-                  },
-                ]}
-              />
-            ),
-          }}
-        />
-      </Tabs>
-    </GestureHandlerRootView>
+      />
+      <Tabs.Screen
+        name="map"
+        options={{
+          title: "",
+          tabBarIcon: ({ focused }) => (
+            <Image
+              source={Images.map}
+              style={[
+                styles.icon,
+                {
+                  tintColor: focused
+                    ? theme.colors.tabBarActive
+                    : theme.colors.tabBarActive,
+                },
+              ]}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="chat"
+        options={{
+          title: "",
+          tabBarIcon: ({ focused }) => (
+            <Image
+              source={Images.chat_icon}
+              style={[
+                styles.icon,
+                {
+                  tintColor: focused
+                    ? theme.colors.tabBarActive
+                    : theme.colors.tabBarActive,
+                },
+              ]}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: "",
+          tabBarIcon: ({ focused }) => (
+            <Image
+              source={Images.profile_icon}
+              style={[
+                styles.icon,
+                {
+                  tintColor: focused
+                    ? theme.colors.tabBarActive
+                    : theme.colors.tabBarActive,
+                },
+              ]}
+            />
+          ),
+        }}
+      />
+    </Tabs>
   );
 }
 

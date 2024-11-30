@@ -4,6 +4,7 @@ import { StyleSheet, View, Alert } from 'react-native'
 import { Button, Input } from '@rneui/themed'
 import { Session } from '@supabase/supabase-js'
 import Avatar from '@/components/Avatar'
+import { Redirect } from 'expo-router';
 
 export default function Account({ session }: { session: Session }) {
   const [loading, setLoading] = useState(true)
@@ -45,6 +46,7 @@ export default function Account({ session }: { session: Session }) {
       }
     } finally {
       setLoading(false)
+      return <Redirect to="/tabs/feed" />
     }
   }
 
