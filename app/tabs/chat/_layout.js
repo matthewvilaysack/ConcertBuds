@@ -48,7 +48,7 @@ export default function Layout() {
       <Stack.Screen
         name="details"
         options={{
-          headerTitle: "Chat Details",
+          headerTitle: "Details",
           headerTitleAlign: "center",
           headerBackTitle: "Back",
         }}
