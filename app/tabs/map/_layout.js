@@ -38,13 +38,22 @@ export default function Layout() {
               }}
             >
               <Text style={{ color: "#fff", fontSize: 18, fontWeight: "bold" }}>
-                Map
+                Plan Commute
               </Text>
             </View>
           ),
         }}
       />
-
+      <Stack.Screen
+        name="preferences"
+        options={{
+          headerTitle: "",
+          headerTitleAlign: "center",
+          headerBackTitle: "",
+          headerTintColor: "white", // Set back button color to white
+          headerBackTitleVisible: "false",
+        }}
+      />
       <Stack.Screen
         name="details"
         options={{

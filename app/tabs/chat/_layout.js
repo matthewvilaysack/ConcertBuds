@@ -1,58 +1,76 @@
 // app/tabs/chat/_layout.js
 import { Stack } from "expo-router";
-import { View, Text } from "react-native";
+import { ImageBackground, View, Text, StyleSheet } from "react-native";
 import theme from "../../../assets/theme";
 
 export default function Layout() {
   return (
-    <Stack
-      screenOptions={{
-        headerStyle: {
-          backgroundColor: theme.colors.backgroundPrimary,
-        },
-        headerTintColor: theme.colors.textPrimary,
-        headerTitleStyle: {
-          backgroundColor: "transparent",
-          fontWeight: "bold",
-        },
-        headerTransparent: true,
-      }}
+    <ImageBackground
+      source={require("@/assets/Images/background.png")} // Replace with your image path
+      style={styles.background}
     >
-      <Stack.Screen
-        name="index"
-        options={{
+      <Stack
+        screenOptions={{
           headerStyle: {
-            position: "absolute",
+            backgroundColor: theme.colors.backgroundPrimary,
+          },
+          headerTintColor: theme.colors.textPrimary,
+          headerTitleStyle: {
             backgroundColor: "transparent",
-            elevation: 0,
-            shadowOpacity: 0,
-            borderBottomWidth: 0,
+            fontWeight: "bold",
           },
           headerTransparent: true,
-          headerTitle: () => (
-            <View
-              style={{
-                backgroundColor: "transparent",
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <Text style={{ color: "#fff", fontSize: 18, fontWeight: "bold" }}>
-                Chat
-              </Text>
-            </View>
-          ),
         }}
-      />
-      <Stack.Screen
-        name="details"
-        options={{
-          headerTitle: "Chat Details",
-          headerTitleAlign: "center",
-          headerBackTitle: "Back",
-        }}
-      />
-    </Stack>
+      >
+        <Stack.Screen
+          name="index"
+          options={{
+            headerStyle: {
+              position: "absolute",
+              backgroundColor: "transparent",
+              elevation: 0,
+              shadowOpacity: 0,
+              borderBottomWidth: 0,
+            },
+            headerTransparent: true,
+            headerTitle: () => (
+              <View
+                style={{
+                  backgroundColor: "transparent",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Text
+                  style={{ color: "#fff", fontSize: 18, fontWeight: "bold" }}
+                >
+                  Chat
+                </Text>
+              </View>
+            ),
+          }}
+        />
+        <Stack.Screen
+          name="details"
+          options={{
+            headerTitle: "Chat Details",
+            headerTitleAlign: "center",
+            headerBackTitle: "Back",
+          }}
+        />
+      </Stack>
+    </ImageBackground>
   );
 }
+const styles = StyleSheet.create({
+  background: {
+    flex: 1,
+    resizeMode: "cover", // Ensure the image covers the whole screen
+  },
+  content: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});
