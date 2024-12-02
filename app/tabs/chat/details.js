@@ -1,25 +1,43 @@
-// app/tabs/chat/details.js
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, StyleSheet, KeyboardAvoidingView, Platform } from "react-native";
+import { useLocalSearchParams } from "expo-router";
 
-export default function ChatDetails() {
+import Theme from "@/assets/theme";
+import ChatHeader from "@/components/ChatHeader";
+import ConcertChatFeed from "@/components/ConcertChatFeed";
+import ChatInput from "@/components/ChatInput";
+
+const Details = () => {
+  const params = useLocalSearchParams();
+  const CURRENT_TAB_DETAILS = "/tabs/chat/details";
+  console.log("PARAMS", params);
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Details about the Chat!</Text>
+      <ChatHeader
+        concertName={params.concert_name}
+        location={params.location}
+        date={params.concert_date}
+        numUsers={params.num_users}
+      />
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 65 : 0}
+        style={styles.keyboardContainer}
+      >
+        <ConcertChatFeed chatRoomId={params.concertId} />
+        <ChatInput chatRoomId={params.concertId} />
+      </KeyboardAvoidingView>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#fff",
+    backgroundColor: Theme.colors.backgroundPrimary,
   },
-  text: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#333",
+  keyboardContainer: {
+    flex: 1,
   },
 });
+export default Details;

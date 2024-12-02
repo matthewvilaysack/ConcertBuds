@@ -1,32 +1,73 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
+import { View, TextInput, TouchableOpacity, StyleSheet, Text } from "react-native";
+import Theme from "@/assets/theme";
+import supabase from "@/lib/supabase";
 
-const ChatInput = ({ onSend }) => {
-  const [message, setMessage] = useState('');
+const ChatInput = ({ chatRoomId }) => {
+  const [inputText, setInputText] = useState("");
 
-  const handleSend = () => {
-    if (message.trim()) {
-      onSend(message);
-      setMessage('');
+  const sendMessage = async () => {
+    if (!inputText.trim()) return;
+
+    try {
+      const { data: user } = await supabase.auth.getUser();
+
+      const { error } = await supabase.from("messages").insert({
+        chat_room_id: chatRoomId,
+        user_id: user.id,
+        content: inputText,
+      });
+
+      if (error) throw error;
+
+      setInputText("");
+    } catch (error) {
+      console.error("Error sending message:", error.message);
     }
   };
 
   return (
-    <div className="p-4 bg-gray-100 flex">
-      <input
-        type="text"
-        className="flex-1 p-2 border rounded"
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
-        placeholder="Type a message..."
+    <View style={styles.container}>
+      <TextInput
+        style={styles.input}
+        value={inputText}
+        onChangeText={setInputText}
+        placeholder="Write a message..."
+        placeholderTextColor={Theme.colors.textSecondary}
       />
-      <button
-        className="ml-2 p-2 bg-blue-500 text-white rounded"
-        onClick={handleSend}
-      >
-        Send
-      </button>
-    </div>
+      <TouchableOpacity onPress={sendMessage} style={styles.sendButton}>
+        <Text style={styles.sendButtonText}>Send</Text>
+      </TouchableOpacity>
+    </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: Theme.colors.backgroundPrimary,
+    borderRadius: 8,
+    padding: 8,
+  },
+  input: {
+    flex: 1,
+    padding: 8,
+    backgroundColor: Theme.colors.backgroundSecondary,
+    borderRadius: 8,
+    color: Theme.colors.textPrimary,
+    marginRight: 8,
+  },
+  sendButton: {
+    backgroundColor: Theme.colors.primary,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+  },
+  sendButtonText: {
+    color: "#fff",
+    fontWeight: "bold",
+  },
+});
 
 export default ChatInput;

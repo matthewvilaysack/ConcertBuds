@@ -90,7 +90,8 @@ const ConcertCard = ({ item, onRSVPChange }) => {
           address: address,
           concertDate: date || new Date().toISOString(),
           concertTime: concertTime,
-          avatarUrl: profile?.avatar_url
+          avatarUrl: profile?.avatar_url,
+          joinChat: false
         });
         setIsRSVPed(true);
         if (onRSVPChange) {

@@ -17,6 +17,7 @@ import {
   checkUserRSVPStatus,
 } from "@/lib/concert-db"; // Update this import
 import Theme from "../assets/theme";
+
 const windowWidth = Dimensions.get("window").width;
 
 const CommutePreferences = ({ item, onRSVPChange }) => {
@@ -48,6 +49,7 @@ const CommutePreferences = ({ item, onRSVPChange }) => {
   const month = eventDate.toLocaleString("en-US", { month: "short" });
   const day = eventDate.getDate();
   const [searchQuery, setSearchQuery] = useState(artist);
+  const [chosenDate, setChosenDate] = useState(new Date());
 
   // Use the passed dayOfWeek and concertTime or format from date if not provided
   const displayTime = concertTime || "Time TBD";
@@ -143,38 +145,31 @@ const CommutePreferences = ({ item, onRSVPChange }) => {
           </View>
         </View>
       </View>
-      <Text style={styles.artistName}>Start Location:</Text>
-      <View style={styles.searchInputContainer}>
-        <TextInput
-          style={styles.searchInput}
-          placeholder="Search for artist, tour, etc."
-          placeholderTextColor="rgba(0, 0, 0, 0.4)"
-          value={searchQuery}
-          onChangeText={setSearchQuery}
-          returnKeyType="search"
-        />
-      </View>
-      <Text style={styles.artistName}>Arrival Time:</Text>
-      <View style={styles.searchInputContainer}>
-        <TextInput
-          style={styles.searchInput}
-          placeholder="Search for artist, tour, etc."
-          placeholderTextColor="rgba(0, 0, 0, 0.4)"
-          value={searchQuery}
-          onChangeText={setSearchQuery}
-          returnKeyType="search"
-        />
-      </View>
-      <Text style={styles.artistName}>Transportation Route:</Text>
-      <View style={styles.searchInputContainer}>
-        <TextInput
-          style={styles.searchInput}
-          placeholder="Search for artist, tour, etc."
-          placeholderTextColor="rgba(0, 0, 0, 0.4)"
-          value={searchQuery}
-          onChangeText={setSearchQuery}
-          returnKeyType="search"
-        />
+      <View style={styles.preferencesContainer}>
+        <Text style={styles.searchName}>Start Location:</Text>
+        <View style={styles.searchInputContainer}>
+          <TextInput
+            style={styles.searchInput}
+            placeholder="459 Lagunita Dr, Stanford, CA 94305"
+            placeholderTextColor="rgba(0, 0, 0, 0.4)"
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            returnKeyType="search"
+          />
+        </View>
+        <Text style={styles.searchName}>Arrival Time:</Text>
+        <View style={styles.searchInputContainer}></View>
+        <Text style={styles.searchName}>Transportation Route:</Text>
+        <View style={styles.searchInputContainer}>
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Search for artist, tour, etc."
+            placeholderTextColor="rgba(0, 0, 0, 0.4)"
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            returnKeyType="search"
+          />
+        </View>
       </View>
       <View style={styles.goingContainer}>
         <TouchableOpacity
@@ -215,7 +210,6 @@ const styles = StyleSheet.create({
   dateContainer: {
     marginTop: "5%",
     marginLeft: "5%",
-    marginBottom: "5%",
     flexDirection: "column",
     alignItems: "center",
   },
@@ -261,6 +255,12 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 20,
     borderTopLeftRadius: 20,
   },
+  preferencesContainer: {
+    alignItems: "flex-start",
+    justifyContent: "flex-start",
+    width: "100%",
+    paddingHorizontal: 36,
+  },
   goingContainer: {
     // backgroundColor: "rgba(255, 255, 255, 0.5)",
     borderBottomRightRadius: 20,
@@ -275,7 +275,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: "center",
     justifyContent: "center",
-    padding: 20,
+    padding: 15,
+    marginVertical: 20,
   },
   goingText: {
     color: "white",
@@ -288,11 +289,20 @@ const styles = StyleSheet.create({
   goingButtonDisabled: {
     opacity: 0.5,
   },
+  searchName: {
+    fontFamily: "Doppio",
+    fontSize: 16,
+    lineHeight: 20,
+    color: "#000000",
+    marginTop: 20,
+    marginBottom: 10,
+    marginLeft: 5,
+  },
   searchInputContainer: {
-    flex: 1,
     height: 50,
     borderRadius: 10,
     overflow: "hidden",
+    width: "100%",
     backgroundColor: "rgba(255, 255, 255, 0.6)",
   },
   searchInput: {

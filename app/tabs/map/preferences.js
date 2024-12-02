@@ -54,19 +54,10 @@ const styles = StyleSheet.create({
     height: "100%",
   },
   contentWrapper: {
-    position: "absolute",
-    top: 200,
-    alignItems: "center",
+    flex: 1,
+    justifyContent: "center",
     width: "100%",
     padding: 20,
-  },
-  infoText: {
-    fontSize: 15,
-    color: "#FFFFFF",
-    opacity: 0.8,
-    textAlign: "center",
-    marginTop: 10,
-    lineHeight: 22,
   },
 });
 
