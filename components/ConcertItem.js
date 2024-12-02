@@ -20,7 +20,7 @@ const ConcertItem = ({ item, destination, hasRSVPed = false, onRSVPChange }) => 
   const router = useRouter();
   if (!item) return null;
 
-  const { name, dates, _embedded, id, formattedData } = item || {};
+  const { name, dates, _embedded, concertId, formattedData } = item || {};
   const venue = _embedded?.venues?.[0];
   const city = venue?.city?.name || "San Jose";
   const state = venue?.state?.stateCode;
@@ -32,8 +32,8 @@ const ConcertItem = ({ item, destination, hasRSVPed = false, onRSVPChange }) => 
   const month = eventDate.toLocaleString("en-US", { month: "short" });
   const day = eventDate.getDate();
   const locationText = city && state ? `${city}, ${state}` : `${city}`;
-
   const handleNavigate = () => {
+    console.log(item);
     router.push({
       pathname: destination,
       params: getParams(item),
@@ -75,7 +75,7 @@ const ConcertItem = ({ item, destination, hasRSVPed = false, onRSVPChange }) => 
   const getAdditionalDetails = (item) => ({
     imageUrl: formattedData?.imageUrl,
     timezone: formattedData?.timezone,
-    address: item._embedded?.venues?.[0]?.address?.line1,
+    address: item.address,
   });
 
   const handleUnRSVP = async (e) => {

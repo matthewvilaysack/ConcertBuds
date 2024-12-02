@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, View, Image, StatusBar, ActivityIndicator, TouchableOpacity, Text, Alert } from "react-native";
 import { useRouter } from "expo-router";
-import ConcertBudsPage from "@/components/ConcertBudsPage";
 import ConcertItem from "@/components/ConcertItem";
 import Images from "@/assets/Images";
 import ConcertUsersGoing from "@/components/ConcertUsersGoing";
@@ -10,14 +9,15 @@ import { supabase } from '@/lib/supabase';
 import { getUserConcerts, getConcertAttendees, createChatRoom, joinChatRoom, createOrJoinChatRoom } from '@/lib/concert-db';
 import Theme from "@/assets/theme";
 import useSession from '@/utils/useSession';
-
+import {useLocalSearchParams} from 'expo-router';
 export default function ConcertBudsScreen() {
   const router = useRouter();
   const session = useSession();
   const [attendees, setAttendees] = useState([]);
   const [loading, setLoading] = useState(true);
   const [concert, setConcert] = useState(null);
-
+  const params = useLocalSearchParams();
+  // fix this to get the concert id from the params
   useEffect(() => {
     const loadConcertData = async () => {
       try {

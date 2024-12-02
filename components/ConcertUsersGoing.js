@@ -56,7 +56,8 @@ const ConcertUsersGoing = ({ concertId }) => {
 
   const renderItem = ({ item }) => (
     <View style={styles.attendeesRow}>
-      {item.map((attendee) => (
+      {
+        item.map((attendee) => (
         <View key={attendee.id} style={styles.attendeeContainer}>
           <Image
             style={styles.avatarCircle}
@@ -91,7 +92,7 @@ const ConcertUsersGoing = ({ concertId }) => {
         persistentScrollbar={true}
         data={groupedData}
         renderItem={renderItem}
-        keyExtractor={(item, index) => index.toString()}
+        keyExtractor={(item, index) => `${concertId}-${index}`} // Combine concertId and group index
       />
     </View>
   );
