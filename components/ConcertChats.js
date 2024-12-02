@@ -8,9 +8,18 @@ import {
   Dimensions,
 } from "react-native";
 import Theme from "../assets/theme";
+import { useRouter } from "expo-router";
+
 const windowWidth = Dimensions.get("window").width;
 
 const ConcertChats = ({ concerts }) => {
+  const router = useRouter();
+  const handleNavigate = () => {
+    router.push({
+      pathname: "/tabs/chat/details",
+    });
+  };
+
   return (
     <View style={styles.container}>
       {concerts.map((concert, index) => (
