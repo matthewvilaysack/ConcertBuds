@@ -20,7 +20,7 @@ const ConcertItem = ({ item, destination, hasRSVPed = false, onRSVPChange }) => 
   const router = useRouter();
   if (!item) return null;
 
-  const { name, dates, _embedded, concertId, formattedData } = item || {};
+  const { name, dates, _embedded, formattedData } = item || {};
   const venue = _embedded?.venues?.[0];
   const city = venue?.city?.name || "San Jose";
   const state = venue?.state?.stateCode;

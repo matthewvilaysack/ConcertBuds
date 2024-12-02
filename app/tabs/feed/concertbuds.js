@@ -15,30 +15,42 @@ export default function ConcertBudsScreen() {
   const session = useSession();
   const [attendees, setAttendees] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [concert, setConcert] = useState(null);
   const params = useLocalSearchParams();
-  // fix this to get the concert id from the params
+  console.log("PARAMS ", params);
+  // Create a properly structured concert object from URL params
+  const concert = {
+    concert_id: params.id,
+    concert_name: params.concertName || params.name,
+    concert_date: params.date,
+    location: `${params.city}, ${params.state}`,
+    address: params.address,
+    timezone: params.timezone,
+    time: params.time,
+    artist: params.artist,
+    imageUrl: params.imageUrl
+  };
+  // fix this to get just the one concert concert id from the params
   useEffect(() => {
-    const loadConcertData = async () => {
+    const loadAttendees = async () => {
+      if (!concert.concert_id) {
+        setLoading(false);
+        return;
+      }
+
       try {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (user) {
-          const concerts = await getUserConcerts(user.id);
-          if (concerts && concerts.length > 0) {
-            setConcert(concerts[0]);
-            const attendeeData = await getConcertAttendees(concerts[0].concert_id);
-            setAttendees(attendeeData || []);
-          }
-        }
+        const attendeeData = await getConcertAttendees(concert.concert_id);
+        console.log("ATTENDEE DATA", attendeeData)
+        setAttendees(attendeeData || []);
       } catch (error) {
-        console.error("Error loading concert data:", error);
+        console.error("Error loading attendees:", error);
+        Alert.alert("Error", "Failed to load concert attendees");
       } finally {
         setLoading(false);
       }
     };
 
-    loadConcertData();
-  }, []);
+    loadAttendees();
+  }, [concert.concert_id]);
 
   const handleJoinChat = async () => {
     if (!concert || !session.user) {
@@ -80,7 +92,7 @@ export default function ConcertBudsScreen() {
         userId,
         username
       );
-    console.log(chatRoom);
+    // console.log(chatRoom);
       // console.log("num users:", chatRoom.num_users);
   
       Alert.alert("Success", "You have successfully joined the chat!");
