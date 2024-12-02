@@ -31,6 +31,7 @@ const ConcertUsersGoing = ({ concertId }) => {
     const fetchAttendees = async () => {
       try {
         const attendeeData = await getConcertAttendees(concertId);
+        console.log("ATTENDEE DATA", attendeeData);
         setAttendees(attendeeData || []);
       } catch (error) {
         console.error("Error fetching attendees:", error);
@@ -53,11 +54,12 @@ const ConcertUsersGoing = ({ concertId }) => {
   }
 
   const groupedData = chunkArray(attendees, 3);
+  // console.log("Grouped Data\n", groupedData);
 
   const renderItem = ({ item, index }) => (
     <View style={styles.attendeesRow} key={`${concertId}-${index}`}>
       {item.map((attendee) => (
-        <View key={`${concertId}-${attendee.id}`} style={styles.attendeeContainer}>
+        <View key={`${concertId}-${attendee.user_id}`} style={styles.attendeeContainer}>
           <Image
             style={styles.avatarCircle}
             source={

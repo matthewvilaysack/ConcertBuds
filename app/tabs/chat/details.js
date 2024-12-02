@@ -10,7 +10,7 @@ import ChatInput from "@/components/ChatInput";
 const Details = () => {
   const params = useLocalSearchParams();
   const CURRENT_TAB_DETAILS = "/tabs/chat/details";
-  console.log(params);
+  console.log("PARAMS", params);
   return (
     <View style={styles.container}>
       <ChatHeader
