@@ -1,156 +1,161 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
+  FlatList,
   Text,
-  StyleShee,
-  TouchableOpacity,
   StyleSheet,
-  Dimensions,
+  TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
-import Theme from "../assets/theme";
-import { useRouter } from "expo-router";
+import supabase from "@/lib/supabase";
+import Theme from "@/assets/theme";
 
-const windowWidth = Dimensions.get("window").width;
+const ConcertChats = ({ navigation }) => {
+  const [concertChats, setConcertChats] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-const ConcertChats = ({ concerts }) => {
-  const router = useRouter();
-  const handleNavigate = () => {
-    router.push({
-      pathname: "/tabs/chat/details",
+  const fetchConcertChats = async () => {
+    setIsLoading(true);
+    try {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (!user) {
+        console.error("User not authenticated");
+        setIsLoading(false);
+        return;
+      }
+
+      console.log("Fetching concert chats for user:", user.id);
+
+      const { data, error } = await supabase
+        .from("user_concerts")
+        .select(
+          `
+          concert_id,
+          concert_name,
+          location,
+          address,
+          concert_date,
+          join_chat,
+          chat_rooms (num_users)
+        `
+        )
+        .eq("user_id", user.id)
+        .eq("join_chat", true);
+
+      console.log("Query response:", data);
+      if (error) {
+        console.error("Query error:", error);
+        throw error;
+      }
+
+      setConcertChats(data);
+    } catch (error) {
+      console.error("Error fetching concert chats:", error.message);
+    }
+    setIsLoading(false);
+  };
+
+  useEffect(() => {
+    fetchConcertChats();
+  }, []);
+
+  const handleNavigate = (concert) => {
+    navigation.navigate("ConcertChatDetails", {
+      concert_id: concert.concert_id,
+      concert_name: concert.concert_name,
+      concert_location: concert.location,
+      address: concert.address,
+      concert_date: concert.concert_date,
     });
   };
 
+  if (isLoading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color={Theme.colors.textPrimary} />
+        <Text style={styles.loadingText}>Loading Chats...</Text>
+      </View>
+    );
+  }
+
+  if (concertChats.length === 0) {
+    return (
+      <View style={styles.emptyContainer}>
+        <Text style={styles.emptyText}>No concert chats available</Text>
+      </View>
+    );
+  }
+
   return (
-    <View style={styles.container}>
-      {concerts.map((concert, index) => (
-        <TouchableOpacity key={index} onPress={() => handleNavigate(concert)}>
-          <View style={styles.artistContainer}>
-            <View style={styles.dateContainer}>
-              <Text style={styles.month}>Dec</Text>
-              <Text style={styles.day}>
-                {new Date(concert.concert_date).getDate()}
-              </Text>
-            </View>
-            <View style={styles.contentContainer}>
-              <View style={styles.headerRow}>
-                <Text style={styles.concertName}>
-                  {concert.concert_name} • {concert.location}
-                </Text>
-              </View>
-              <View style={styles.headerRow}>
-                <Text style={styles.numGoing}>
-                  {concert.num_going} people going
-                </Text>
-              </View>
-            </View>
-            <View style={styles.dateContainer}>
-              <Text style={styles.lastMessageTime}>
-                {concert.last_message_time}
-              </Text>
-            </View>
+    <FlatList
+      data={concertChats}
+      keyExtractor={(item) => item.concert_id.toString()} // Ensure the key is unique
+      renderItem={({ item }) => (
+        <TouchableOpacity onPress={() => handleNavigate(item)}>
+          <View style={styles.chatItem}>
+            <Text style={styles.chatName}>
+              {item.concert_name} • {item.location}
+            </Text>
+            <Text style={styles.chatDate}>
+              {new Date(item.concert_date).toDateString()}
+            </Text>
+            <Text style={styles.chatUsers}>
+              {item.chat_rooms ? item.chat_rooms.num_users : 0} people in chat
+            </Text>
           </View>
         </TouchableOpacity>
-      ))}
-    </View>
+      )}
+    />
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingHorizontal: "4%",
-    width: windowWidth,
-  },
-  artistContainer: {
-    width: "92%",
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: Theme.colors.background.primary,
-    borderRadius: 16,
-    marginVertical: 8,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 2,
-  },
-  dateContainer: {
-    padding: 12,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  month: {
-    fontSize: 16,
-    fontFamily: Theme.typography.fontFamilies.primary,
-    color: Theme.colors.text.primary,
-    marginBottom: 2,
-  },
-  day: {
-    fontSize: 24,
-    fontFamily: Theme.typography.fontFamilies.primary,
-    color: Theme.colors.text.primary,
-    fontWeight: "500",
-  },
-  contentContainer: {
-    flex: 1,
+  listContainer: {
     padding: 16,
   },
-  headerRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+  chatItem: {
+    backgroundColor: Theme.colors.backgroundSecondary,
+    padding: 16,
+    marginVertical: 8,
+    borderRadius: 8,
   },
-  location: {
-    fontSize: 18,
-    fontFamily: Theme.typography.fontFamilies.primary,
-    color: Theme.colors.text.secondary,
+  chatName: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: Theme.colors.textPrimary,
+  },
+  chatDate: {
+    fontSize: 14,
+    color: Theme.colors.textSecondary,
+  },
+  chatUsers: {
+    fontSize: 14,
+    color: Theme.colors.textSecondary,
+    marginTop: 4,
+  },
+  loadingContainer: {
     flex: 1,
-    marginRight: 8,
-  },
-  actionsContainer: {
-    flexDirection: "row",
+    justifyContent: "center",
     alignItems: "center",
-    gap: 8,
+    backgroundColor: Theme.colors.backgroundPrimary,
   },
-  goingButton: {
-    backgroundColor: Theme.colors.primary.main,
-    borderRadius: Theme.borderRadius.sm,
-    paddingVertical: 6,
-    paddingHorizontal: 14,
+  loadingText: {
+    fontSize: 18,
+    color: Theme.colors.textPrimary,
+    marginTop: 8,
   },
-  goingText: {
-    color: Theme.colors.text.white,
-    fontFamily: Theme.typography.fontFamilies.primary,
-    fontSize: 14,
+  emptyContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: Theme.colors.backgroundPrimary,
   },
-  artistName: {
-    fontSize: 14,
-    fontFamily: Theme.typography.fontFamilies.primary,
-    color: Theme.colors.text.primary,
-    marginTop: 4,
-  },
-  concertName: {
-    fontSize: 14,
-    fontFamily: Theme.typography.fontFamilies.primary,
-    color: Theme.colors.text.primary,
-    marginTop: 4,
-  },
-  concertDate: {
-    fontSize: 14,
-    fontFamily: Theme.typography.fontFamilies.primary,
-    color: Theme.colors.text.secondary,
-  },
-  numGoing: {
-    fontSize: 14,
-    fontFamily: Theme.typography.fontFamilies.primary,
-    color: Theme.colors.text.secondary,
-    marginTop: 4,
-  },
-  lastMessageTime: {
-    fontSize: 12,
-    fontFamily: Theme.typography.fontFamilies.primary,
-    color: Theme.colors.text.tertiary,
-    marginTop: 4,
+  emptyText: {
+    fontSize: 18,
+    color: Theme.colors.textSecondary,
   },
 });
 

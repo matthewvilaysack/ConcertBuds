@@ -5,62 +5,55 @@ import theme from "../../../assets/theme";
 
 export default function Layout() {
   return (
-    <ImageBackground
-      source={require("@/assets/Images/background.png")} // Replace with your image path
-      style={styles.background}
+    <Stack
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: theme.colors.backgroundPrimary,
+        },
+        headerTintColor: theme.colors.textPrimary,
+        headerTitleStyle: {
+          backgroundColor: "transparent",
+          fontWeight: "bold",
+        },
+        headerTransparent: true,
+      }}
     >
-      <Stack
-        screenOptions={{
+      <Stack.Screen
+        name="index"
+        options={{
           headerStyle: {
-            backgroundColor: theme.colors.backgroundPrimary,
-          },
-          headerTintColor: theme.colors.textPrimary,
-          headerTitleStyle: {
+            position: "absolute",
             backgroundColor: "transparent",
-            fontWeight: "bold",
+            elevation: 0,
+            shadowOpacity: 0,
+            borderBottomWidth: 0,
           },
           headerTransparent: true,
+          headerTitle: () => (
+            <View
+              style={{
+                backgroundColor: "transparent",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Text style={{ color: "#fff", fontSize: 18, fontWeight: "bold" }}>
+                Chat
+              </Text>
+            </View>
+          ),
         }}
-      >
-        <Stack.Screen
-          name="index"
-          options={{
-            headerStyle: {
-              position: "absolute",
-              backgroundColor: "transparent",
-              elevation: 0,
-              shadowOpacity: 0,
-              borderBottomWidth: 0,
-            },
-            headerTransparent: true,
-            headerTitle: () => (
-              <View
-                style={{
-                  backgroundColor: "transparent",
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <Text
-                  style={{ color: "#fff", fontSize: 18, fontWeight: "bold" }}
-                >
-                  Chat
-                </Text>
-              </View>
-            ),
-          }}
-        />
-        <Stack.Screen
-          name="details"
-          options={{
-            headerTitle: "Chat Details",
-            headerTitleAlign: "center",
-            headerBackTitle: "Back",
-          }}
-        />
-      </Stack>
-    </ImageBackground>
+      />
+      <Stack.Screen
+        name="details"
+        options={{
+          headerTitle: "Chat Details",
+          headerTitleAlign: "center",
+          headerBackTitle: "Back",
+        }}
+      />
+    </Stack>
   );
 }
 const styles = StyleSheet.create({
