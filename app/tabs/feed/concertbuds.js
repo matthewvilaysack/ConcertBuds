@@ -16,7 +16,7 @@ export default function ConcertBudsScreen() {
   const [attendees, setAttendees] = useState([]);
   const [loading, setLoading] = useState(true);
   const params = useLocalSearchParams();
-  console.log("PARAMS ", params);
+  // console.log("PARAMS ", params);
   // Create a properly structured concert object from URL params
   const concert = {
     concert_id: params.id,
@@ -29,7 +29,6 @@ export default function ConcertBudsScreen() {
     artist: params.artist,
     imageUrl: params.imageUrl
   };
-  // fix this to get just the one concert concert id from the params
   useEffect(() => {
     const loadAttendees = async () => {
       if (!concert.concert_id) {
@@ -39,7 +38,7 @@ export default function ConcertBudsScreen() {
 
       try {
         const attendeeData = await getConcertAttendees(concert.concert_id);
-        console.log("ATTENDEE DATA", attendeeData)
+        // console.log("ATTENDEE DATA", attendeeData)
         setAttendees(attendeeData || []);
       } catch (error) {
         console.error("Error loading attendees:", error);
@@ -50,7 +49,7 @@ export default function ConcertBudsScreen() {
     };
 
     loadAttendees();
-  }, [concert.concert_id]);
+  }, []);
 
   const handleJoinChat = async () => {
     if (!concert || !session.user) {
@@ -92,7 +91,7 @@ export default function ConcertBudsScreen() {
         userId,
         username
       );
-    // console.log(chatRoom);
+      console.log("CHAT_ROOM", chatRoom);
       // console.log("num users:", chatRoom.num_users);
   
       Alert.alert("Success", "You have successfully joined the chat!");
@@ -105,7 +104,7 @@ export default function ConcertBudsScreen() {
           location: concert.location,
           address: concert.address,
           concert_date: concert.concert_date,
-          // num_users: chatRoom.num_users || 0, // Pass num_users
+          num_users: chatRoom.num_users || 0, // Pass num_users
         },
       });
     } catch (error) {
@@ -158,7 +157,7 @@ export default function ConcertBudsScreen() {
           />
         )}
         <ConcertUsersGoing
-          key={concert?.concert_id}
+          key={`${concert?.concert_id}-attendees`}
           attendees={attendees}
           concertId={concert?.concert_id}
           style={styles.itemSpacing}
