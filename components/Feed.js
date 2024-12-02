@@ -9,6 +9,9 @@ import ConcertItem from "./ConcertItem";
 import Theme from "../assets/theme";
 
 const Feed = ({ concerts, destination, onRSVPChange }) => {
+  // Log concert IDs to identify duplicates
+  console.log("Concert IDs:", concerts.map(concert => concert.concert_id));
+
   return (
     <View style={styles.container}>
       <FlatList

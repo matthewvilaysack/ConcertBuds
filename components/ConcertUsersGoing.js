@@ -54,11 +54,10 @@ const ConcertUsersGoing = ({ concertId }) => {
 
   const groupedData = chunkArray(attendees, 3);
 
-  const renderItem = ({ item }) => (
-    <View style={styles.attendeesRow}>
-      {
-        item.map((attendee) => (
-        <View key={attendee.id} style={styles.attendeeContainer}>
+  const renderItem = ({ item, index }) => (
+    <View style={styles.attendeesRow} key={`${concertId}-${index}`}>
+      {item.map((attendee) => (
+        <View key={`${concertId}-${attendee.id}`} style={styles.attendeeContainer}>
           <Image
             style={styles.avatarCircle}
             source={
