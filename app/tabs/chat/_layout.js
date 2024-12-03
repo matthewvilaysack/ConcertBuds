@@ -1,4 +1,3 @@
-// app/tabs/chat/_layout.js
 import { Stack } from "expo-router";
 import { View, Text } from "react-native";
 import theme from "../../../assets/theme";
@@ -10,7 +9,7 @@ export default function Layout() {
         headerStyle: {
           backgroundColor: theme.colors.backgroundPrimary,
         },
-        headerTintColor: theme.colors.textPrimary,
+        headerTintColor: "#fff",
         headerTitleStyle: {
           backgroundColor: "transparent",
           fontWeight: "bold",
@@ -48,9 +47,18 @@ export default function Layout() {
       <Stack.Screen
         name="details"
         options={{
-          headerTitle: "Details",
+          headerTitle: "",
           headerTitleAlign: "center",
-          headerBackTitle: "Back",
+          headerBackTitleVisible: false,
+          headerStyle: {
+            position: "absolute",
+            backgroundColor: "transparent",
+            elevation: 0,
+            shadowOpacity: 0,
+            borderBottomWidth: 0,
+          },
+          headerTransparent: true,
+          headerTintColor: "#fff",
         }}
       />
     </Stack>

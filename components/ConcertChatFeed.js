@@ -6,20 +6,37 @@ import ChatMessage from "@/components/ChatMessage";
 
 const ConcertChatFeed = ({ concertId }) => {
   const [messages, setMessages] = useState([]);
+  const [userProfiles, setUserProfiles] = useState({});
   const [isLoading, setIsLoading] = useState(true);
-  console.log("CHATROOMID", concertId);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
 
-  const fetchMessages = async () => {
+  const fetchMessages = async (page) => {
     setIsLoading(true);
     try {
       const { data, error } = await supabase
         .from("messages")
-        .select("*")
+        .select("*, profiles:user_id(username, avatar_url)")
         .eq("concert_id", concertId)
-        .order("created_at", { ascending: true });
+        .order("created_at", { ascending: false })
+        .range((page - 1) * 20, page * 20 - 1); // Fetch 20 messages per page
 
       if (error) throw error;
-      setMessages(data);
+
+      if (data.length < 20) {
+        setHasMore(false);
+      }
+
+      // Build a map of user profiles for easy lookup
+      const profiles = {};
+      data.forEach((message) => {
+        profiles[message.user_id] = {
+          username: message.profiles.username,
+          avatarUrl: message.profiles.avatar_url,
+        };
+      });
+      setUserProfiles((prevProfiles) => ({ ...prevProfiles, ...profiles }));
+      setMessages((prevMessages) => [...prevMessages, ...data]);
     } catch (error) {
       console.error("Error fetching messages:", error.message);
     }
@@ -27,10 +44,16 @@ const ConcertChatFeed = ({ concertId }) => {
   };
 
   useEffect(() => {
-    fetchMessages();
-  }, [concertId]);
+    fetchMessages(page);
+  }, [concertId, page]);
 
-  if (isLoading) {
+  const handleLoadMore = () => {
+    if (hasMore && !isLoading) {
+      setPage((prevPage) => prevPage + 1);
+    }
+  };
+
+  if (isLoading && page === 1) {
     return (
       <View style={styles.loadingContainer}>
         <Text style={styles.loadingText}>Loading messages...</Text>
@@ -45,11 +68,15 @@ const ConcertChatFeed = ({ concertId }) => {
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <ChatMessage
-            username={item.user_id}
+            username={userProfiles[item.user_id]?.username}
+            avatarUrl={userProfiles[item.user_id]?.avatarUrl}
             timestamp={new Date(item.created_at).toLocaleTimeString()}
             text={item.content}
           />
         )}
+        inverted // Start at the latest messages
+        onEndReached={handleLoadMore}
+        onEndReachedThreshold={0.5}
         style={styles.messageList}
       />
     </View>

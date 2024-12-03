@@ -91,7 +91,6 @@ export default function ConcertBudsScreen() {
         userId,
         username
       );
-      console.log("CHAT_ROOM", chatRoom);
       // console.log("num users:", chatRoom.num_users);
   
       Alert.alert("Success", "You have successfully joined the chat!");
@@ -113,9 +112,6 @@ export default function ConcertBudsScreen() {
     }
   };
   
-  
-  
-
   if (loading) {
     return (
       <View style={[styles.container, styles.centered]}>
@@ -149,7 +145,12 @@ export default function ConcertBudsScreen() {
                     stateCode: concert.location.split(', ')[1]
                   }
                 }]
-              }
+              },
+              address: concert.address, // Ensure address is passed correctly
+              timezone: concert.timezone,
+              time: concert.time,
+              artist: concert.artist,
+              imageUrl: concert.imageUrl
             }}
             destination="/tabs/feed/concertbuds"
             hasRSVPed={true}

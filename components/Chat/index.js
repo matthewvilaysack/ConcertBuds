@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import {
   View,
@@ -6,13 +7,12 @@ import {
   TouchableOpacity,
   Dimensions,
   ActivityIndicator,
-  Image,
 } from "react-native";
 import Theme from "../assets/theme";
 import { useRouter } from "expo-router";
 import supabase from "@/lib/supabase";
 import timeAgo from '@/utils/timeAgo';
-import Images from '../assets/Images'; // Updated import
+
 
 const windowWidth = Dimensions.get("window").width;
 
@@ -51,7 +51,7 @@ const ConcertChats = ({ currentTab, uuid }) => {
         `)
         .eq('user_id', uuid)
         .eq('join_chat', true);
-          
+  
       console.log("Joined concerts:", joinedConcerts);
   
       if (joinedError) {
@@ -103,7 +103,7 @@ const ConcertChats = ({ currentTab, uuid }) => {
           lastMessage,
           eventDate
         });
-        console.log("CHATROOM", chatRoom);
+  
         return {
           ...concert,
           month: eventDate.toLocaleString("en-US", { month: "short" }),
@@ -114,9 +114,6 @@ const ConcertChats = ({ currentTab, uuid }) => {
             : 'No messages yet'
         };
       });
-
-      // Sort concerts by date in ascending order
-      formattedConcerts.sort((a, b) => new Date(a.concert_date) - new Date(b.concert_date));
   
       console.log("Final formatted concerts:", formattedConcerts);
       setConcerts(formattedConcerts);
@@ -157,153 +154,134 @@ const ConcertChats = ({ currentTab, uuid }) => {
   return (
     <View style={styles.container}>
       {concerts.map((concert, index) => (
-        <TouchableOpacity 
-          key={index} 
-          onPress={() => handleNavigate(concert)}
-          accessible={true}
-          accessibilityLabel={`${concert.concert_name} in ${concert.location}, ${concert.num_users} members, Last message ${concert.last_message_time}`}
-        >
+        <TouchableOpacity key={index} onPress={() => handleNavigate(concert)}>
           <View style={styles.artistContainer}>
             <View style={styles.dateContainer}>
-              <Text style={styles.month}>
-                {concert.month}
-              </Text>
-              <Text style={styles.day}>
-                {concert.day}
-              </Text>
+              <Text style={styles.month}>{concert.month}</Text>
+              <Text style={styles.day}>{concert.day}</Text>
             </View>
             <View style={styles.contentContainer}>
-              <Text 
-                style={styles.concertNameText} 
-                numberOfLines={1} 
-                ellipsizeMode="tail"
-              >
-                {concert.concert_name}
-              </Text>
-              <Text 
-                style={styles.locationText}
-                numberOfLines={1}
-                ellipsizeMode="tail"
-              >
-                {concert.location}
-              </Text>
-              <View style={styles.memberContainer}>
-                <Image 
-                  source={Images.members_icon}
-                  style={styles.memberIcon}
-                  accessibilityElementsHidden={true}
-                />
-                <Text style={styles.memberCount}>
-                  {concert.num_users.toLocaleString()} {concert.num_users === 1 ? 'member' : 'members'}
+              <View style={styles.headerRow}>
+                <Text style={styles.concertName}>
+                  {concert.concert_name} • {concert.location}
+                </Text>
+              </View>
+              <View style={styles.headerRow}>
+                <Text style={styles.numGoing}>
+                  {concert.num_users} people in chat
                 </Text>
               </View>
             </View>
-            <Text style={styles.lastMessageTime}>
-              {concert.last_message_time}
-            </Text>
+            <View style={styles.dateContainer}>
+              <Text style={styles.lastMessageTime}>
+                {concert.last_message_time}
+              </Text>
+            </View>
           </View>
         </TouchableOpacity>
       ))}
     </View>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    paddingHorizontal: 16,
+    backgroundColor: Theme.colors.background.primary, // Ensure this matches Feed's background
+    paddingHorizontal: "4%",
+    width: windowWidth,
   },
   artistContainer: {
-    width: 336,
-    height: 90,
-    backgroundColor: 'rgba(255, 255, 255, 0.15)', // Lighter, more visible background
-    borderRadius: 20,
-    flexDirection: 'row',
-    marginBottom: 8,
-    overflow: 'hidden',
+    width: "92%",
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: Theme.colors.background.primary,
+    borderRadius: 16,
+    marginVertical: 8,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
   },
   dateContainer: {
-    width: 75,
-    height: '100%',
-    backgroundColor: 'rgba(217, 217, 217, 0.2)', // Slightly more opaque for better contrast
-    borderTopLeftRadius: 20,
-    borderBottomLeftRadius: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 12,
+    padding: 12,
+    alignItems: "center",
+    justifyContent: "center",
   },
   month: {
     fontSize: 16,
     fontFamily: Theme.typography.fontFamilies.primary,
-    color: Theme.colors.text.white,
-    lineHeight: 20,
-    textTransform: 'uppercase',
-    marginBottom: 4,
+    color: Theme.colors.text.primary,
+    marginBottom: 2,
   },
   day: {
-    fontSize: 32,
+    fontSize: 24,
     fontFamily: Theme.typography.fontFamilies.primary,
-    color: Theme.colors.text.white,
-    fontWeight: '500',
+    color: Theme.colors.text.primary,
+    fontWeight: "500",
   },
   contentContainer: {
     flex: 1,
-    paddingLeft: 16,
-    paddingTop: 16,
-    paddingRight: 60,
+    padding: 16,
   },
-  concertNameText: {
+  headerRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  location: {
     fontSize: 18,
     fontFamily: Theme.typography.fontFamilies.primary,
-    color: Theme.colors.text.white,
-    fontWeight: '500',
-    marginBottom: 4,
+    color: Theme.colors.text.secondary,
+    flex: 1,
+    marginRight: 8,
   },
-  locationText: {
+  actionsContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
+  goingButton: {
+    backgroundColor: Theme.colors.primary.main,
+    borderRadius: Theme.borderRadius.sm,
+    paddingVertical: 6,
+    paddingHorizontal: 14,
+  },
+  goingText: {
+    color: Theme.colors.text.white,
+    fontFamily: Theme.typography.fontFamilies.primary,
+    fontSize: 14,
+  },
+  artistName: {
     fontSize: 14,
     fontFamily: Theme.typography.fontFamilies.primary,
-    color: 'rgba(255, 255, 255, 0.7)', // Better contrast for the location
-    marginBottom: 6,
+    color: Theme.colors.text.primary,
+    marginTop: 4,
   },
-  memberContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  memberCount: {
-    fontSize: 13,
+  concertName: {
+    fontSize: 14,
     fontFamily: Theme.typography.fontFamilies.primary,
-    color: 'rgba(255, 255, 255, 0.7)',
-    marginLeft: 4,
+    color: Theme.colors.text.primary,
+    marginTop: 4,
   },
-  memberIcon: {
-    width: 14,
-    height: 14,
-    tintColor: 'rgba(255, 255, 255, 0.7)',
+  concertDate: {
+    fontSize: 14,
+    fontFamily: Theme.typography.fontFamilies.primary,
+    color: Theme.colors.text.secondary,
+  },
+  numGoing: {
+    fontSize: 14,
+    fontFamily: Theme.typography.fontFamilies.primary,
+    color: Theme.colors.text.secondary,
+    marginTop: 4,
   },
   lastMessageTime: {
-    position: 'absolute',
-    right: 16,
-    top: 16,
-    fontSize: 13,
+    fontSize: 12,
     fontFamily: Theme.typography.fontFamilies.primary,
-    color: 'rgba(255, 255, 255, 0.7)',
-  },
-  messageBubble: {
-    backgroundColor: Theme.colors.background.lightGray, // Light gray background for message bubble
-    borderRadius: 10,
-    padding: 10,
-    marginVertical: 5,
-  },
-  usernameText: {
-    color: Theme.colors.text.white, // White color for username
-    fontFamily: Theme.typography.fontFamilies.primary,
-    fontSize: 14,
-    fontWeight: 'bold',
-  },
-  messageText: {
-    color: Theme.colors.text.black, // Black color for message text
-    fontFamily: Theme.typography.fontFamilies.primary,
-    fontSize: 14,
+    color: Theme.colors.text.tertiary,
+    marginTop: 4,
   },
 });
-export default ConcertChats
+
+export default ConcertChats;

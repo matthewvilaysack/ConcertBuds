@@ -24,6 +24,7 @@ const Details = () => {
           location={params.location}
           date={params.concert_date}
           numUsers={params.num_users}
+          address={params.address}
           textStyle={styles.text}
         />
         <KeyboardAvoidingView
@@ -31,8 +32,8 @@ const Details = () => {
           keyboardVerticalOffset={Platform.OS === "ios" ? 65 : 0}
           style={styles.keyboardContainer}
         >
-          <ConcertChatFeed concertId={params.concert_id} textStyle={styles.text} />
-          <ChatInput concertId={params.concert_id} textStyle={styles.text} />
+          <ConcertChatFeed concertId={params.concert_id} address={params.address} />
+          <ChatInput concertId={params.concert_id} />
         </KeyboardAvoidingView>
       </View>
     </View>

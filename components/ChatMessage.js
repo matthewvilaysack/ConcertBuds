@@ -1,24 +1,14 @@
-import { StyleSheet, Text, View } from "react-native";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { StyleSheet, Text, View, Image } from "react-native";
 import Theme from "@/assets/theme";
 
-export default function ChatMessage({ username, timestamp, text }) {
+export default function ChatMessage({ username, timestamp, text, avatarUrl }) {
   return (
     <View style={styles.container}>
-      <View style={styles.content}>
-        <View style={styles.header}>
-          <FontAwesome
-            size={Theme.sizes?.iconSmall || 16}
-            name="user"
-            color={Theme.colors.iconSecondary}
-          />
-          <Tex.username}>{username}</Text>
-        </View>
-        <View style={styles.body}>
-          <Text style={styles.text}>{text}</Text>
-        </View>
-        <View style={styles.footer}>
-          <Text style={styles.timestamp}>{timestamp}</Text>
+      <Image source={{ uri: avatarUrl }} style={styles.avatar} />
+      <View style={styles.contentContainer}>
+        <Text style={styles.username}>{username}</Text>
+        <View style={styles.messageBubble}>
+          <Text style={styles.messageText}>{text}</Text>
         </View>
       </View>
     </View>
@@ -27,39 +17,38 @@ export default function ChatMessage({ username, timestamp, text }) {
 
 const styles = StyleSheet.create({
   container: {
-    width: "100%",
-    alignItems: "center",
-    padding: 24,
-    backgroundColor: Theme.colors.backgroundSecondary,
     flexDirection: "row",
+    marginVertical: 4,
+    paddingHorizontal: 16,
+    alignItems: "flex-start",
   },
-  content: {
+  avatar: {
+    width: 50, // Increased size for better alignment
+    height: 50, // Increased size for better alignment
+    borderRadius: 25, // Make it a bigger circle
+    marginRight: 8,
+    marginTop: 4, // Slightly more down vertically
+  },
+  contentContainer: {
     flex: 1,
-    gap: 8,
-    marginRight: 16,
-  },
-  header: {
-    flexDirection: "row",
-    width: "100%",
-  },
-  body: {
-    width: "100%",
-  },
-  footer: {
-    flexDirection: "row",
-    width: "100%",
-    justifyContent: "space-between",
-  },
-  text: {
-    color: Theme.colors.textPrimary,
-    fontWeight: "bold",
   },
   username: {
-    color: Theme.colors.textSecondary,
-    fontWeight: "bold",
-    marginLeft: 8,
+    fontSize: 13,
+    color: Theme.colors.text.white, // White color for username
+    marginBottom: 4,
+    fontFamily: Theme.typography.fontFamilies.primary,
   },
-  timestamp: {
-    color: Theme.colors.textSecondary,
+  messageBubble: {
+    backgroundColor: Theme.colors.background.secondary, // Light gray background for message bubble
+    borderRadius: 16,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    maxWidth: "80%",
+  },
+  messageText: {
+    color: Theme.colors.text.primary, // Black color for message text
+    fontSize: 14,
+    lineHeight: 20,
+    fontFamily: Theme.typography.fontFamilies.primary,
   },
 });
