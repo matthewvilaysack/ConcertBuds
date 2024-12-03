@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { FlatList, View, StyleSheet, Text } from "react-native";
 import supabase from "@/lib/supabase";
 import Theme from "@/assets/theme";
@@ -8,52 +8,82 @@ const ConcertChatFeed = ({ concertId }) => {
   const [messages, setMessages] = useState([]);
   const [userProfiles, setUserProfiles] = useState({});
   const [isLoading, setIsLoading] = useState(true);
-  const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
+  const flatListRef = useRef(null);
 
-  const fetchMessages = async (page) => {
-    setIsLoading(true);
+  // Initial fetch of messages
+  const fetchMessages = async () => {
+    console.log("Fetching messages for concert:", concertId);
     try {
       const { data, error } = await supabase
         .from("messages")
         .select("*, profiles:user_id(username, avatar_url)")
         .eq("concert_id", concertId)
-        .order("created_at", { ascending: false })
-        .range((page - 1) * 20, page * 20 - 1); // Fetch 20 messages per page
+        .order("created_at", { ascending: true });
 
       if (error) throw error;
 
-      if (data.length < 20) {
-        setHasMore(false);
-      }
+      console.log("Fetched messages:", data);
+      setMessages(data || []);
 
-      // Build a map of user profiles for easy lookup
+      // Build profiles map
       const profiles = {};
-      data.forEach((message) => {
-        profiles[message.user_id] = {
-          username: message.profiles.username,
-          avatarUrl: message.profiles.avatar_url,
-        };
+      data?.forEach((message) => {
+        if (message.profiles) {
+          profiles[message.user_id] = {
+            username: message.profiles.username,
+            avatarUrl: message.profiles.avatar_url,
+          };
+        }
       });
-      setUserProfiles((prevProfiles) => ({ ...prevProfiles, ...profiles }));
-      setMessages((prevMessages) => [...prevMessages, ...data]);
+      setUserProfiles(profiles);
     } catch (error) {
-      console.error("Error fetching messages:", error.message);
+      console.error("Error fetching messages:", error);
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
   useEffect(() => {
-    fetchMessages(page);
-  }, [concertId, page]);
+    fetchMessages(); // Keep this to fetch initial messages
 
-  const handleLoadMore = () => {
-    if (hasMore && !isLoading) {
-      setPage((prevPage) => prevPage + 1);
-    }
-  };
+    // Set up broadcast channel
+    const channel = supabase
+      .channel(`concert-chat-${concertId}`)
+      .on(
+        'broadcast',
+        { event: 'new-message' },
+        async (payload) => {
+          console.log('Received broadcast message:', payload);
+          
+          // Add the new message to state
+          if (payload.payload) {
+            setMessages(currentMessages => [...currentMessages, payload.payload]);
+            
+            // Update profiles if needed
+            if (payload.payload.profiles) {
+              setUserProfiles(current => ({
+                ...current,
+                [payload.payload.user_id]: {
+                  username: payload.payload.profiles.username,
+                  avatarUrl: payload.payload.profiles.avatar_url,
+                },
+              }));
+            }
 
-  if (isLoading && page === 1) {
+            // Scroll to bottom
+            if (flatListRef.current) {
+              flatListRef.current.scrollToEnd({ animated: true });
+            }
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [concertId]);
+  if (isLoading) {
     return (
       <View style={styles.loadingContainer}>
         <Text style={styles.loadingText}>Loading messages...</Text>
@@ -64,19 +94,19 @@ const ConcertChatFeed = ({ concertId }) => {
   return (
     <View style={styles.feedContainer}>
       <FlatList
+        ref={flatListRef}
         data={messages}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <ChatMessage
-            username={userProfiles[item.user_id]?.username}
-            avatarUrl={userProfiles[item.user_id]?.avatarUrl}
+            username={item.profiles?.username || userProfiles[item.user_id]?.username}
+            avatarUrl={item.profiles?.avatar_url || userProfiles[item.user_id]?.avatarUrl}
             timestamp={new Date(item.created_at).toLocaleTimeString()}
             text={item.content}
           />
         )}
-        inverted // Start at the latest messages
-        onEndReached={handleLoadMore}
-        onEndReachedThreshold={0.5}
+        onContentSizeChange={() => flatListRef.current?.scrollToEnd()}
+        onLayout={() => flatListRef.current?.scrollToEnd()}
         style={styles.messageList}
       />
     </View>

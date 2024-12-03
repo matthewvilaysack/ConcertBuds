@@ -145,6 +145,7 @@ const ConcertItem = ({ item, destination, hasRSVPed = false, onRSVPChange }) => 
     </TouchableOpacity>
   );
 };
+
 const styles = StyleSheet.create({
   artistContainer: {
     width: '92%',
