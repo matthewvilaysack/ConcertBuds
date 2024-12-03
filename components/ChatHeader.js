@@ -25,21 +25,21 @@ const styles = StyleSheet.create({
   concertName: {
     fontSize: 18,
     fontWeight: "bold",
-    color: Theme.colors.textPrimary,
+    color: Theme.colors.text.white,
     marginBottom: 4,
   },
   location: {
     fontSize: 14,
-    color: Theme.colors.textSecondary,
+    color: Theme.colors.text.white,
   },
   date: {
     fontSize: 14,
-    color: Theme.colors.textSecondary,
+    color: Theme.colors.text.white,
     marginTop: 4,
   },
   numUsers: {
     fontSize: 14,
-    color: Theme.colors.textHighlighted,
+    color: Theme.colors.text.white,
     marginTop: 8,
   },
 });
