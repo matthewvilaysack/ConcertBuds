@@ -307,9 +307,4 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
 });
-<<<<<<< HEAD
 export default ConcertChats
-=======
-
-export default ConcertChats;
->>>>>>> origin/main
