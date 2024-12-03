@@ -22,7 +22,7 @@ const ChatHeader = ({ concertName, address, location, date, numUsers }) => {
         </TouchableOpacity>
       </View>
       <Text style={styles.date}>{`${dayOfWeek}, ${month} ${day}`} </Text>
-      <Text style={styles.date}>@{address}, {location} </Text>
+      <Text style={styles.date}>@ {address}, {location} </Text>
       {numUsers !== undefined && (
         <Text style={styles.numUsers}>{`${numUsers} people in this chat`}</Text>
       )}

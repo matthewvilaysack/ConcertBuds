@@ -9,53 +9,43 @@ const ChatInput = ({ concertId }) => {
 
   const sendMessage = async () => {
     if (!message.trim()) return;
-
     if (!session?.user?.id) {
       Alert.alert("Error", "You must be logged in to send messages");
       return;
     }
-
+  
+    const trimmedMessage = message.trim();
+    setMessage(""); // Optimistic update
+  
     try {
-      const { data: chatRooms, error: roomError } = await supabase
-        .from("chat_rooms")
-        .select("id")
-        .eq("concert_id", concertId);
-
-      if (roomError) throw roomError;
-
-      if (!chatRooms || chatRooms.length === 0) {
-        const { data: newRoom, error: createError } = await supabase
-          .from("chat_rooms")
-          .insert({ concert_id: concertId, num_users: 1 })
-          .select()
-          .single();
-
-        if (createError) throw createError;
-
-        const { error: messageError } = await supabase
-          .from("messages")
-          .insert({
-            concert_id: concertId,
-            user_id: session.user.id,
-            content: message.trim(),
-          });
-
-        if (messageError) throw messageError;
-      } else {
-        const { error: messageError } = await supabase
-          .from("messages")
-          .insert({
-            concert_id: concertId,
-            user_id: session.user.id,
-            content: message.trim(),
-          });
-
-        if (messageError) throw messageError;
-      }
-
-      setMessage("");
+      // First save to database
+      const { data: messageData, error: messageError } = await supabase
+        .from("messages")
+        .insert({
+          concert_id: concertId,
+          user_id: session.user.id,
+          content: trimmedMessage,
+        })
+        .select('*, profiles:user_id(username, avatar_url)')
+        .single();
+  
+      if (messageError) throw messageError;
+  
+      // Then broadcast to all connected clients
+      const channel = supabase
+        .channel(`concert-chat-${concertId}`);
+      
+      await channel.send({
+        type: 'broadcast',
+        event: 'new-message',
+        payload: messageData
+      });
+  
+      console.log('Message sent and broadcasted successfully');
+  
     } catch (error) {
       console.error("Error sending message:", error);
+      setMessage(trimmedMessage); // Restore message if failed
       Alert.alert("Error", "Failed to send message");
     }
   };
