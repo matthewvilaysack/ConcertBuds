@@ -142,6 +142,7 @@ const ConcertChats = ({ currentTab, uuid }) => {
         concert_location: concert.location,
         address: concert.address,
         concert_date: concert.concert_date,
+        num_users: concert.num_users,
       }
     });
   };

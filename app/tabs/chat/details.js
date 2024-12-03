@@ -21,7 +21,7 @@ const Details = () => {
       <View style={styles.contentWrapper}>
         <ChatHeader
           concertName={params.concert_name}
-          location={params.location}
+          location={params.concert_location}
           date={params.concert_date}
           numUsers={params.num_users}
           address={params.address}
