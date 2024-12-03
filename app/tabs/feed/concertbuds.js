@@ -1,15 +1,30 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, View, Image, StatusBar, ActivityIndicator, TouchableOpacity, Text, Alert } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Image,
+  StatusBar,
+  ActivityIndicator,
+  TouchableOpacity,
+  Text,
+  Alert,
+} from "react-native";
 import { useRouter } from "expo-router";
 import ConcertItem from "@/components/ConcertItem";
 import Images from "@/assets/Images";
 import ConcertUsersGoing from "@/components/ConcertUsersGoing";
 import Button from "@/components/Button";
-import { supabase } from '@/lib/supabase';
-import { getUserConcerts, getConcertAttendees, createChatRoom, joinChatRoom, createOrJoinChatRoom } from '@/lib/concert-db';
+import { supabase } from "@/lib/supabase";
+import {
+  getUserConcerts,
+  getConcertAttendees,
+  createChatRoom,
+  joinChatRoom,
+  createOrJoinChatRoom,
+} from "@/lib/concert-db";
 import Theme from "@/assets/theme";
-import useSession from '@/utils/useSession';
-import {useLocalSearchParams} from 'expo-router';
+import useSession from "@/utils/useSession";
+import { useLocalSearchParams } from "expo-router";
 export default function ConcertBudsScreen() {
   const router = useRouter();
   const session = useSession();
@@ -27,7 +42,7 @@ export default function ConcertBudsScreen() {
     timezone: params.timezone,
     time: params.time,
     artist: params.artist,
-    imageUrl: params.imageUrl
+    imageUrl: params.imageUrl,
   };
   useEffect(() => {
     const loadAttendees = async () => {
@@ -56,10 +71,10 @@ export default function ConcertBudsScreen() {
       console.error("Concert or session.user is missing");
       return;
     }
-  
+
     const userId = session.user.id;
     let username;
-  
+
     try {
       // Fetch username from profiles
       const { data, error } = await supabase
@@ -67,17 +82,17 @@ export default function ConcertBudsScreen() {
         .select("username")
         .eq("id", userId)
         .single();
-  
+
       if (error) {
         throw new Error("Error fetching username: " + error.message);
       }
-  
+
       if (!data?.username) {
         throw new Error("Username not found for user ID: " + userId);
       }
-  
+
       username = data.username;
-  
+
       console.log("Joining chat with:", {
         concertId: concert.concert_id,
         userId,
@@ -92,7 +107,7 @@ export default function ConcertBudsScreen() {
         username
       );
       // console.log("num users:", chatRoom.num_users);
-  
+
       Alert.alert("Success", "You have successfully joined the chat!");
       router.push({
         pathname: "/tabs/chat/details",
@@ -111,7 +126,11 @@ export default function ConcertBudsScreen() {
       Alert.alert("Error", "Failed to join the chat. Please try again.");
     }
   };
+<<<<<<< HEAD
   
+=======
+
+>>>>>>> origin/main
   if (loading) {
     return (
       <View style={[styles.container, styles.centered]}>
@@ -133,14 +152,20 @@ export default function ConcertBudsScreen() {
               name: concert.concert_name,
               dates: {
                 start: {
-                  localDate: concert.concert_date
-                }
+                  localDate: concert.concert_date,
+                },
               },
               _embedded: {
-                venues: [{
-                  city: {
-                    name: concert.location.split(', ')[0]
+                venues: [
+                  {
+                    city: {
+                      name: concert.location.split(", ")[0],
+                    },
+                    state: {
+                      stateCode: concert.location.split(", ")[1],
+                    },
                   },
+<<<<<<< HEAD
                   state: {
                     stateCode: concert.location.split(', ')[1]
                   }
@@ -151,6 +176,10 @@ export default function ConcertBudsScreen() {
               time: concert.time,
               artist: concert.artist,
               imageUrl: concert.imageUrl
+=======
+                ],
+              },
+>>>>>>> origin/main
             }}
             destination="/tabs/feed/concertbuds"
             hasRSVPed={true}
@@ -163,8 +192,11 @@ export default function ConcertBudsScreen() {
           concertId={concert?.concert_id}
           style={styles.itemSpacing}
         />
-       <View style={{ alignItems: "center", width: "100%", marginTop: 20 }}>
-          <TouchableOpacity style={styles.joinChatButton} onPress={handleJoinChat}>
+        <View style={{ alignItems: "center", width: "100%", marginTop: 20 }}>
+          <TouchableOpacity
+            style={styles.joinChatButton}
+            onPress={handleJoinChat}
+          >
             <Text style={styles.joinChatButtonText}>Join the Chat</Text>
           </TouchableOpacity>
         </View>

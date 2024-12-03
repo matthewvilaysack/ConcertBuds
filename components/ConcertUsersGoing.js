@@ -59,7 +59,10 @@ const ConcertUsersGoing = ({ concertId }) => {
   const renderItem = ({ item, index }) => (
     <View style={styles.attendeesRow} key={`${concertId}-${index}`}>
       {item.map((attendee) => (
-        <View key={`${concertId}-${attendee.user_id}`} style={styles.attendeeContainer}>
+        <View
+          key={`${concertId}-${attendee.id}`}
+          style={styles.attendeeContainer}
+        >
           <Image
             style={styles.avatarCircle}
             source={
@@ -68,8 +71,8 @@ const ConcertUsersGoing = ({ concertId }) => {
                 : require("../assets/Images/profile-icon-1.png")
             }
           />
-          <Text 
-            style={styles.attendeeName} 
+          <Text
+            style={styles.attendeeName}
             numberOfLines={1}
             ellipsizeMode="tail"
           >
@@ -84,9 +87,9 @@ const ConcertUsersGoing = ({ concertId }) => {
     <View style={styles.attendeesSection}>
       <View style={styles.attendeesHeader}>
         <Text style={styles.attendeesTitle}>
-        {attendees.length === 1
-        ? "1 ConcertBud Going"
-        : `${attendees.length} ConcertBuds Going`}
+          {attendees.length === 1
+            ? "1 ConcertBud Going"
+            : `${attendees.length} ConcertBuds Going`}
         </Text>
       </View>
       <FlatList
@@ -123,7 +126,7 @@ const styles = StyleSheet.create({
   },
   attendeesTitle: {
     color: Theme.colors.primary.main,
-    fontSize: Theme.typography.sizes['2xl'],
+    fontSize: Theme.typography.sizes["2xl"],
     textAlign: "center",
     marginBottom: Theme.spacing.md,
     fontFamily: Theme.typography.fontFamilies.primary,
@@ -131,7 +134,7 @@ const styles = StyleSheet.create({
   attendeeContainer: {
     flex: 1,
     alignItems: "center",
-    maxWidth: windowWidth * 0.9 / 3,
+    maxWidth: (windowWidth * 0.9) / 3,
     paddingHorizontal: Theme.spacing.xs,
     marginTop: Theme.spacing.md, // Add spacing from the top
   },
@@ -148,7 +151,7 @@ const styles = StyleSheet.create({
     marginTop: Theme.spacing.xs,
     textAlign: "center",
     fontFamily: "Doppio",
-    width: '100%',
+    width: "100%",
   },
   loadingContainer: {
     flex: 1,

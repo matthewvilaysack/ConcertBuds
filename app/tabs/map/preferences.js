@@ -8,6 +8,7 @@ import Feed from "@/components/Feed";
 import { getUserConcerts } from "@/lib/concert-db";
 import supabase from "@/lib/supabase";
 import Theme from "@/assets/theme";
+import CommutePreferences from "@/components/CommutePreferences";
 
 const App = () => {
   const [userConcerts, setUserConcerts] = useState([]);
@@ -35,11 +36,7 @@ const App = () => {
     <View style={styles.container}>
       <Image source={Images.background} style={styles.background} />
       <View style={styles.contentWrapper}>
-        <Feed
-          concerts={userConcerts}
-          destination={"/tabs/map/preferences"}
-          style={styles.feed}
-        />
+        <CommutePreferences></CommutePreferences>
       </View>
     </View>
   );
@@ -57,19 +54,10 @@ const styles = StyleSheet.create({
     height: "100%",
   },
   contentWrapper: {
-    position: "absolute",
-    top: 200,
-    alignItems: "center",
+    flex: 1,
+    justifyContent: "center",
     width: "100%",
     padding: 20,
-  },
-  infoText: {
-    fontSize: 15,
-    color: "#FFFFFF",
-    opacity: 0.8,
-    textAlign: "center",
-    marginTop: 10,
-    lineHeight: 22,
   },
 });
 

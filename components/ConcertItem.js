@@ -148,42 +148,42 @@ const ConcertItem = ({ item, destination, hasRSVPed = false, onRSVPChange }) => 
 
 const styles = StyleSheet.create({
   artistContainer: {
-    width: '92%',
+    width: 336,
+    height: 90, // Reduced height for better proportion
+    backgroundColor: 'rgba(255, 255, 255, 0.15)', // More transparent
+    borderRadius: 20,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Theme.colors.background.primary,
-    borderRadius: 16,
-    marginVertical: 8,
-    marginHorizontal: '4%',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 2,
+    marginBottom: 12,
+    marginHorizontal: 'auto',
   },
   dateContainer: {
-    width: 65,
+    width: 75,
+    height: '100%',
+    backgroundColor: 'rgba(217, 217, 217, 0.2)', // Subtle contrast for date section
     padding: 12,
-    alignItems: 'center',
     justifyContent: 'center',
-    borderRightWidth: 1,
-    borderRightColor: '#F0F0F0',
+    alignItems: 'center',
+    borderTopLeftRadius: 20,
+    borderBottomLeftRadius: 20,
   },
   month: {
     fontSize: 16,
-    fontFamily: Theme.typography.fontFamilies.primary,
-    color: Theme.colors.text.primary,
+    fontFamily: 'Doppio One',
+    color: '#FFFFFF',
     marginBottom: 2,
+    textTransform: 'uppercase',
   },
   day: {
-    fontSize: 24,
-    fontFamily: Theme.typography.fontFamilies.primary,
-    color: Theme.colors.text.primary,
+    fontSize: 32, // Smaller for better fit
+    fontFamily: 'Doppio One',
+    color: '#FFFFFF',
     fontWeight: '500',
   },
   contentContainer: {
     flex: 1,
-    padding: 16,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
   },
   headerRow: {
     flexDirection: 'row',
@@ -191,46 +191,55 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   location: {
-    fontSize: 18,
-    fontFamily: Theme.typography.fontFamilies.primary,
-    color: Theme.colors.text.secondary,
+    fontSize: 18, // Smaller for better fit
+    fontFamily: 'Doppio One',
+    color: '#FFFFFF',
     flex: 1,
     marginRight: 8,
   },
   artistName: {
     fontSize: 14,
-    fontFamily: Theme.typography.fontFamilies.primary,
-    color: Theme.colors.text.primary,
+    fontFamily: 'Doppio One',
+    color: 'rgba(255, 255, 255, 0.7)', // Slightly dimmed for hierarchy
     marginTop: 4,
   },
   actionsContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: 6,
   },
   goingButton: {
-    backgroundColor: Theme.colors.primary.main,
-    borderRadius: Theme.borderRadius.sm,
-    paddingVertical: 6,
-    paddingHorizontal: 14,
+    height: 28, // Slightly smaller
+    paddingHorizontal: 12,
+    backgroundColor: '#846AE3',
+    borderRadius: 14,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   goingText: {
-    color: Theme.colors.text.white,
-    fontFamily: Theme.typography.fontFamilies.primary,
     fontSize: 14,
+    fontFamily: 'Doppio One',
+    color: '#FFFFFF',
   },
   trashContainer: {
     padding: 6,
+    marginLeft: 2,
   },
   trashIcon: {
-    width: 16,
-    height: 16,
-    tintColor: '#666666',
-    resizeMode: 'contain',
+    width: 14,
+    height: 14,
+    tintColor: 'rgba(255, 255, 255, 0.6)', // Lighter for dark background
+  },
+  notGoingButton: {
+    height: 28,
+    paddingHorizontal: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   notGoingText: {
-    color: Theme.colors.text.tertiary,
-    fontSize: Theme.typography.sizes.sm,
+    fontSize: 14,
+    fontFamily: 'Doppio One',
+    color: 'rgba(255, 255, 255, 0.5)',
   }
 });
 export default ConcertItem;

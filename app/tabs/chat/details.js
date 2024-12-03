@@ -64,5 +64,4 @@ const styles = StyleSheet.create({
     color: Theme.colors.text.white,
   },
 });
-
 export default Details;
