@@ -1,5 +1,5 @@
 import { Stack } from "expo-router";
-import { View, Text } from "react-native";
+import { ImageBackground, View, Text, StyleSheet } from "react-native";
 import theme from "../../../assets/theme";
 
 export default function Layout() {
@@ -64,3 +64,14 @@ export default function Layout() {
     </Stack>
   );
 }
+const styles = StyleSheet.create({
+  background: {
+    flex: 1,
+    resizeMode: "cover", // Ensure the image covers the whole screen
+  },
+  content: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});
