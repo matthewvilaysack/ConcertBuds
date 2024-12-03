@@ -1,41 +1,119 @@
-import React from 'react';
+import React, { useState } from "react";
+import { View, Text, StyleSheet, TouchableOpacity, Modal } from "react-native";
+import Theme from "@/assets/theme";
+import { formatDate } from "../utils/getDate";
 
-const ChatHeader = () => {
+const ChatHeader = ({ concertName, address, location, date, numUsers }) => {
+  const [modalVisible, setModalVisible] = useState(false);
+  console.log("LOCATTTION", location);
+  const { dayOfWeek, month, day } = formatDate(date);
+
+  const toggleModal = () => setModalVisible(!modalVisible);
+
   return (
-    <div className="relative w-full bg-gradient-to-b from-purple-600/10 via-purple-600/5 to-transparent px-6 py-4 backdrop-blur-sm">
-      {/* Back button */}
-      <button 
-        className="absolute left-4 top-1/2 -translate-y-1/2 text-white hover:opacity-80"
+    <View style={styles.container}>
+      <View style={styles.headerRow}>
+        <TouchableOpacity style={styles.backIcon}>
+          <Text style={styles.iconText}>←</Text>
+        </TouchableOpacity>
+        <Text style={styles.artistName}>{concertName}</Text>
+        <TouchableOpacity style={styles.infoIcon} onPress={toggleModal}>
+          <Text style={styles.iconText}>i</Text>
+        </TouchableOpacity>
+      </View>
+      <Text style={styles.date}>{`${dayOfWeek}, ${month} ${day}`} </Text>
+      <Text style={styles.date}>@ {address}, {location} </Text>
+      {numUsers !== undefined && (
+        <Text style={styles.numUsers}>{`${numUsers} people in this chat`}</Text>
+      )}
+      {/* Modal Popup for Info */}
+      <Modal
+        transparent={true}
+        visible={modalVisible}
+        animationType="slide"
+        onRequestClose={toggleModal}
       >
-        <svg 
-          className="h-6 w-6" 
-          fill="none" 
-          strokeWidth="2" 
-          stroke="currentColor" 
-          viewBox="0 0 24 24"
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-        </svg>
-      </button>
-
-      {/* Content container */}
-      <div className="flex flex-col items-center gap-1">
-        {/* Artist name */}
-        <h1 className="text-3xl font-bold text-white">Billie Eilish</h1>
-        
-        {/* Date */}
-        <p className="text-sm text-gray-200">Wed Nov 6</p>
-        
-        {/* Location info */}
-        <div className="mt-2 flex flex-col items-center gap-1">
-          <p className="text-lg font-medium text-white">Stanford, CA</p>
-          <p className="text-sm text-gray-200">
-            Frost Amphitheater · 7 PM
-          </p>
-        </div>
-      </div>
-    </div>
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalText}>Info about this chat or artist</Text>
+            <TouchableOpacity style={styles.closeButton} onPress={toggleModal}>
+              <Text style={styles.closeButtonText}>Close</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+    </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    padding: 16,
+    borderBottomWidth: 1,
+    borderColor: Theme.colors.border,
+  },
+  headerRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  backIcon: {
+    paddingHorizontal: 8,
+  },
+  infoIcon: {
+    paddingHorizontal: 8,
+  },
+  iconText: {
+    fontSize: 16,
+    color: Theme.colors.text.white,
+  },
+  artistName: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: Theme.colors.text.white,
+    flex: 1,
+    textAlign: "center",
+  },
+  date: {
+    fontSize: 14,
+    color: Theme.colors.text.white,
+    textAlign: "center",
+    marginTop: 4,
+  },
+  numUsers: {
+    fontSize: 14,
+    color: Theme.colors.text.white,
+    textAlign: "center",
+    marginTop: 4,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalContent: {
+    width: "80%",
+    backgroundColor: "white",
+    borderRadius: 10,
+    padding: 20,
+    alignItems: "center",
+  },
+  modalText: {
+    fontSize: 16,
+    color: "#000",
+    marginBottom: 20,
+    textAlign: "center",
+  },
+  closeButton: {
+    backgroundColor: Theme.colors.primary,
+    padding: 10,
+    borderRadius: 5,
+  },
+  closeButtonText: {
+    color: "#fff",
+    fontSize: 14,
+  },
+});
 
 export default ChatHeader;

@@ -1,19 +1,33 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, Image, TouchableOpacity, Alert, Dimensions } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  Alert,
+  Dimensions,
+} from "react-native";
 import { router } from "expo-router";
-import supabase from '@/lib/supabase';
-import { RSVPForConcert, unRSVPFromConcert, getUserConcerts, checkUserRSVPStatus } from '@/lib/concert-db'; // Update this import
-import Theme from '../assets/theme';
+import supabase from "@/lib/supabase";
+import {
+  RSVPForConcert,
+  unRSVPFromConcert,
+  getUserConcerts,
+  checkUserRSVPStatus,
+} from "@/lib/concert-db"; // Update this import
+import Theme from "../assets/theme";
+
 const windowWidth = Dimensions.get("window").width;
 
-const ConcertCard = ({ item, onRSVPChange }) => {
+const CommutePreferences = ({ item, onRSVPChange }) => {
   const [isRSVPed, setIsRSVPed] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { 
-    id, 
-    name, 
+  const {
+    id,
+    name,
     artist,
-    concertName, 
+    concertName,
     date,
     dayOfWeek,
     concertTime,
@@ -24,16 +38,18 @@ const ConcertCard = ({ item, onRSVPChange }) => {
     state,
     venue,
     imageUrl,
-    timezone 
+    timezone,
   } = item || {};
 
   // Format the date correctly
   const eventDate = date
-    ? new Date(date + 'T00:00:00') // Add time component to preserve local date
+    ? new Date(date + "T00:00:00") // Add time component to preserve local date
     : new Date();
-  
+
   const month = eventDate.toLocaleString("en-US", { month: "short" });
   const day = eventDate.getDate();
+  const [searchQuery, setSearchQuery] = useState(artist);
+  const [chosenDate, setChosenDate] = useState(new Date());
 
   // Use the passed dayOfWeek and concertTime or format from date if not provided
   const displayTime = concertTime || "Time TBD";
@@ -42,7 +58,9 @@ const ConcertCard = ({ item, onRSVPChange }) => {
   useEffect(() => {
     const checkRSVPStatus = async () => {
       try {
-        const { data: { user } } = await supabase.auth.getUser();
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
         if (user) {
           const hasRSVPed = await checkUserRSVPStatus(user.id, id);
           setIsRSVPed(hasRSVPed);
@@ -57,18 +75,20 @@ const ConcertCard = ({ item, onRSVPChange }) => {
   const handleRSVP = async () => {
     try {
       setLoading(true);
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       console.log("User", user);
-      
+
       if (!user) {
         Alert.alert("Error", "Please sign in to RSVP for concerts");
         return;
       }
 
       const { data: profile } = await supabase
-        .from('profiles')
-        .select('username, avatar_url')
-        .eq('id', user.id)
+        .from("profiles")
+        .select("username, avatar_url")
+        .eq("id", user.id)
         .single();
 
       if (isRSVPed) {
@@ -79,7 +99,7 @@ const ConcertCard = ({ item, onRSVPChange }) => {
         }
         Alert.alert("Success", "You've removed your RSVP");
       } else {
-        console.log("profile", profile)
+        console.log("profile", profile);
         await RSVPForConcert({
           userId: user.id,
           username: profile?.username || user.email,
@@ -91,7 +111,6 @@ const ConcertCard = ({ item, onRSVPChange }) => {
           concertDate: date || new Date().toISOString(),
           concertTime: concertTime,
           avatarUrl: profile?.avatar_url,
-          joinChat: false
         });
         setIsRSVPed(true);
         if (onRSVPChange) {
@@ -109,14 +128,6 @@ const ConcertCard = ({ item, onRSVPChange }) => {
 
   return (
     <View style={styles.artistImageContainer}>
-      <View>
-        <Image
-          source={{
-            uri: imageUrl,
-          }}
-          style={styles.image}
-        />
-      </View>
       <View style={styles.artistContainer}>
         <View style={styles.dateContainer}>
           <Text style={styles.month}>{month}</Text>
@@ -134,19 +145,43 @@ const ConcertCard = ({ item, onRSVPChange }) => {
           </View>
         </View>
       </View>
+      <View style={styles.preferencesContainer}>
+        <Text style={styles.searchName}>Start Location:</Text>
+        <View style={styles.searchInputContainer}>
+          <TextInput
+            style={styles.searchInput}
+            placeholder="459 Lagunita Dr, Stanford, CA 94305"
+            placeholderTextColor="rgba(0, 0, 0, 0.4)"
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            returnKeyType="search"
+          />
+        </View>
+        <Text style={styles.searchName}>Arrival Time:</Text>
+        <View style={styles.searchInputContainer}></View>
+        <Text style={styles.searchName}>Transportation Route:</Text>
+        <View style={styles.searchInputContainer}>
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Search for artist, tour, etc."
+            placeholderTextColor="rgba(0, 0, 0, 0.4)"
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            returnKeyType="search"
+          />
+        </View>
+      </View>
       <View style={styles.goingContainer}>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={[
             styles.goingButton,
             isRSVPed && styles.goingButtonRSVPed,
-            loading && styles.goingButtonDisabled
-          ]} 
+            loading && styles.goingButtonDisabled,
+          ]}
           onPress={handleRSVP}
           disabled={loading}
         >
-          <Text style={styles.goingText}>
-            {loading ? 'Loading...' : isRSVPed ? 'Cancel RSVP' : 'Going'}
-          </Text>
+          <Text style={styles.goingText}>Find My Route</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -168,12 +203,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "flex-start",
     justifyContent: "flex-start",
-    borderRadius: 20,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    backgroundColor: "rgba(255, 255, 255, .6)",
   },
   dateContainer: {
     marginTop: "5%",
     marginLeft: "5%",
-    marginBottom: "5%",
     flexDirection: "column",
     alignItems: "center",
   },
@@ -219,6 +255,12 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 20,
     borderTopLeftRadius: 20,
   },
+  preferencesContainer: {
+    alignItems: "flex-start",
+    justifyContent: "flex-start",
+    width: "100%",
+    paddingHorizontal: 36,
+  },
   goingContainer: {
     // backgroundColor: "rgba(255, 255, 255, 0.5)",
     borderBottomRightRadius: 20,
@@ -233,7 +275,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: "center",
     justifyContent: "center",
-    padding: 20,
+    padding: 15,
+    marginVertical: 20,
   },
   goingText: {
     color: "white",
@@ -245,7 +288,31 @@ const styles = StyleSheet.create({
   },
   goingButtonDisabled: {
     opacity: 0.5,
-  }
+  },
+  searchName: {
+    fontFamily: "Doppio",
+    fontSize: 16,
+    lineHeight: 20,
+    color: "#000000",
+    marginTop: 20,
+    marginBottom: 10,
+    marginLeft: 5,
+  },
+  searchInputContainer: {
+    height: 50,
+    borderRadius: 10,
+    overflow: "hidden",
+    width: "100%",
+    backgroundColor: "rgba(255, 255, 255, 0.6)",
+  },
+  searchInput: {
+    flex: 1,
+    paddingHorizontal: 19,
+    fontSize: 15,
+    color: "#1A1A1A",
+    height: "100%",
+    fontFamily: "Doppio",
+  },
 });
 
-export default ConcertCard;
+export default CommutePreferences;

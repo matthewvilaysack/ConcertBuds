@@ -9,6 +9,9 @@ import ConcertItem from "./ConcertItem";
 import Theme from "../assets/theme";
 
 const Feed = ({ concerts, destination, onRSVPChange }) => {
+  // Log concert IDs to identify duplicates
+  console.log("Concert IDs:", concerts.map(concert => concert.concert_id));
+
   return (
     <View style={styles.container}>
       <FlatList
@@ -21,13 +24,14 @@ const Feed = ({ concerts, destination, onRSVPChange }) => {
               artist: item.artist_name,
               date: item.concert_date,
               time: item.concert_time,
-              location: item.location,
+              address: item.address,
+              location: item.location || "",
               venue: item.venue || "Venue TBD",
               formattedData: {
                 artist: item.artist_name,
                 concertName: item.concert_name,
                 time: item.concert_time,
-                dayOfWeek: new Date(item.concert_date).toLocaleString("en-US", { weekday: "long" }),
+                dayOfWeek: item.concert_date ? new Date(item.concert_date).toLocaleString("en-US", { weekday: "long" }) : "",
                 concertTime: item.concert_time,
                 location: item.location,
                 imageUrl: item.image_url || "",
@@ -42,17 +46,17 @@ const Feed = ({ concerts, destination, onRSVPChange }) => {
               _embedded: {
                 venues: [{
                   city: {
-                    name: item.location.split(', ')[0],
+                    name: item.location ? item.location.split(', ')[0] : "",
                   },
                   state: {
-                    stateCode: item.location.split(', ')[1],
+                    stateCode: item.location && item.location.includes(', ') ? item.location.split(', ')[1] : "",
                   },
                 }],
               },
             }}
             destination={destination}
             hasRSVPed={true}
-            onRSVPChange={onRSVPChange}
+            onRSVPChange={() => onRSVPChange(item.concert_id)}
           />
         )}
         keyExtractor={(item) => item.concert_id.toString()}
@@ -64,7 +68,6 @@ const Feed = ({ concerts, destination, onRSVPChange }) => {
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
