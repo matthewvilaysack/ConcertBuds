@@ -44,12 +44,12 @@
           <Text style={styles.text}>{session.user.email}</Text>
         </View>
         <Text style={[styles.title, styles.postTitle]}>My Posts</Text>
-        <Feed
+        {/* <Feed
           shouldNavigateToComments={true}
           currentTab={CURRENT_TAB_DETAILS}
           fetchUsersPostsOnly={true}
           uuid={session.user.id}
-        />
+        /> */}
       </View>
     );
   }

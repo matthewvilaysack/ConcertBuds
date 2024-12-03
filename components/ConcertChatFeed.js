@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { FlatList, View, Text, StyleSheet } from "react-native";
+import { FlatList, View, StyleSheet, Text } from "react-native";
 import supabase from "@/lib/supabase";
 import Theme from "@/assets/theme";
+import ChatMessage from "@/components/ChatMessage";
 
-const ConcertChatFeed = ({ chatRoomId }) => {
+const ConcertChatFeed = ({ concertId }) => {
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  console.log("CHATROOMID", concertId);
 
   const fetchMessages = async () => {
     setIsLoading(true);
@@ -13,11 +15,10 @@ const ConcertChatFeed = ({ chatRoomId }) => {
       const { data, error } = await supabase
         .from("messages")
         .select("*")
-        .eq("chat_room_id", chatRoomId)
+        .eq("concert_id", concertId)
         .order("created_at", { ascending: true });
 
       if (error) throw error;
-
       setMessages(data);
     } catch (error) {
       console.error("Error fetching messages:", error.message);
@@ -27,7 +28,7 @@ const ConcertChatFeed = ({ chatRoomId }) => {
 
   useEffect(() => {
     fetchMessages();
-  }, []);
+  }, [concertId]);
 
   if (isLoading) {
     return (
@@ -38,47 +39,34 @@ const ConcertChatFeed = ({ chatRoomId }) => {
   }
 
   return (
-    <FlatList
-      data={messages}
-      keyExtractor={(item) => item.id.toString()}
-      renderItem={({ item }) => (
-        <View style={styles.messageItem}>
-          <Text style={styles.messageAuthor}>{item.user_id}</Text>
-          <Text style={styles.messageContent}>{item.content}</Text>
-          <Text style={styles.messageTimestamp}>
-            {new Date(item.created_at).toLocaleTimeString()}
-          </Text>
-        </View>
-      )}
-      style={styles.messageList}
-    />
+    <View style={styles.feedContainer}>
+      <FlatList
+        data={messages}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item }) => (
+          <ChatMessage
+            username={item.user_id}
+            timestamp={new Date(item.created_at).toLocaleTimeString()}
+            text={item.content}
+          />
+        )}
+        style={styles.messageList}
+      />
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  feedContainer: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: Theme.colors.border,
+    borderRadius: 8,
+    padding: 8,
+  },
   messageList: {
     flex: 1,
     padding: 8,
-  },
-  messageItem: {
-    padding: 12,
-    marginVertical: 8,
-    backgroundColor: Theme.colors.backgroundSecondary,
-    borderRadius: 8,
-  },
-  messageAuthor: {
-    fontWeight: "bold",
-    color: Theme.colors.textPrimary,
-    marginBottom: 4,
-  },
-  messageContent: {
-    fontSize: 14,
-    color: Theme.colors.textPrimary,
-  },
-  messageTimestamp: {
-    fontSize: 12,
-    color: Theme.colors.textSecondary,
-    marginTop: 8,
   },
   loadingContainer: {
     flex: 1,
