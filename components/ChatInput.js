@@ -1,79 +1,62 @@
-import React, { useState } from 'react';
-import { View, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
-import { supabase } from '@/lib/supabase';
-import useSession from '@/utils/useSession';
-
+import React, { useState } from "react";
+import { View, TextInput, TouchableOpacity, StyleSheet, Alert } from "react-native";
+import { supabase } from "@/lib/supabase";
+import useSession from "@/utils/useSession";
+import Theme from '@/assets/theme';
 const ChatInput = ({ concertId }) => {
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
   const session = useSession();
-  console.log("CHAT ROOM ID ", concertId);
 
   const sendMessage = async () => {
     if (!message.trim()) return;
+
     if (!session?.user?.id) {
-      Alert.alert('Error', 'You must be logged in to send messages');
+      Alert.alert("Error", "You must be logged in to send messages");
       return;
     }
 
     try {
-      console.log("Attempting to find chat room with concert_id:", concertId);
-      
-      // First get the chat room numeric id
       const { data: chatRooms, error: roomError } = await supabase
-        .from('chat_rooms')
-        .select('id')
-        .eq('concert_id', concertId);
+        .from("chat_rooms")
+        .select("id")
+        .eq("concert_id", concertId);
 
       if (roomError) throw roomError;
-      
+
       if (!chatRooms || chatRooms.length === 0) {
-        console.log("No chat room found, creating one");
-        // Create the chat room if it doesn't exist
         const { data: newRoom, error: createError } = await supabase
-          .from('chat_rooms')
-          .insert({ 
-            concert_id: concertId,
-            num_users: 1 
-          })
+          .from("chat_rooms")
+          .insert({ concert_id: concertId, num_users: 1 })
           .select()
           .single();
 
         if (createError) throw createError;
-        
-        // Use the newly created room's id
-        console.log("Created new chat room with id:", concertId);
 
-        // Send message with new room id
         const { error: messageError } = await supabase
-          .from('messages')
+          .from("messages")
           .insert({
             concert_id: concertId,
             user_id: session.user.id,
-            content: message.trim()
+            content: message.trim(),
           });
 
         if (messageError) throw messageError;
       } else {
-        // Use existing room's id
-        console.log("Found existing chat room with id:", concertId);
-
-        // Send message with existing room id
         const { error: messageError } = await supabase
-          .from('messages')
+          .from("messages")
           .insert({
             concert_id: concertId,
             user_id: session.user.id,
-            content: message.trim()
+            content: message.trim(),
           });
 
         if (messageError) throw messageError;
       }
 
-      // Clear the input on success
-      setMessage('');
+      setMessage("");
     } catch (error) {
-      console.error('Error sending message:', error);
-      Alert.alert('Error', 'Failed to send message');
+      console.error("Error sending message:", error);
+      Alert.alert("Error", "Failed to send message");
     }
   };
 
@@ -84,17 +67,17 @@ const ChatInput = ({ concertId }) => {
         value={message}
         onChangeText={setMessage}
         placeholder="Type a message..."
-        placeholderTextColor="#666"
+        placeholderTextColor="#9E9E9E"
         multiline={false}
         returnKeyType="send"
         onSubmitEditing={sendMessage}
       />
-      <TouchableOpacity 
-        style={[styles.sendButton, !message.trim() && styles.sendButtonDisabled]} 
+      <TouchableOpacity
+        style={[styles.sendButton, !message.trim() && styles.sendButtonDisabled]}
         onPress={sendMessage}
         disabled={!message.trim()}
       >
-        <View style={styles.sendButtonInner} />
+        <View style={styles.sendButtonIcon} />
       </TouchableOpacity>
     </View>
   );
@@ -102,44 +85,47 @@ const ChatInput = ({ concertId }) => {
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-    padding: 10,
-    backgroundColor: '#fff',
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 10,
+    paddingHorizontal: 16,
     borderTopWidth: 1,
-    borderTopColor: '#eee',
+    borderTopColor: Theme.colors.border,
   },
   input: {
     flex: 1,
-    padding: 10,
-    backgroundColor: '#f8f8f8',
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    backgroundColor: "rgba(255, 255, 255, 0.1)", // Semi-transparent input
     borderRadius: 20,
-    marginRight: 10,
-    maxHeight: 100,
+    color: "#FFF",
+    fontSize: 16,
+    fontFamily: "Doppio One",
   },
   sendButton: {
-    justifyContent: 'center',
-    alignItems: 'center',
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: '#007AFF',
+    marginLeft: 10,
+    backgroundColor: Theme.colors.primary, // Use a vibrant theme color
+    justifyContent: "center",
+    alignItems: "center",
   },
   sendButtonDisabled: {
-    backgroundColor: '#ccc',
+    backgroundColor: Theme.colors.primary.main, // Subtle disabled state
   },
-  sendButtonInner: {
+  sendButtonIcon: {
     width: 0,
     height: 0,
-    backgroundColor: 'transparent',
-    borderStyle: 'solid',
-    borderLeftWidth: 12,
-    borderRightWidth: 12,
-    borderBottomWidth: 12,
-    borderLeftColor: 'transparent',
-    borderRightColor: 'transparent',
-    borderBottomColor: 'white',
-    transform: [{ rotate: '90deg' }],
-  }
+    borderLeftWidth: 10,
+    borderRightWidth: 10,
+    borderBottomWidth: 16,
+    borderStyle: "solid",
+    borderLeftColor: "transparent",
+    borderRightColor: "transparent",
+    borderBottomColor: "#FFFFFF", // White arrow
+    transform: [{ rotate: "90deg" }],
+  },
 });
 
 export default ChatInput;

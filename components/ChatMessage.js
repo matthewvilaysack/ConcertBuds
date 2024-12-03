@@ -1,5 +1,4 @@
 import { StyleSheet, Text, View, Image } from "react-native";
-import Theme from "@/assets/theme";
 
 export default function ChatMessage({ username, timestamp, text, avatarUrl }) {
   return (
@@ -7,8 +6,11 @@ export default function ChatMessage({ username, timestamp, text, avatarUrl }) {
       <Image source={{ uri: avatarUrl }} style={styles.avatar} />
       <View style={styles.contentContainer}>
         <Text style={styles.username}>{username}</Text>
-        <View style={styles.messageBubble}>
-          <Text style={styles.messageText}>{text}</Text>
+        <View style={styles.messageContainer}>
+          <View style={styles.messageBubble}>
+            <Text style={styles.messageText}>{text}</Text>
+          </View>
+          <Text style={styles.timestamp}>{timestamp}</Text>
         </View>
       </View>
     </View>
@@ -18,37 +20,49 @@ export default function ChatMessage({ username, timestamp, text, avatarUrl }) {
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    marginVertical: 4,
-    paddingHorizontal: 16,
-    alignItems: "flex-start",
+    marginVertical: 8,
+    alignItems: "center",
   },
   avatar: {
-    width: 50, // Increased size for better alignment
-    height: 50, // Increased size for better alignment
-    borderRadius: 25, // Make it a bigger circle
-    marginRight: 8,
-    marginTop: 4, // Slightly more down vertically
+    width: 60, // Increased size for better accessibility
+    height: 60, // Increased size for better accessibility
+    borderRadius: 30,
+    marginRight: 12, // Increased margin for better spacing
+    backgroundColor: "#D9D9D9", // Placeholder background if no image
   },
   contentContainer: {
     flex: 1,
   },
   username: {
-    fontSize: 13,
-    color: Theme.colors.text.white, // White color for username
+    fontSize: 16, // Increased font size for better readability
+    color: "#FFFFFF", // White text for username
+    fontFamily: "Doppio One",
     marginBottom: 4,
-    fontFamily: Theme.typography.fontFamilies.primary,
+    marginLeft: 8,
+  },
+  messageContainer: {
+    flexDirection: "column",
   },
   messageBubble: {
-    backgroundColor: Theme.colors.background.secondary, // Light gray background for message bubble
-    borderRadius: 16,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    maxWidth: "80%",
+    backgroundColor: "rgba(255, 255, 255, 0.5)", // Semi-transparent white
+    borderRadius: 20,
+    paddingHorizontal: 16, // Increased padding for better readability
+    paddingVertical: 10, // Increased padding for better readability
+    maxWidth: 250, // Increased max width for better readability
+    flexShrink: 1,
   },
   messageText: {
-    color: Theme.colors.text.primary, // Black color for message text
-    fontSize: 14,
-    lineHeight: 20,
-    fontFamily: Theme.typography.fontFamilies.primary,
+    color: "#000000", // Black text for message
+    fontSize: 16, // Increased font size for better readability
+    fontFamily: "Doppio One",
+    lineHeight: 20, // Adjusted line height for better readability
+  },
+  timestamp: {
+    color: "#FFFFFF", // White text for timestamp
+    fontSize: 12, // Increased font size for better readability
+    marginTop: 4,
+    marginLeft: 8,
+    fontFamily: "Doppio One",
+    alignSelf: "flex-start", // Left-align the timestamp
   },
 });
