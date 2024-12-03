@@ -56,10 +56,11 @@ const ConcertItemWrapper = React.memo(({ item, artistQuery, userConcerts, onRSVP
     city: item._embedded?.venues?.[0]?.city?.name,
     state: item._embedded?.venues?.[0]?.state?.stateCode,
     venue: item._embedded?.venues?.[0]?.name,
+    address: item._embedded?.venues?.[0]?.address?.line1 || "Address not provided", // Ensure address is not null
     imageUrl: item.images?.[1]?.url,
     timezone: item.dates?.timezone
   };
-
+  console.log("FORMATTED DATA BE LIKE", formattedData);
   return (
     <ConcertItem
       item={{ ...item, formattedData }}
@@ -91,7 +92,7 @@ export default function SearchResults() {
       const uniqueEvents = events.filter(
         (event, index, self) =>
           index === self.findIndex((e) => e.id === event.id)
-      );
+    );
 
       if (uniqueEvents.length === 0) {
         setHasMore(false);
