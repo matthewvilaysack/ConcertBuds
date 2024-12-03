@@ -126,11 +126,7 @@ export default function ConcertBudsScreen() {
       Alert.alert("Error", "Failed to join the chat. Please try again.");
     }
   };
-<<<<<<< HEAD
   
-=======
-
->>>>>>> origin/main
   if (loading) {
     return (
       <View style={[styles.container, styles.centered]}>
@@ -156,16 +152,10 @@ export default function ConcertBudsScreen() {
                 },
               },
               _embedded: {
-                venues: [
-                  {
-                    city: {
-                      name: concert.location.split(", ")[0],
-                    },
-                    state: {
-                      stateCode: concert.location.split(", ")[1],
-                    },
+                venues: [{
+                  city: {
+                    name: concert.location.split(', ')[0]
                   },
-<<<<<<< HEAD
                   state: {
                     stateCode: concert.location.split(', ')[1]
                   }
@@ -176,10 +166,6 @@ export default function ConcertBudsScreen() {
               time: concert.time,
               artist: concert.artist,
               imageUrl: concert.imageUrl
-=======
-                ],
-              },
->>>>>>> origin/main
             }}
             destination="/tabs/feed/concertbuds"
             hasRSVPed={true}
