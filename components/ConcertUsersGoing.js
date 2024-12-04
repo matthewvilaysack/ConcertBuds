@@ -105,11 +105,11 @@ const ConcertUsersGoing = ({ concertId }) => {
 const styles = StyleSheet.create({
   attendeesSection: {
     width: windowWidth * 0.9,
-    height: windowHeight * 0.5,
+    height: windowHeight * 0.525,
     borderRadius: Theme.borderRadius.lg,
     backgroundColor: "rgba(255, 255, 255, 0.8)",
     paddingBottom: Theme.spacing.md,
-    marginTop: Theme.spacing.md,
+    // marginTop: Theme.spacing.md,
   },
   attendeesHeader: {
     paddingTop: Theme.spacing.md,

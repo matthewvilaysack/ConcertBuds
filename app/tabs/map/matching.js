@@ -1,5 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
-import { StyleSheet, View, Image, ActivityIndicator, Text } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Image,
+  ActivityIndicator,
+  Text,
+  TouchableOpacity,
+} from "react-native";
 import MapView, { Marker, Polyline } from "react-native-maps";
 import MapViewDirections from "react-native-maps-directions";
 import ENV from "@/utils/env";
@@ -19,22 +26,34 @@ const App = () => {
       router.push({
         pathname: "/tabs/map/nav",
       });
-    }, 5000); // 10 seconds
+    }, 3000); // 10 seconds
 
     return () => clearTimeout(timer); // Cleanup the timer on component unmount
   }, []);
+
+  const handleNavigate = () => {
+    router.push({
+      pathname: "/tabs/map/nav",
+    });
+  };
 
   return (
     <View style={styles.container}>
       <Image source={Images.background} style={styles.background} />
       <View style={styles.contentWrapper}>
-        <Text style={styles.text}>
-          Finding Buddies for You Based on Your Preferences
-        </Text>
         {isLoading ? (
-          <ActivityIndicator size="large" color="white" />
+          <View>
+            <Text style={styles.text}>
+              Finding Buddies for You Based on Your Preferences
+            </Text>
+            <ActivityIndicator size="large" color="white" />
+          </View>
         ) : (
-          <Text style={styles.text}>Loading complete!</Text>
+          <View>
+            <TouchableOpacity onPress={handleNavigate}>
+              <Text style={styles.text}>View Your Route</Text>
+            </TouchableOpacity>
+          </View>
         )}
       </View>
     </View>
