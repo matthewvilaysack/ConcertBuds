@@ -11,20 +11,17 @@ const ChatHeader = ({ concertName, address, location, date, numUsers }) => {
   const toggleModal = () => setModalVisible(!modalVisible);
 
   return (
-    <View style={styles.container}>
-      <View style={styles.headerRow}>
-        <TouchableOpacity style={styles.backIcon}>
-          <Text style={styles.iconText}>←</Text>
-        </TouchableOpacity>
-        <Text style={styles.artistName}>{concertName}</Text>
+    <View style={styles.ConcertChatHeaderContainer}>
+      <View style={styles.ConcertChatHeaderRow}>
+        <Text style={styles.ConcertName}>{concertName}</Text>
         <TouchableOpacity style={styles.infoIcon} onPress={toggleModal}>
           <Text style={styles.iconText}>i</Text>
         </TouchableOpacity>
       </View>
-      <Text style={styles.date}>{`${dayOfWeek}, ${month} ${day}`} </Text>
-      <Text style={styles.date}>@ {address}, {location} </Text>
+      <Text style={styles.ConcertDate}>{`${dayOfWeek}, ${month} ${day}`} </Text>
+      <Text style={styles.ConcertDate}>@ {address}, {location} </Text>
       {numUsers !== undefined && (
-        <Text style={styles.numUsers}>{`${numUsers} people in this chat`}</Text>
+        <Text style={styles.ConcertUserCount}>{`${numUsers} people in this chat`}</Text>
       )}
       {/* Modal Popup for Info */}
       <Modal
@@ -47,44 +44,43 @@ const ChatHeader = ({ concertName, address, location, date, numUsers }) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    padding: 16,
+  ConcertChatHeaderContainer: {
+    padding: 8, // Reduced from 16
     borderBottomWidth: 1,
     borderColor: Theme.colors.border,
+    marginBottom: 4, // Added to create slight spacing
+    paddingTop: 0
   },
-  headerRow: {
+  ConcertChatHeaderRow: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-  },
-  backIcon: {
-    paddingHorizontal: 8,
   },
   infoIcon: {
     paddingHorizontal: 8,
   },
   iconText: {
-    fontSize: 16,
+    fontSize: 18, // Increased from 16
     color: Theme.colors.text.white,
   },
-  artistName: {
-    fontSize: 18,
+  ConcertName: {
+    fontSize: 24, // Increased from 18
     fontWeight: "bold",
     color: Theme.colors.text.white,
     flex: 1,
     textAlign: "center",
   },
-  date: {
-    fontSize: 14,
+  ConcertDate: {
+    fontSize: 16, // Increased from 14
     color: Theme.colors.text.white,
     textAlign: "center",
-    marginTop: 4,
+    marginTop: 2, // Reduced from 4
   },
-  numUsers: {
-    fontSize: 14,
+  ConcertUserCount: {
+    fontSize: 16, // Increased from 14
     color: Theme.colors.text.white,
     textAlign: "center",
-    marginTop: 4,
+    marginTop: 2, // Reduced from 4
   },
   modalOverlay: {
     flex: 1,

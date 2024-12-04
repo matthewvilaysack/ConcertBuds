@@ -89,6 +89,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     borderTopWidth: 1,
     borderTopColor: Theme.colors.border,
+    marginBottom: 4, // Added to lift from bottom
   },
   input: {
     flex: 1,

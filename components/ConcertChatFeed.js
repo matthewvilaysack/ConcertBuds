@@ -116,9 +116,6 @@ const ConcertChatFeed = ({ concertId }) => {
 const styles = StyleSheet.create({
   feedContainer: {
     flex: 1,
-    borderWidth: 1,
-    borderColor: Theme.colors.border,
-    borderRadius: 8,
     padding: 8,
   },
   messageList: {
