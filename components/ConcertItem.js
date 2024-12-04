@@ -83,7 +83,7 @@ const ConcertItem = ({ item, destination, hasRSVPed = false, onRSVPChange }) => 
   });
 
   const handleUnRSVP = async (e) => {
-    e.stopPropagation(); // Prevent navigation
+    e.stopPropagation();
     try {
       setLoading(true);
       const { data: { user } } = await supabase.auth.getUser();
@@ -92,9 +92,9 @@ const ConcertItem = ({ item, destination, hasRSVPed = false, onRSVPChange }) => 
         Alert.alert("Error", "Please sign in first");
         return;
       }
-      await unRSVPFromConcert(user.id, id);
+      await unRSVPFromConcert(user.id, item.id);
       if (onRSVPChange) {
-        onRSVPChange(id, false); // Notify parent about RSVP change
+        onRSVPChange(item.id, false);
       }
       Alert.alert("Success", "You've removed your RSVP");
     } catch (error) {
@@ -191,7 +191,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   location: {
-    fontSize: 18, // Smaller for better fit
+    fontSize: 18,
     fontFamily: 'Doppio One',
     color: '#FFFFFF',
     flex: 1,
