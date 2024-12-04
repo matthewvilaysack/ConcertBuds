@@ -1,14 +1,36 @@
-import React from "react";
-import { View, StyleSheet, Text } from "react-native";
+import React, {useEffect} from "react";
+import { View, StyleSheet, Text, Image, StatusBar } from "react-native";
 import ConcertChats from "../../../components/ConcertChats";
 import Theme from "@/assets/theme";
+import useSession from '@/utils/useSession';
+import Loading from "@/components/Loading";
+import Images from "@/assets/Images";
 
+const ChatScreen = () => {
+  const session = useSession();
 
-const ChatScreen = ({ navigation }) => {
+  useEffect(() => {
+    console.log("Session in ChatScreen:", session);
+    if (session?.user) {
+      console.log("User ID:", session.user.id);
+    }
+  }, [session]);
+
+  if (!session) {
+    return <Loading />;
+  }
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Concert Chats</Text>
-      <ConcertChats navigation={navigation} />
+      <Image source={Images.background} style={styles.background} />
+      <StatusBar style="light" />
+      <View style={styles.contentWrapper}>
+        <Text style={styles.title}>Concert Chats</Text>
+        <ConcertChats 
+          currentTab="/tabs/chat/details" 
+          uuid={session.user.id}
+        />
+      </View>
     </View>
   );
 };
@@ -16,14 +38,26 @@ const ChatScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Theme.colors.backgroundPrimary,
-    padding: 16,
+    backgroundColor: "black",
+  },
+  background: {
+    position: "absolute",
+    width: "100%",
+    height: "100%",
+  },
+  contentWrapper: {
+    position: "absolute",
+    top: "11%",
+    width: "100%",
+    height: "89%",
+    padding: 20,
   },
   title: {
     fontSize: 24,
     fontWeight: "bold",
-    color: Theme.colors.textPrimary,
+    color: Theme.colors.text.white,
     marginBottom: 16,
+    fontFamily: Theme.typography.fontFamilies.primary,
   },
 });
 
