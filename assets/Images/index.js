@@ -8,7 +8,8 @@ const Images = {
   mapActive: require("./mapActive.png"),
   profile_icon: require("./profile_icon.png"),
   profileActive: require("./profileActive.png"),
-  members_icon: require("./members-icon.png"), // Added new image
+  members_icon: require("./members-icon.png"), 
+  send_icon: require("./send-icon.png"),
 };
 
 export default Images;
