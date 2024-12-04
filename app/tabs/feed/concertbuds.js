@@ -109,7 +109,7 @@ export default function ConcertBudsScreen() {
       // console.log("num users:", chatRoom.num_users);
       console.log("ChatRoom", chatRoom);
       console.log("ChatRoom Num Users", chatRoom.num_users);
-      
+
       Alert.alert("Success", "You have successfully joined the chat!");
       router.push({
         pathname: "/tabs/chat/details",
@@ -128,7 +128,7 @@ export default function ConcertBudsScreen() {
       Alert.alert("Error", "Failed to join the chat. Please try again.");
     }
   };
-  
+
   if (loading) {
     return (
       <View style={[styles.container, styles.centered]}>
@@ -154,20 +154,22 @@ export default function ConcertBudsScreen() {
                 },
               },
               _embedded: {
-                venues: [{
-                  city: {
-                    name: concert.location.split(', ')[0]
+                venues: [
+                  {
+                    city: {
+                      name: concert.location.split(", ")[0],
+                    },
+                    state: {
+                      stateCode: concert.location.split(", ")[1],
+                    },
                   },
-                  state: {
-                    stateCode: concert.location.split(', ')[1]
-                  }
-                }]
+                ],
               },
               address: concert.address, // Ensure address is passed correctly
               timezone: concert.timezone,
               time: concert.time,
               artist: concert.artist,
-              imageUrl: concert.imageUrl
+              imageUrl: concert.imageUrl,
             }}
             destination="/tabs/feed/concertbuds"
             hasRSVPed={true}
@@ -180,7 +182,7 @@ export default function ConcertBudsScreen() {
           concertId={concert?.concert_id}
           style={styles.itemSpacing}
         />
-        <View style={{ alignItems: "center", width: "100%", marginTop: 20 }}>
+        <View style={{ alignItems: "center", width: "100%" }}>
           <TouchableOpacity
             style={styles.joinChatButton}
             onPress={handleJoinChat}
@@ -208,8 +210,10 @@ const styles = StyleSheet.create({
     top: "11%",
     alignItems: "center",
     width: "100%",
-    height: "89%",
+    maxHeight: "89%",
     padding: 20,
+    flexDirection: "column",
+    justifyContent: "space-evenly",
   },
   itemSpacing: {
     marginBottom: 20, // Adjust this value to match the spacing of the join chat button

@@ -1,19 +1,32 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, Image, TouchableOpacity, Alert, Dimensions } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  Alert,
+  Dimensions,
+} from "react-native";
 import { router } from "expo-router";
-import supabase from '@/lib/supabase';
-import { RSVPForConcert, unRSVPFromConcert, getUserConcerts, checkUserRSVPStatus } from '@/lib/concert-db'; // Update this import
-import Theme from '../assets/theme';
+import supabase from "@/lib/supabase";
+import {
+  RSVPForConcert,
+  unRSVPFromConcert,
+  getUserConcerts,
+  checkUserRSVPStatus,
+} from "@/lib/concert-db"; // Update this import
+import Theme from "../assets/theme";
 const windowWidth = Dimensions.get("window").width;
 
 const ConcertCard = ({ item, onRSVPChange }) => {
   const [isRSVPed, setIsRSVPed] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { 
-    id, 
-    name, 
+  const {
+    id,
+    name,
     artist,
-    concertName, 
+    concertName,
     date,
     dayOfWeek,
     concertTime,
@@ -24,14 +37,14 @@ const ConcertCard = ({ item, onRSVPChange }) => {
     state,
     venue,
     imageUrl,
-    timezone 
+    timezone,
   } = item || {};
 
   // Format the date correctly
   const eventDate = date
-    ? new Date(date + 'T00:00:00') // Add time component to preserve local date
+    ? new Date(date + "T00:00:00") // Add time component to preserve local date
     : new Date();
-  
+
   const month = eventDate.toLocaleString("en-US", { month: "short" });
   const day = eventDate.getDate();
 
@@ -42,7 +55,9 @@ const ConcertCard = ({ item, onRSVPChange }) => {
   useEffect(() => {
     const checkRSVPStatus = async () => {
       try {
-        const { data: { user } } = await supabase.auth.getUser();
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
         if (user) {
           const hasRSVPed = await checkUserRSVPStatus(user.id, id);
           setIsRSVPed(hasRSVPed);
@@ -57,18 +72,20 @@ const ConcertCard = ({ item, onRSVPChange }) => {
   const handleRSVP = async () => {
     try {
       setLoading(true);
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       console.log("User", user);
-      
+
       if (!user) {
         Alert.alert("Error", "Please sign in to RSVP for concerts");
         return;
       }
 
       const { data: profile } = await supabase
-        .from('profiles')
-        .select('username, avatar_url')
-        .eq('id', user.id)
+        .from("profiles")
+        .select("username, avatar_url")
+        .eq("id", user.id)
         .single();
 
       if (isRSVPed) {
@@ -77,9 +94,12 @@ const ConcertCard = ({ item, onRSVPChange }) => {
         if (onRSVPChange) {
           onRSVPChange(false); // Notify parent about RSVP change
         }
-        Alert.alert("Success", "You've removed your RSVP");
+        router.push({
+          pathname: "/tabs/feed/concertbuds",
+          params: item,
+        });
       } else {
-        console.log("profile", profile)
+        console.log("profile", profile);
         await RSVPForConcert({
           userId: user.id,
           username: profile?.username || user.email,
@@ -91,13 +111,16 @@ const ConcertCard = ({ item, onRSVPChange }) => {
           concertDate: date || new Date().toISOString(),
           concertTime: concertTime,
           avatarUrl: profile?.avatar_url,
-          joinChat: false
+          joinChat: false,
         });
         setIsRSVPed(true);
         if (onRSVPChange) {
           onRSVPChange(true); // Notify parent about RSVP change
         }
-        Alert.alert("Success", "You're now going to this concert!");
+        router.push({
+          pathname: "/tabs/feed/concertbuds",
+          params: item,
+        });
       }
     } catch (error) {
       console.error("Error handling RSVP:", error);
@@ -135,17 +158,17 @@ const ConcertCard = ({ item, onRSVPChange }) => {
         </View>
       </View>
       <View style={styles.goingContainer}>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={[
             styles.goingButton,
             isRSVPed && styles.goingButtonRSVPed,
-            loading && styles.goingButtonDisabled
-          ]} 
+            loading && styles.goingButtonDisabled,
+          ]}
           onPress={handleRSVP}
           disabled={loading}
         >
           <Text style={styles.goingText}>
-            {loading ? 'Loading...' : isRSVPed ? 'Cancel RSVP' : 'Going'}
+            {loading ? "Loading..." : isRSVPed ? "Cancel RSVP" : "Going"}
           </Text>
         </TouchableOpacity>
       </View>
@@ -245,7 +268,7 @@ const styles = StyleSheet.create({
   },
   goingButtonDisabled: {
     opacity: 0.5,
-  }
+  },
 });
 
 export default ConcertCard;
