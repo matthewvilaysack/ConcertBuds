@@ -36,15 +36,8 @@ export default function TabLayout() {
           title: "",
           tabBarIcon: ({ focused }) => (
             <Image
-              source={Images.home}
-              style={[
-                styles.icon,
-                {
-                  tintColor: focused
-                    ? theme.colors.tabBarActive
-                    : theme.colors.tabBarActive,
-                },
-              ]}
+              source={focused ? Images.homeActive : Images.homeInactive} // Change image based on focus
+              style={styles.icon}
             />
           ),
         }}
@@ -55,15 +48,8 @@ export default function TabLayout() {
           title: "",
           tabBarIcon: ({ focused }) => (
             <Image
-              source={Images.map}
-              style={[
-                styles.icon,
-                {
-                  tintColor: focused
-                    ? theme.colors.tabBarActive
-                    : theme.colors.tabBarActive,
-                },
-              ]}
+              source={focused ? Images.mapActive : Images.mapInactive} // Change image based on focus
+              style={styles.icon}
             />
           ),
         }}
@@ -74,15 +60,8 @@ export default function TabLayout() {
           title: "",
           tabBarIcon: ({ focused }) => (
             <Image
-              source={Images.chat_icon}
-              style={[
-                styles.icon,
-                {
-                  tintColor: focused
-                    ? theme.colors.tabBarActive
-                    : theme.colors.tabBarActive,
-                },
-              ]}
+              source={focused ? Images.chatActive : Images.chat_icon} // Change image based on focus
+              style={styles.icon}
             />
           ),
         }}
@@ -93,15 +72,8 @@ export default function TabLayout() {
           title: "",
           tabBarIcon: ({ focused }) => (
             <Image
-              source={Images.profile_icon}
-              style={[
-                styles.icon,
-                {
-                  tintColor: focused
-                    ? theme.colors.tabBarActive
-                    : theme.colors.tabBarActive,
-                },
-              ]}
+              source={focused ? Images.profileActive : Images.profile_icon} // Change image based on focus
+              style={styles.icon}
             />
           ),
         }}
