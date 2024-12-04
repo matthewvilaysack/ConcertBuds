@@ -11,11 +11,16 @@ import {
 import { useRouter } from "expo-router";
 import supabase from "@/lib/supabase";
 import { unRSVPFromConcert } from "@/lib/concert-db";
-import Theme from "../assets/theme";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 const windowWidth = Dimensions.get("window").width;
 
-const ConcertItem = ({ item, destination, hasRSVPed = false, onRSVPChange }) => {
+const ConcertItem = ({
+  item,
+  destination,
+  hasRSVPed = false,
+  onRSVPChange,
+}) => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   if (!item) return null;
@@ -31,7 +36,7 @@ const ConcertItem = ({ item, destination, hasRSVPed = false, onRSVPChange }) => 
   console.log("FORMATTED DATA", formattedData);
 
   const eventDate = dates?.start?.localDate
-    ? new Date(dates.start.localDate + 'T00:00:00')
+    ? new Date(dates.start.localDate + "T00:00:00")
     : new Date();
   const month = eventDate.toLocaleString("en-US", { month: "short" });
   const day = eventDate.getDate();
@@ -79,14 +84,16 @@ const ConcertItem = ({ item, destination, hasRSVPed = false, onRSVPChange }) => 
   const getAdditionalDetails = (item) => ({
     imageUrl: formattedData?.imageUrl,
     timezone: formattedData?.timezone,
-    address: formattedData?.address
+    address: formattedData?.address,
   });
 
   const handleUnRSVP = async (e) => {
     e.stopPropagation();
     try {
       setLoading(true);
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
 
       if (!user) {
         Alert.alert("Error", "Please sign in first");
@@ -113,8 +120,11 @@ const ConcertItem = ({ item, destination, hasRSVPed = false, onRSVPChange }) => 
           <Text style={styles.day}>{day}</Text>
         </View>
         <View style={styles.contentContainer}>
-        <View style={styles.headerRow}>
-          <Text style={styles.location}>{locationText}</Text>
+          <View style={styles.headerContainer}>
+            <Text style={styles.location}>{locationText}</Text>
+            <Text style={styles.artistName}>{name || "Event Name TBD"}</Text>
+          </View>
+
           <View style={styles.actionsContainer}>
             {hasRSVPed ? (
               <>
@@ -126,10 +136,7 @@ const ConcertItem = ({ item, destination, hasRSVPed = false, onRSVPChange }) => 
                   disabled={loading}
                   style={styles.trashContainer}
                 >
-                  <Image
-                    source={require('@/assets/Images/trash.png')}
-                    style={styles.trashIcon}
-                  />
+                  <FontAwesome name="trash" size={18} color={"gray"} />
                 </TouchableOpacity>
               </>
             ) : (
@@ -139,8 +146,6 @@ const ConcertItem = ({ item, destination, hasRSVPed = false, onRSVPChange }) => 
             )}
           </View>
         </View>
-          <Text style={styles.artistName}>{name || "Event Name TBD"}</Text>
-        </View>
       </View>
     </TouchableOpacity>
   );
@@ -148,78 +153,83 @@ const ConcertItem = ({ item, destination, hasRSVPed = false, onRSVPChange }) => 
 
 const styles = StyleSheet.create({
   artistContainer: {
-    width: 336,
-    height: 90, // Reduced height for better proportion
-    backgroundColor: 'rgba(255, 255, 255, 0.15)', // More transparent
+    width: windowWidth * 0.9,
+    height: 90,
     borderRadius: 20,
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 12,
-    marginHorizontal: 'auto',
+    marginHorizontal: "auto",
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
+    overflow: "hidden",
   },
   dateContainer: {
     width: 75,
-    height: '100%',
-    backgroundColor: 'rgba(217, 217, 217, 0.2)', // Subtle contrast for date section
+    height: "100%",
     padding: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     borderTopLeftRadius: 20,
     borderBottomLeftRadius: 20,
   },
   month: {
     fontSize: 16,
-    fontFamily: 'Doppio One',
-    color: '#FFFFFF',
+    fontFamily: "Doppio One",
+    color: "#000000",
     marginBottom: 2,
-    textTransform: 'uppercase',
+    textTransform: "uppercase",
   },
   day: {
     fontSize: 32, // Smaller for better fit
-    fontFamily: 'Doppio One',
-    color: '#FFFFFF',
-    fontWeight: '500',
+    fontFamily: "Doppio One",
+    color: "#000000",
+    fontWeight: "500",
   },
   contentContainer: {
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
+    height: "100%",
     flex: 1,
     paddingHorizontal: 16,
     paddingVertical: 12,
+    justifyContent: "center",
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
-  headerRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+  headerContainer: {
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "flex-start",
   },
   location: {
     fontSize: 18,
-    fontFamily: 'Doppio One',
-    color: '#FFFFFF',
-    flex: 1,
+    fontFamily: "Doppio One",
+    color: "#000000",
     marginRight: 8,
   },
   artistName: {
     fontSize: 14,
-    fontFamily: 'Doppio One',
-    color: 'rgba(255, 255, 255, 0.7)', // Slightly dimmed for hierarchy
-    marginTop: 4,
+    fontFamily: "Doppio One",
+    marginTop: 5,
+    color: "rgba(255, 255, 255, 0.7)", // Slightly dimmed for hierarchy
+    color: "#000000",
   },
   actionsContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 6,
   },
   goingButton: {
     height: 28, // Slightly smaller
     paddingHorizontal: 12,
-    backgroundColor: '#846AE3',
+    backgroundColor: "#846AE3",
     borderRadius: 14,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   goingText: {
     fontSize: 14,
-    fontFamily: 'Doppio One',
-    color: '#FFFFFF',
+    fontFamily: "Doppio One",
+    color: "#FFFFFF",
   },
   trashContainer: {
     padding: 6,
@@ -228,19 +238,18 @@ const styles = StyleSheet.create({
   trashIcon: {
     width: 14,
     height: 14,
-    tintColor: 'rgba(255, 255, 255, 0.6)', // Lighter for dark background
+    tintColor: "rgba(0, 0, 0)", // Lighter for dark background
   },
   notGoingButton: {
     height: 28,
     paddingHorizontal: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   notGoingText: {
     fontSize: 14,
-    fontFamily: 'Doppio One',
-    color: 'rgba(255, 255, 255, 0.5)',
-  }
+    fontFamily: "Doppio One",
+    color: "rgba(255, 255, 255, 0.5)",
+  },
 });
 export default ConcertItem;
-
