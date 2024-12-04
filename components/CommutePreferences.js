@@ -17,8 +17,29 @@ import {
   checkUserRSVPStatus,
 } from "@/lib/concert-db"; // Update this import
 import Theme from "../assets/theme";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import DropDownPicker from "react-native-dropdown-picker";
+import { placeholder } from "deprecated-react-native-prop-types/DeprecatedTextInputPropTypes";
 
 const windowWidth = Dimensions.get("window").width;
+const items = [
+  {
+    id: 1,
+    name: "Bus",
+  },
+  {
+    id: 2,
+    name: "Train",
+  },
+  {
+    id: 3,
+    name: "Subway",
+  },
+  {
+    id: 4,
+    name: "Tram and light rail",
+  },
+];
 
 const CommutePreferences = ({ item, onRSVPChange }) => {
   const [isRSVPed, setIsRSVPed] = useState(false);
@@ -49,11 +70,12 @@ const CommutePreferences = ({ item, onRSVPChange }) => {
   const month = eventDate.toLocaleString("en-US", { month: "short" });
   const day = eventDate.getDate();
   const [searchQuery, setSearchQuery] = useState(artist);
-  const [chosenDate, setChosenDate] = useState(new Date());
+  const [chosenDate, setChosenDate] = useState(eventDate);
+  const [modes, setModes] = useState([]);
+  const [selectedModes, setSelectedModes] = useState([]);
 
   // Use the passed dayOfWeek and concertTime or format from date if not provided
   const displayTime = concertTime || "Time TBD";
-  const locationText = city && state ? `${city}, ${state}` : `${city}`;
 
   useEffect(() => {
     const checkRSVPStatus = async () => {
@@ -125,6 +147,20 @@ const CommutePreferences = ({ item, onRSVPChange }) => {
       setLoading(false);
     }
   };
+  const onDateChange = (event, selectedDate) => {
+    if (selectedDate) {
+      setChosenDate(selectedDate); // Ensure selectedDate is a valid Date object
+    }
+  };
+
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [dropdownValue, setDropdownValue] = useState([]);
+  const [dropdownItems, setDropdownItems] = useState([
+    { label: "Bus", value: "bus" },
+    { label: "Train", value: "train" },
+    { label: "Subway", value: "subway" },
+    { label: "Tram and light rail", value: "tram" },
+  ]);
 
   return (
     <View style={styles.artistImageContainer}>
@@ -138,37 +174,11 @@ const CommutePreferences = ({ item, onRSVPChange }) => {
         </View>
 
         <View style={styles.artistHeader}>
-          <Text style={styles.location}>{locationText}</Text>
+          <Text style={styles.location}>{location}</Text>
           <Text style={styles.artistName}>{name || "Event Name TBD"}</Text>
           <View>
             <Text style={styles.artistName}>{address}</Text>
           </View>
-        </View>
-      </View>
-      <View style={styles.preferencesContainer}>
-        <Text style={styles.searchName}>Start Location:</Text>
-        <View style={styles.searchInputContainer}>
-          <TextInput
-            style={styles.searchInput}
-            placeholder="459 Lagunita Dr, Stanford, CA 94305"
-            placeholderTextColor="rgba(0, 0, 0, 0.4)"
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-            returnKeyType="search"
-          />
-        </View>
-        <Text style={styles.searchName}>Arrival Time:</Text>
-        <View style={styles.searchInputContainer}></View>
-        <Text style={styles.searchName}>Transportation Route:</Text>
-        <View style={styles.searchInputContainer}>
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Search for artist, tour, etc."
-            placeholderTextColor="rgba(0, 0, 0, 0.4)"
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-            returnKeyType="search"
-          />
         </View>
       </View>
       <View style={styles.goingContainer}>
@@ -184,6 +194,49 @@ const CommutePreferences = ({ item, onRSVPChange }) => {
           <Text style={styles.goingText}>Find My Route</Text>
         </TouchableOpacity>
       </View>
+
+      <View style={styles.preferencesContainer}>
+        <Text style={styles.searchName}>Start Location:</Text>
+        <View style={styles.searchInputContainer}>
+          <TextInput
+            style={styles.searchInput}
+            placeholder="459 Lagunita Dr, Stanford, CA 94305"
+            placeholderTextColor="rgba(0, 0, 0, 0.4)"
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            returnKeyType="search"
+          />
+        </View>
+        <Text style={styles.searchName}>Arrival Time:</Text>
+        <View style={styles.searchInputContainer}>
+          <View style={styles.timeInput}>
+            <DateTimePicker
+              value={chosenDate}
+              mode="datetime"
+              display="default"
+              onChange={onDateChange}
+            />
+          </View>
+        </View>
+        <Text style={styles.searchName}>Transportation Modes:</Text>
+
+        <View style={styles.modeInputContainer}>
+          <DropDownPicker
+            multiple={true}
+            open={dropdownOpen}
+            value={dropdownValue}
+            items={dropdownItems}
+            setOpen={setDropdownOpen}
+            setValue={setDropdownValue}
+            setItems={setDropdownItems}
+            placeholder="Select items"
+            mode="BADGE" // Shows selected items as badges
+            style={styles.dropdown}
+            dropDownContainerStyle={styles.dropdownList}
+            textStyle={styles.dropdownText} // Customize font here
+          />
+        </View>
+      </View>
     </View>
   );
 };
@@ -197,6 +250,7 @@ const styles = StyleSheet.create({
     width: windowWidth * 0.9,
     backgroundColor: "rgba(255, 255, 255, 0.75)",
     marginBottom: 20,
+    paddingBottom: 90,
   },
   artistContainer: {
     width: windowWidth * 0.9,
@@ -232,6 +286,7 @@ const styles = StyleSheet.create({
     flex: 1,
     borderBottomRightRadius: 0,
     borderTopRightRadius: 0,
+    paddingTop: 10,
   },
   variantRadius: {
     borderBottomRightRadius: 0,
@@ -269,6 +324,9 @@ const styles = StyleSheet.create({
     paddingTop: 0,
     alignSelf: "stretch",
     paddingBottom: "8%",
+    position: "absolute",
+    top: 410,
+    right: 0,
   },
   goingButton: {
     backgroundColor: "#846AE3",
@@ -312,6 +370,38 @@ const styles = StyleSheet.create({
     color: "#1A1A1A",
     height: "100%",
     fontFamily: "Doppio",
+  },
+  timeInput: {
+    position: "absolute",
+    left: 0,
+    top: 7,
+  },
+  dateInputContainer: {
+    height: 50,
+    borderRadius: 10,
+    overflow: "hidden",
+    width: "100%",
+  },
+  modeInputContainer: {
+    // position: "absolute",
+    // left: 36,
+    // top: 250,
+    height: 50,
+    borderRadius: 10,
+    width: "100%",
+    backgroundColor: "rgba(255, 255, 255, 0.6)",
+  },
+  dropdown: {
+    borderWidth: 0, // Removes the black border around the dropdown trigger
+    backgroundColor: "white", // Optional: Adjust background color
+  },
+  dropdownList: {
+    borderWidth: 0, // Removes the black border around the dropdown items
+    backgroundColor: "white", // Optional: Adjust background color to match
+  },
+  dropdownText: {
+    fontSize: 16, // Adjust font size
+    fontFamily: "Doppio", // Use a specific font family (system font or custom)
   },
 });
 
