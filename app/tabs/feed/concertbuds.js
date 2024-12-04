@@ -107,7 +107,9 @@ export default function ConcertBudsScreen() {
         username
       );
       // console.log("num users:", chatRoom.num_users);
-
+      console.log("ChatRoom", chatRoom);
+      console.log("ChatRoom Num Users", chatRoom.num_users);
+      
       Alert.alert("Success", "You have successfully joined the chat!");
       router.push({
         pathname: "/tabs/chat/details",
