@@ -43,6 +43,7 @@ const Details = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingBottom: 4, // Added to lift from bottom navigation
     backgroundColor: Theme.colors.backgroundPrimary,
   },
   background: {
@@ -52,8 +53,9 @@ const styles = StyleSheet.create({
     resizeMode: "cover",
   },
   contentWrapper: {
+    flex: 1,
     position: "absolute",
-    top: "11%",
+    top: "8%",
     width: "100%",
     height: windowHeight - 200,
   },
