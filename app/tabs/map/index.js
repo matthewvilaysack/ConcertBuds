@@ -30,7 +30,6 @@ const App = () => {
 
     loadUserConcerts();
   }, [userConcerts]);
-
   return (
     <View style={styles.container}>
       <Image source={Images.background} style={styles.background} />

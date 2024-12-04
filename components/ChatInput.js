@@ -1,8 +1,10 @@
 import React, { useState } from "react";
-import { View, TextInput, TouchableOpacity, StyleSheet, Alert } from "react-native";
+import { View, Image, TextInput, TouchableOpacity, StyleSheet, Alert } from "react-native";
 import { supabase } from "@/lib/supabase";
 import useSession from "@/utils/useSession";
 import Theme from '@/assets/theme';
+import Images from "@/assets/Images";
+
 const ChatInput = ({ concertId }) => {
   const [message, setMessage] = useState("");
   const session = useSession();
@@ -67,7 +69,13 @@ const ChatInput = ({ concertId }) => {
         onPress={sendMessage}
         disabled={!message.trim()}
       >
-        <View style={styles.sendButtonIcon} />
+        <Image 
+          source={Images.send_icon} 
+          style={[
+            styles.sendButtonIcon,
+            !message.trim() && styles.sendButtonIconDisabled
+          ]} 
+        />
       </TouchableOpacity>
     </View>
   );
@@ -86,7 +94,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 12,
     paddingHorizontal: 16,
-    backgroundColor: "rgba(255, 255, 255, 0.1)", // Semi-transparent input
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
     borderRadius: 20,
     color: "#FFF",
     fontSize: 16,
@@ -97,25 +105,21 @@ const styles = StyleSheet.create({
     height: 44,
     borderRadius: 22,
     marginLeft: 10,
-    backgroundColor: Theme.colors.primary, // Use a vibrant theme color
+    backgroundColor: Theme.colors.primary,
     justifyContent: "center",
     alignItems: "center",
   },
   sendButtonDisabled: {
-    backgroundColor: Theme.colors.primary.main, // Subtle disabled state
+    backgroundColor: Theme.colors.primary.main,
   },
   sendButtonIcon: {
-    width: 0,
-    height: 0,
-    borderLeftWidth: 10,
-    borderRightWidth: 10,
-    borderBottomWidth: 16,
-    borderStyle: "solid",
-    borderLeftColor: "transparent",
-    borderRightColor: "transparent",
-    borderBottomColor: "#FFFFFF", // White arrow
-    transform: [{ rotate: "90deg" }],
+    width: 24,
+    height: 24,
+    tintColor: '#FFFFFF',
   },
+  sendButtonIconDisabled: {
+    tintColor: 'rgba(255, 255, 255, 0.5)',
+  }
 });
 
 export default ChatInput;
