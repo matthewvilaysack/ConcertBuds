@@ -8,35 +8,41 @@ import Feed from "@/components/Feed";
 import { getUserConcerts } from "@/lib/concert-db";
 import supabase from "@/lib/supabase";
 import Theme from "@/assets/theme";
+import { useLocalSearchParams } from "expo-router";
 import CommutePreferences from "@/components/CommutePreferences";
 
 const App = () => {
-  const [userConcerts, setUserConcerts] = useState([]);
-  useEffect(() => {
-    const loadUserConcerts = async () => {
-      try {
-        const {
-          data: { user },
-        } = await supabase.auth.getUser();
-        if (user) {
-          const concerts = await getUserConcerts(user.id);
-          if (JSON.stringify(userConcerts) !== JSON.stringify(concerts)) {
-            setUserConcerts(concerts || []);
-          }
-        }
-      } catch (error) {
-        console.error("Error loading user concerts:", error);
-      }
-    };
-
-    loadUserConcerts();
-  }, [userConcerts]);
+  const params = useLocalSearchParams();
+  const concert = {
+    concert_id: params.id,
+    concert_name: params.concertName || params.name,
+    concert_date: params.date,
+    location: `${params.city}, ${params.state}`,
+    address: params.address,
+    timezone: params.timezone,
+    time: params.time,
+    artist: params.artist,
+    imageUrl: params.imageUrl,
+  };
 
   return (
     <View style={styles.container}>
       <Image source={Images.background} style={styles.background} />
       <View style={styles.contentWrapper}>
-        <CommutePreferences></CommutePreferences>
+        <CommutePreferences
+          item={{
+            id: concert.concert_id,
+            name: concert.concert_name,
+            dates: {
+              start: {
+                localDate: concert.concert_date,
+              },
+            },
+            location: concert.location,
+            city: concert.city,
+            state: concert.state,
+          }}
+        ></CommutePreferences>
       </View>
     </View>
   );

@@ -50,7 +50,7 @@ export default function Layout() {
           headerTitle: "",
           headerTitleAlign: "center",
           headerBackTitle: "",
-          headerTintColor: "white", // Set back button color to white
+          headerTintColor: "white",
           headerBackTitleVisible: "false",
         }}
       />
@@ -60,7 +60,28 @@ export default function Layout() {
           headerTitle: "Map Details",
           headerTitleAlign: "center",
           headerBackTitle: "Back",
-          headerTintColor: theme.colors.backgroundPrimary, // Set back button color to white
+          headerTintColor: "white",
+          headerBackTitleVisible: "false",
+        }}
+      />
+      <Stack.Screen
+        name="matching"
+        options={{
+          headerTitle: "",
+          headerTitleAlign: "center",
+          headerBackTitle: "Back",
+          headerTintColor: "white",
+          headerBackTitleVisible: "false",
+        }}
+      />
+      <Stack.Screen
+        name="nav"
+        options={{
+          headerTitle: "",
+          headerTitleAlign: "center",
+          headerBackTitle: "Back",
+          headerTintColor: "white",
+          headerBackTitleVisible: "false",
         }}
       />
     </Stack>
