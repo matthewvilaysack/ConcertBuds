@@ -61,7 +61,7 @@ export default function Layout() {
           headerTitle: "",
           headerTitleAlign: "center",
           headerBackTitleVisible: "false",
-          headerTintColor: theme.colors.backgroundPrimary, // Set back button color to white
+          headerTintColor: theme.colors.backgroundPrimary, 
           headerStyle: {
             backgroundColor: "transparent",
             elevation: 0,
