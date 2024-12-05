@@ -16,6 +16,11 @@
       "supportsTablet": true,
       "config": {
         "googleMapsApiKey": "AIzaSyDWDGpqVjj5dgDRNqWC8LuXcAEgPqbP8KI"
+      },
+      "bundleIdentifier": "com.anonymous.cs147l24aua4",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "Your app needs access to your location.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "Your app needs access to your location even in the background."
       }
     },
     "android": {
@@ -25,7 +30,8 @@
       },
       "config": {
         "googleMapsApiKey": "AIzaSyDWDGpqVjj5dgDRNqWC8LuXcAEgPqbP8KI"
-      }
+      },
+      "package": "com.anonymous.cs147l24aua4"
     },
     "web": {
       "favicon": "./assets/favicon.png"
