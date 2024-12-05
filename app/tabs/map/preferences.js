@@ -39,6 +39,7 @@ const App = () => {
             name: concert.artist,
             concertName: concert.concert_name,
             concertRawTime: concert.concert_raw_time,
+            time: concert.time,
             dates: {
               start: {
                 localDate: concert.concert_date,

@@ -28,7 +28,7 @@ const App = () => {
   const destinationAddress = "525 W Santa Clara St, San Jose, CA 95113"; // Replace with actual address
   const origin2Address = "566 Governor's Ave, Stanford, CA 94305"; // Replace with actual address
   const origin3Address = "400 Reservoir Rd, Stanford, CA 94305"; // Replace with actual address
-
+  
   const GOOGLE_MAPS_API_KEY = ENV.MAPS_API_KEY; // Replace with your API key
   const handleAccept = () => {
     setAccepted(true);
@@ -138,7 +138,7 @@ const App = () => {
     <View style={styles.container}>
       <Image source={Images.background} style={styles.background} />
       <View style={styles.headerContainer}>
-        <Text style={styles.acceptText}>525 W Santa Clara St · 7 PM</Text>
+        <Text style={styles.acceptText}>Rogers Arena · 7 PM</Text>
       </View>
       <View style={styles.mapContainer}>
         <MapView

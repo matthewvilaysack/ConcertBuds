@@ -31,7 +31,7 @@ const CommutePreferences = ({ item, onRSVPChange }) => {
     artist,
     concertName,
     concertRawTime,
-    date,
+    dates,
     dayOfWeek,
     concertTime,
     time,
@@ -46,9 +46,9 @@ const CommutePreferences = ({ item, onRSVPChange }) => {
   } = item || {};
   console.log("item in commutepreferences: ", item);
 
-  // Format the date correctly
-  const eventDate = date
-    ? new Date(date + "T00:00:00") // Add time component to preserve local date
+  // // Format the date correctly
+  const eventDate = dates.start.localDate
+    ? new Date(dates.start.localDate + "T00:00:00") // Add time component to preserve local date
     : new Date();
 
   const month = eventDate.toLocaleString("en-US", { month: "short" });
@@ -113,6 +113,7 @@ const CommutePreferences = ({ item, onRSVPChange }) => {
 
         <View style={styles.artistHeader}>
           <Text style={styles.location}>{location}</Text>
+          <Text style={styles.artistName}>{time}</Text>
           <Text style={styles.artistName}>{name || "Event Name TBD"}</Text>
           <View>
             <Text style={styles.artistName}>{address}</Text>
@@ -248,6 +249,7 @@ const styles = StyleSheet.create({
   },
   goingContainer: {
     // backgroundColor: "rgba(255, 255, 255, 0.5)",
+    marginTop: 25,
     borderBottomRightRadius: 20,
     borderBottomLeftRadius: 20,
     paddingHorizontal: "10%",

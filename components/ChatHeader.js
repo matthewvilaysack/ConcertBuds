@@ -24,7 +24,6 @@ const ChatHeader = ({ concertName, address, location, date, numUsers }) => {
   const { dayOfWeek, month, day } = formatDate(date);
 
   const toggleModal = () => setModalVisible(!modalVisible);
-
   return (
     <View style={styles.ConcertChatHeaderContainer}>
       <View style={styles.ConcertChatHeaderRow}>
@@ -38,7 +37,7 @@ const ChatHeader = ({ concertName, address, location, date, numUsers }) => {
       </TouchableOpacity>
       </View>
       <Text style={styles.ConcertDate}>{`${dayOfWeek}, ${month} ${day}`}</Text>
-      <Text numberOfLines={2} style={styles.ConcertDate}>@ {address}, {location}</Text>
+      <Text numberOfLines={2} style={styles.ConcertDate}>@ 525 W Santa Clara St, San Jose, CA</Text>
       {numUsers !== undefined && (
         <View style={styles.userCountContainer}>
           <Image 
