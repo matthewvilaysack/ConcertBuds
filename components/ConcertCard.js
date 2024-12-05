@@ -153,6 +153,7 @@ const ConcertCard = ({ item, onRSVPChange }) => {
           <Text style={styles.location}>{locationText}</Text>
           <Text style={styles.artistName}>{name || "Event Name TBD"}</Text>
           <View>
+            <Text style={styles.artistName}>{venue}</Text>
             <Text style={styles.artistName}>{address}</Text>
           </View>
         </View>
@@ -252,6 +253,7 @@ const styles = StyleSheet.create({
     paddingBottom: "8%",
   },
   goingButton: {
+    marginTop: 10,
     backgroundColor: "#846AE3",
     borderRadius: 10,
     alignItems: "center",

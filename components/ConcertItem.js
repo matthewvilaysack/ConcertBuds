@@ -24,15 +24,15 @@ const ConcertItem = ({
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   if (!item) return null;
-
-  console.log("CONCERTITEM PARAMS", item);
+// 
+  // console.log("CONCERTITEM PARAMS", item);
 
   const { name, dates, _embedded, formattedData } = item || {};
   const venue = _embedded?.venues?.[0];
   const city = venue?.city?.name || "San Jose";
   const state = venue?.state?.stateCode;
   const artist = formattedData?.artist;
-
+// 
   console.log("FORMATTED DATA", formattedData);
 
   const eventDate = dates?.start?.localDate
@@ -122,7 +122,7 @@ const ConcertItem = ({
         <View style={styles.contentContainer}>
           <View style={styles.headerContainer}>
             <Text style={styles.location}>{locationText}</Text>
-            <Text style={styles.artistName}>{name || "Event Name TBD"}</Text>
+            <Text style={styles.artistName}>{formattedData?.artist || "Event Name TBD"}</Text>
           </View>
 
           <View style={styles.actionsContainer}>

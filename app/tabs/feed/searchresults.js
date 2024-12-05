@@ -60,7 +60,6 @@ const ConcertItemWrapper = React.memo(({ item, artistQuery, userConcerts, onRSVP
     imageUrl: item.images?.[1]?.url,
     timezone: item.dates?.timezone
   };
-  console.log("FORMATTED DATA BE LIKE", formattedData);
   return (
     <ConcertItem
       item={{ ...item, formattedData }}
