@@ -15,15 +15,17 @@ const App = () => {
   const params = useLocalSearchParams();
   const concert = {
     concert_id: params.id,
-    concert_name: params.concertName || params.name,
+    concert_name: params.concertName,
     concert_date: params.date,
     location: `${params.city}, ${params.state}`,
     address: params.address,
     timezone: params.timezone,
     time: params.time,
-    artist: params.artist,
+    artist: params.name,
     imageUrl: params.imageUrl,
   };
+
+  console.log("params in preferences", params);
 
   return (
     <View style={styles.container}>
@@ -32,7 +34,8 @@ const App = () => {
         <CommutePreferences
           item={{
             id: concert.concert_id,
-            name: concert.concert_name,
+            name: concert.artist,
+            concertName: concert.concert_name,
             dates: {
               start: {
                 localDate: concert.concert_date,

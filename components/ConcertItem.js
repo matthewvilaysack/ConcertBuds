@@ -42,7 +42,9 @@ const ConcertItem = ({
   const day = eventDate.getDate();
   const locationText = city && state ? `${city}, ${state}` : `${city}`;
   const handleNavigate = () => {
-    console.log(item);
+    console.log("destination", destination);
+    console.log("params in concertitem", getParams(item));
+
     router.push({
       pathname: destination,
       params: getParams(item),
@@ -84,7 +86,7 @@ const ConcertItem = ({
   const getAdditionalDetails = (item) => ({
     imageUrl: formattedData?.imageUrl,
     timezone: formattedData?.timezone,
-    address: formattedData?.address,
+    address: item.address,
   });
 
   const handleUnRSVP = async (e) => {
@@ -120,9 +122,9 @@ const ConcertItem = ({
           <Text style={styles.day}>{day}</Text>
         </View>
         <View style={styles.contentContainer}>
-          <View style={styles.headerContainer}>
+          <View style={styles.headerContainer}> 
             <Text style={styles.location}>{locationText}</Text>
-            <Text style={styles.artistName}>{formattedData?.artist || "Event Name TBD"}</Text>
+            <Text style={styles.artistName}>{name || "Event Name TBD"}</Text>
           </View>
 
           <View style={styles.actionsContainer}>
