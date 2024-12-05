@@ -36,7 +36,9 @@ const TransitOptions = ({ transitSteps }) => {
                   { backgroundColor: transitDetails.line.color },
                 ]}
               >
-                <Text style={styles.lineText}>{transitDetails.line.name}</Text>
+                <Text style={styles.lineText}>
+                  {transitDetails.line.short_name}
+                </Text>
               </View>
             </View>
           );
@@ -175,7 +177,7 @@ const styles = StyleSheet.create({
   },
   lineText: {
     fontFamily: "Doppio",
-    color: "black",
+    color: "white",
   },
 });
 
