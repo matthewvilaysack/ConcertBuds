@@ -60,7 +60,7 @@ const ConcertUsersGoing = ({ concertId }) => {
     <View style={styles.attendeesRow} key={`${concertId}-${index}`}>
       {item.map((attendee) => (
         <View
-          key={`${concertId}-${attendee.id}`}
+          key={`${concertId}-${attendee.user_id}`}
           style={styles.attendeeContainer}
         >
           <Image

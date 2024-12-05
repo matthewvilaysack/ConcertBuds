@@ -5,6 +5,7 @@ import Theme from "@/assets/theme";
 import useSession from '@/utils/useSession';
 import Loading from "@/components/Loading";
 import Images from "@/assets/Images";
+import BuddyChats from '../../../components/BuddyChats';
 
 const ChatScreen = () => {
   const session = useSession();
@@ -25,6 +26,11 @@ const ChatScreen = () => {
       <Image source={Images.background} style={styles.background} />
       <StatusBar style="light" />
       <View style={styles.contentWrapper}>
+      <Text style={styles.title}>Concert Chats</Text>
+        <BuddyChats 
+          currentTab="/tabs/chat/details" 
+          uuid={session.user.id}
+        />
         <Text style={styles.title}>Concert Chats</Text>
         <ConcertChats 
           currentTab="/tabs/chat/details" 
