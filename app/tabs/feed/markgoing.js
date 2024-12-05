@@ -20,6 +20,7 @@ const MarkGoing = () => {
     date: params.date,
     dayOfWeek: params.dayOfWeek,
     concertTime: params.concertTime,
+    concertRawTime: params.concertRawTime,
     dateTime: params.dateTime,
     
     // Location details

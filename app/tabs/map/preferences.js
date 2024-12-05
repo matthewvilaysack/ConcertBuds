@@ -13,10 +13,12 @@ import CommutePreferences from "@/components/CommutePreferences";
 
 const App = () => {
   const params = useLocalSearchParams();
+  console.log("PARAMS IN PREFERENCES", params);
   const concert = {
     concert_id: params.id,
     concert_name: params.concertName,
     concert_date: params.date,
+    concert_raw_time: params.concertRawTime,
     location: `${params.city}, ${params.state}`,
     address: params.address,
     timezone: params.timezone,
@@ -36,6 +38,7 @@ const App = () => {
             id: concert.concert_id,
             name: concert.artist,
             concertName: concert.concert_name,
+            concertRawTime: concert.concert_raw_time,
             dates: {
               start: {
                 localDate: concert.concert_date,

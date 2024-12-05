@@ -29,6 +29,7 @@ const ConcertCard = ({ item, onRSVPChange }) => {
     concertName,
     date,
     dayOfWeek,
+    concertRawTime,
     concertTime,
     dateTime,
     address,
@@ -106,6 +107,7 @@ const ConcertCard = ({ item, onRSVPChange }) => {
           address: address,
           concertDate: date || new Date().toISOString(),
           concertTime: concertTime,
+          concertRawTime: concertRawTime,
           avatarUrl: profile?.avatar_url,
           joinChat: false,
         });
