@@ -7,8 +7,10 @@ const Images = {
   mapInactive: require("./mapInactive.png"),
   mapActive: require("./mapActive.png"),
   profile_icon: require("./profile_icon.png"),
+  profile_icon_2: require("./profile-icon-1.png"),
+
   profileActive: require("./profileActive.png"),
-  members_icon: require("./members-icon.png"), 
+  members_icon: require("./members-icon.png"),
   send_icon: require("./send-icon.png"),
 };
 
