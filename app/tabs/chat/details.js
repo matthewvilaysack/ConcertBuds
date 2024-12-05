@@ -1,5 +1,13 @@
 import React from "react";
-import { View, StyleSheet, KeyboardAvoidingView, Platform, Dimensions, Image, Text } from "react-native";
+import {
+  View,
+  StyleSheet,
+  KeyboardAvoidingView,
+  Platform,
+  Dimensions,
+  Image,
+  Text,
+} from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import Theme from "@/assets/theme";
@@ -32,7 +40,10 @@ const Details = () => {
           keyboardVerticalOffset={Platform.OS === "ios" ? 65 : 0}
           style={styles.keyboardContainer}
         >
-          <ConcertChatFeed concertId={params.concert_id} address={params.address} />
+          <ConcertChatFeed
+            concertId={params.concert_id}
+            address={params.address}
+          />
           <ChatInput concertId={params.concert_id} />
         </KeyboardAvoidingView>
       </View>
@@ -43,7 +54,6 @@ const Details = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingBottom: 4, // Added to lift from bottom navigation
     backgroundColor: Theme.colors.backgroundPrimary,
   },
   background: {
@@ -57,7 +67,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: "8%",
     width: "100%",
-    height: windowHeight - 200,
+    height: windowHeight * 0.8,
   },
   keyboardContainer: {
     flex: 1,
