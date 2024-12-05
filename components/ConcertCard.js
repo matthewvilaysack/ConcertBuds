@@ -94,10 +94,6 @@ const ConcertCard = ({ item, onRSVPChange }) => {
         if (onRSVPChange) {
           onRSVPChange(false); // Notify parent about RSVP change
         }
-        router.push({
-          pathname: "/tabs/feed/concertbuds",
-          params: item,
-        });
       } else {
         console.log("profile", profile);
         await RSVPForConcert({
@@ -193,6 +189,7 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     justifyContent: "flex-start",
     borderRadius: 20,
+    marginVertical: 10,
   },
   dateContainer: {
     marginTop: "5%",

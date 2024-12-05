@@ -41,6 +41,7 @@ const App = () => {
             location: concert.location,
             city: concert.city,
             state: concert.state,
+            address: concert.address,
           }}
         ></CommutePreferences>
       </View>
