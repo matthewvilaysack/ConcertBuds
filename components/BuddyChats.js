@@ -11,8 +11,8 @@ import {
 import Theme from "../assets/theme";
 import { useRouter } from "expo-router";
 import supabase from "@/lib/supabase";
-import timeAgo from '@/utils/timeAgo';
-import Images from '../assets/Images'; // Updated import
+import timeAgo from "@/utils/timeAgo";
+import Images from "../assets/Images"; // Updated import
 
 const windowWidth = Dimensions.get("window").width;
 
@@ -31,77 +31,83 @@ const BuddyChats = ({ currentTab, uuid }) => {
     setIsLoading(true);
     try {
       console.log("Current UUID:", uuid);
-  
+
       if (!uuid) {
         console.log("No UUID provided, skipping fetch");
         setIsLoading(false);
         return;
       }
-  
+
       // Get user concerts with join_chat = true
       const { data: joinedConcerts, error: joinedError } = await supabase
-        .from('user_concerts')
-        .select(`
+        .from("user_concerts")
+        .select(
+          `
           concert_id,
           concert_name,
           location,
           address,
           concert_date,
           join_chat
-        `)
-        .eq('user_id', uuid)
-        .eq('join_chat', true);
-          
+        `
+        )
+        .eq("user_id", uuid)
+        .eq("join_chat", true);
+
       console.log("Joined concerts:", joinedConcerts);
-  
+
       if (joinedError) {
         console.error("Error fetching joined concerts:", joinedError);
         return;
       }
-  
+
       // Get chat room data for these concerts
-      const concertIds = joinedConcerts?.map(c => c.concert_id) || [];
+      const concertIds = joinedConcerts?.map((c) => c.concert_id) || [];
       console.log("Concert IDs to fetch:", concertIds);
-  
+
       const { data: chatRooms, error: chatRoomsError } = await supabase
-        .from('chat_rooms')
-        .select('concert_id, num_users')
-        .in('concert_id', concertIds);
-  
+        .from("chat_rooms")
+        .select("concert_id, num_users")
+        .in("concert_id", concertIds);
+
       console.log("Chat rooms data:", chatRooms);
-  
+
       if (chatRoomsError) {
         console.error("Error fetching chat rooms:", chatRoomsError);
         return;
       }
-  
+
       // Get latest message for each concert
       const { data: latestMessages, error: messagesError } = await supabase
-        .from('messages')
-        .select('concert_id, created_at')
-        .in('concert_id', concertIds)
-        .order('created_at', { ascending: false });
-  
+        .from("messages")
+        .select("concert_id, created_at")
+        .in("concert_id", concertIds)
+        .order("created_at", { ascending: false });
+
       console.log("Latest messages:", latestMessages);
-  
+
       if (messagesError) {
         console.error("Error fetching messages:", messagesError);
         return;
       }
-  
+
       // Combine all data
-      const formattedConcerts = joinedConcerts.map(concert => {
+      const formattedConcerts = joinedConcerts.map((concert) => {
         const eventDate = concert.concert_date
-          ? new Date(concert.concert_date + 'T00:00:00')
+          ? new Date(concert.concert_date + "T00:00:00")
           : new Date();
-  
-        const chatRoom = chatRooms?.find(room => room.concert_id === concert.concert_id);
-        const lastMessage = latestMessages?.find(msg => msg.concert_id === concert.concert_id);
-  
+
+        const chatRoom = chatRooms?.find(
+          (room) => room.concert_id === concert.concert_id
+        );
+        const lastMessage = latestMessages?.find(
+          (msg) => msg.concert_id === concert.concert_id
+        );
+
         console.log(`Formatting concert ${concert.concert_id}:`, {
           chatRoom,
           lastMessage,
-          eventDate
+          eventDate,
         });
         console.log("CHATROOM", chatRoom);
         return {
@@ -109,15 +115,17 @@ const BuddyChats = ({ currentTab, uuid }) => {
           month: eventDate.toLocaleString("en-US", { month: "short" }),
           day: eventDate.getDate(),
           num_users: chatRoom?.num_users || 0,
-          last_message_time: lastMessage?.created_at 
+          last_message_time: lastMessage?.created_at
             ? timeAgo(lastMessage.created_at)
-            : 'No messages yet'
+            : "No messages yet",
         };
       });
 
       // Sort concerts by date in ascending order
-      formattedConcerts.sort((a, b) => new Date(a.concert_date) - new Date(b.concert_date));
-  
+      formattedConcerts.sort(
+        (a, b) => new Date(a.concert_date) - new Date(b.concert_date)
+      );
+
       console.log("Final formatted concerts:", formattedConcerts);
       setConcerts(formattedConcerts);
     } catch (error) {
@@ -143,13 +151,18 @@ const BuddyChats = ({ currentTab, uuid }) => {
         address: concert.address,
         concert_date: concert.concert_date,
         num_users: concert.num_users,
-      }
+      },
     });
   };
 
   if (isLoading) {
     return (
-      <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
+      <View
+        style={[
+          styles.container,
+          { justifyContent: "center", alignItems: "center" },
+        ]}
+      >
         <ActivityIndicator size="large" color={Theme.colors.text.primary} />
       </View>
     );
@@ -158,50 +171,54 @@ const BuddyChats = ({ currentTab, uuid }) => {
   return (
     <View style={styles.container}>
       {concerts.map((concert, index) => (
-        <TouchableOpacity 
-          key={index} 
+        <TouchableOpacity
+          key={index}
           onPress={() => handleNavigate(concert)}
           accessible={true}
           accessibilityLabel={`${concert.concert_name} in ${concert.location}, ${concert.num_users} members, Last message ${concert.last_message_time}`}
         >
           <View style={styles.artistContainer}>
             <View style={styles.dateContainer}>
-              <Text style={styles.month}>
-                {concert.month}
-              </Text>
-              <Text style={styles.day}>
-                {concert.day}
-              </Text>
+              <Text style={styles.month}>{concert.month}</Text>
+              <Text style={styles.day}>{concert.day}</Text>
             </View>
             <View style={styles.contentContainer}>
-              <Text 
-                style={styles.concertNameText} 
-                numberOfLines={1} 
+              <Text
+                style={styles.concertNameText}
+                numberOfLines={1}
                 ellipsizeMode="tail"
               >
                 {concert.concert_name}
               </Text>
-              <Text 
-                style={styles.locationText}
-                numberOfLines={1}
-                ellipsizeMode="tail"
-              >
-                {concert.location}
-              </Text>
+              <View style={styles.lastMessageContainer}>
+                <Text
+                  style={styles.locationText}
+                  numberOfLines={1}
+                  ellipsizeMode="tail"
+                >
+                  {concert.location}
+                </Text>
+                <Text style={styles.lastMessageTime}>
+                  {concert.last_message_time}
+                </Text>
+              </View>
               <View style={styles.memberContainer}>
-                <Image 
+                <Image
                   source={Images.members_icon}
                   style={styles.memberIcon}
                   accessibilityElementsHidden={true}
                 />
                 <Text style={styles.memberCount}>
-                  {concert.num_users.toLocaleString()} {concert.num_users === 1 ? 'member' : 'members'}
+                  {concert.num_users.toLocaleString()}{" "}
+                  {concert.num_users === 1 ? "member" : "members"}
                 </Text>
               </View>
             </View>
-            <Text style={styles.lastMessageTime}>
-              {concert.last_message_time}
-            </Text>
+            {/* <View style={styles.lastMessageContainer}>
+              <Text style={styles.lastMessageTime}>
+                {concert.last_message_time}
+              </Text>
+            </View> */}
           </View>
         </TouchableOpacity>
       ))}
@@ -211,7 +228,7 @@ const BuddyChats = ({ currentTab, uuid }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
+    alignItems: "center",
     paddingHorizontal: 16,
   },
   artistContainer: {
@@ -248,10 +265,11 @@ const styles = StyleSheet.create({
     fontWeight: "500",
   },
   contentContainer: {
+    minWidth: "40%",
     backgroundColor: "rgba(255, 255, 255, 0.8)",
     height: "100%",
     flex: 1,
-    paddingHorizontal: 16,
+    paddingLeft: 16,
     paddingVertical: 12,
     justifyContent: "center",
   },
@@ -268,8 +286,8 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
   memberContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   memberCount: {
     fontSize: 13,
@@ -280,15 +298,18 @@ const styles = StyleSheet.create({
   memberIcon: {
     width: 14,
     height: 14,
-    tintColor: '#000000',
+    tintColor: "#000000",
+  },
+  lastMessageContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   lastMessageTime: {
-    position: 'absolute',
-    right: 16,
-    top: 16,
     fontSize: 13,
     fontFamily: "Doppio One",
     color: "#000000",
+    marginRight: 16,
+    flexWrap: "wrap",
   },
 });
 
