@@ -30,6 +30,7 @@ const App = () => {
 
     loadUserConcerts();
   }, [userConcerts]);
+  console.log("USER CONCERTS IN MAP", userConcerts);
   return (
     <View style={styles.container}>
       <Image source={Images.background} style={styles.background} />

@@ -30,8 +30,12 @@ const ChatHeader = ({ concertName, address, location, date, numUsers }) => {
       <View style={styles.ConcertChatHeaderRow}>
         <Text numberOfLines={1} style={styles.ConcertName}>{concertName}</Text>
         <TouchableOpacity style={styles.infoIcon} onPress={toggleModal}>
-          <Text style={styles.iconText}>i</Text>
-        </TouchableOpacity>
+          <Image 
+            source={Images.info_icon}
+            style={styles.infoIconImage}
+            resizeMode="contain"
+          />
+      </TouchableOpacity>
       </View>
       <Text style={styles.ConcertDate}>{`${dayOfWeek}, ${month} ${day}`}</Text>
       <Text numberOfLines={2} style={styles.ConcertDate}>@ {address}, {location}</Text>
@@ -81,7 +85,7 @@ const styles = StyleSheet.create({
   },
 
   ConcertName: {
-    fontSize: normalize(24),
+    fontSize: normalize(30),
     fontWeight: "bold",
     color: Theme.colors.text.white,
     width: '100%',
@@ -106,17 +110,17 @@ const styles = StyleSheet.create({
 
   infoIcon: {
     position: 'absolute',
-    right: normalize(25),
-    top: '25%',
+    right: normalize(20),
+    top: "10%",
     transform: [{ translateY: -normalize(9) }],
     padding: normalize(4),
   },
 
-  iconText: {
-    fontSize: normalize(18),
-    color: Theme.colors.text.white,
+  infoIconImage: {
+    width: normalize(36),
+    height: normalize(36),
+    tintColor: Theme.colors.text.white,
   },
-
   activeStatusIcon: {
     width: normalize(12),
     height: normalize(12),
