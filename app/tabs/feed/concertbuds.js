@@ -37,6 +37,7 @@ export default function ConcertBudsScreen() {
     concert_id: params.id,
     concert_name: params.concertName || params.name,
     concert_date: params.date,
+    concert_raw_time: params.concertRawTime,
     location: `${params.city}, ${params.state}`,
     address: params.address,
     timezone: params.timezone,
@@ -117,6 +118,7 @@ export default function ConcertBudsScreen() {
           user_id: userId,
           concert_id: concert.concert_id,
           concert_name: concert.concert_name,
+          concert_raw_time: concert.concert_raw_time,
           location: concert.location,
           address: concert.address,
           concert_date: concert.concert_date,
@@ -165,9 +167,9 @@ export default function ConcertBudsScreen() {
                   },
                 ],
               },
-              address: concert.address, // Ensure address is passed correctly
+              address: concert.address,
               timezone: concert.timezone,
-              time: concert.time,
+              time: concert.concertRawTime,
               artist: concert.artist,
               imageUrl: concert.imageUrl,
             }}

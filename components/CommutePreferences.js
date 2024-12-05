@@ -30,6 +30,7 @@ const CommutePreferences = ({ item, onRSVPChange }) => {
     name,
     artist,
     concertName,
+    concertRawTime,
     date,
     dayOfWeek,
     concertTime,
@@ -43,7 +44,8 @@ const CommutePreferences = ({ item, onRSVPChange }) => {
     imageUrl,
     timezone,
   } = item || {};
-  console.log("item: ", item);
+  console.log("item in commutepreferences: ", item);
+
 
   // Format the date correctly
   const eventDate = date

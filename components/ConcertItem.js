@@ -12,6 +12,7 @@ import { useRouter } from "expo-router";
 import supabase from "@/lib/supabase";
 import { unRSVPFromConcert } from "@/lib/concert-db";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { formatDate } from '../utils/getDate';
 
 const windowWidth = Dimensions.get("window").width;
 
@@ -70,6 +71,7 @@ const ConcertItem = ({
     time: formattedData?.time,
     dayOfWeek: formattedData?.dayOfWeek,
     concertTime: formattedData?.concertTime,
+    concertRawTime: formattedData?.concertRawTime,
     dateTime: item.dates?.start?.dateTime,
   });
 
