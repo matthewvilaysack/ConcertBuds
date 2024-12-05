@@ -85,11 +85,9 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     alignItems: "center",
-    paddingVertical: 10,
+    paddingVertical: 8,
     paddingHorizontal: 16,
-    borderTopWidth: 1,
     borderTopColor: Theme.colors.border,
-    marginBottom: 4, // Added to lift from bottom
   },
   input: {
     flex: 1,

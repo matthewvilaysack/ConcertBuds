@@ -1,11 +1,26 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Modal } from "react-native";
+import { View, Image, Text, StyleSheet, TouchableOpacity, Modal, Dimensions, Platform } from "react-native";
 import Theme from "@/assets/theme";
+import Images from "@/assets/Images";
 import { formatDate } from "../utils/getDate";
+
+// Get screen dimensions
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
+
+// Scale factor based on screen width
+const scale = SCREEN_WIDTH / 375; // 375 is baseline width (iPhone X)
+
+// Function to make fonts responsive
+const normalize = (size) => {
+  const newSize = size * scale;
+  if (Platform.OS === 'ios') {
+    return Math.round(newSize);
+  }
+  return Math.round(newSize);
+};
 
 const ChatHeader = ({ concertName, address, location, date, numUsers }) => {
   const [modalVisible, setModalVisible] = useState(false);
-  console.log("LOCATTTION", location);
   const { dayOfWeek, month, day } = formatDate(date);
 
   const toggleModal = () => setModalVisible(!modalVisible);
@@ -13,17 +28,23 @@ const ChatHeader = ({ concertName, address, location, date, numUsers }) => {
   return (
     <View style={styles.ConcertChatHeaderContainer}>
       <View style={styles.ConcertChatHeaderRow}>
-        <Text style={styles.ConcertName}>{concertName}</Text>
+        <Text numberOfLines={1} style={styles.ConcertName}>{concertName}</Text>
         <TouchableOpacity style={styles.infoIcon} onPress={toggleModal}>
           <Text style={styles.iconText}>i</Text>
         </TouchableOpacity>
       </View>
-      <Text style={styles.ConcertDate}>{`${dayOfWeek}, ${month} ${day}`} </Text>
-      <Text style={styles.ConcertDate}>@ {address}, {location} </Text>
+      <Text style={styles.ConcertDate}>{`${dayOfWeek}, ${month} ${day}`}</Text>
+      <Text numberOfLines={2} style={styles.ConcertDate}>@ {address}, {location}</Text>
       {numUsers !== undefined && (
-        <Text style={styles.ConcertUserCount}>{`${numUsers} people in this chat`}</Text>
+        <View style={styles.userCountContainer}>
+          <Image 
+            source={Images.active_status} 
+            style={styles.activeStatusIcon} 
+            resizeMode="contain"
+          />
+          <Text style={styles.ConcertUserCount}>{`${numUsers} active users`}</Text>
+        </View>
       )}
-      {/* Modal Popup for Info */}
       <Modal
         transparent={true}
         visible={modalVisible}
@@ -45,70 +66,100 @@ const ChatHeader = ({ concertName, address, location, date, numUsers }) => {
 
 const styles = StyleSheet.create({
   ConcertChatHeaderContainer: {
-    padding: 8, // Reduced from 16
-    borderBottomWidth: 1,
-    borderColor: Theme.colors.border,
-    marginBottom: 4, // Added to create slight spacing
-    paddingTop: 0
+    padding: normalize(8),
+    borderBottomWidth: Theme.colors.backgroundPrimary,
+    paddingTop: normalize(0),
+    width: '100%',
   },
+
   ConcertChatHeaderRow: {
-    flexDirection: "row",
+    position: 'relative',
+    width: '100%',
     alignItems: "center",
-    justifyContent: "space-between",
+    marginBottom: normalize(8),
+    paddingHorizontal: normalize(24), // Add padding for info icon
   },
-  infoIcon: {
-    paddingHorizontal: 8,
-  },
-  iconText: {
-    fontSize: 18, // Increased from 16
-    color: Theme.colors.text.white,
-  },
+
   ConcertName: {
-    fontSize: 24, // Increased from 18
+    fontSize: normalize(24),
     fontWeight: "bold",
     color: Theme.colors.text.white,
-    flex: 1,
+    width: '100%',
     textAlign: "center",
+    marginBottom: normalize(4),
   },
+
   ConcertDate: {
-    fontSize: 16, // Increased from 14
+    fontSize: normalize(16),
     color: Theme.colors.text.white,
     textAlign: "center",
-    marginTop: 2, // Reduced from 4
+    marginBottom: normalize(6),
+    paddingHorizontal: normalize(16),
   },
+
+  userCountContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+  },
+
+  infoIcon: {
+    position: 'absolute',
+    right: normalize(25),
+    top: '25%',
+    transform: [{ translateY: -normalize(9) }],
+    padding: normalize(4),
+  },
+
+  iconText: {
+    fontSize: normalize(18),
+    color: Theme.colors.text.white,
+  },
+
+  activeStatusIcon: {
+    width: normalize(12),
+    height: normalize(12),
+    marginRight: normalize(5),
+  },
+  
   ConcertUserCount: {
-    fontSize: 16, // Increased from 14
+    fontSize: normalize(16),
     color: Theme.colors.text.white,
-    textAlign: "center",
-    marginTop: 2, // Reduced from 4
   },
+
   modalOverlay: {
     flex: 1,
     backgroundColor: "rgba(0, 0, 0, 0.5)",
     justifyContent: "center",
     alignItems: "center",
   },
+
   modalContent: {
-    width: "80%",
+    width: SCREEN_WIDTH * 0.8,
     backgroundColor: "white",
-    borderRadius: 10,
-    padding: 20,
+    borderRadius: normalize(10),
+    padding: normalize(20),
     alignItems: "center",
+    maxWidth: 400, // Maximum width for larger screens
   },
+
   modalText: {
-    fontSize: 16,
+    fontSize: normalize(16),
     color: "#000",
-    marginBottom: 20,
+    marginBottom: normalize(20),
     textAlign: "center",
   },
+
   closeButton: {
     backgroundColor: Theme.colors.primary,
-    padding: 10,
-    borderRadius: 5,
+    padding: normalize(10),
+    borderRadius: normalize(5),
   },
+
   closeButtonText: {
     color: "#fff",
-    fontSize: 14,
+    fontSize: normalize(14),
   },
 });
 
