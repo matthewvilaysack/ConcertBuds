@@ -16,7 +16,7 @@ import Images from '../assets/Images'; // Updated import
 
 const windowWidth = Dimensions.get("window").width;
 
-const ConcertChats = ({ currentTab, uuid }) => {
+const BuddyChats = ({ currentTab, uuid }) => {
   const [concerts, setConcerts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
@@ -292,4 +292,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ConcertChats;
+export default BuddyChats;
