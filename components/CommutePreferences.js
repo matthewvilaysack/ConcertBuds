@@ -46,7 +46,6 @@ const CommutePreferences = ({ item, onRSVPChange }) => {
   } = item || {};
   console.log("item in commutepreferences: ", item);
 
-
   // Format the date correctly
   const eventDate = date
     ? new Date(date + "T00:00:00") // Add time component to preserve local date
@@ -131,7 +130,7 @@ const CommutePreferences = ({ item, onRSVPChange }) => {
         <View style={styles.searchInputContainer}>
           <TextInput
             style={styles.searchInput}
-            placeholder="459 Lagunita Dr, Stanford, CA 94305"
+            placeholder="e.g. 459 Lagunita Dr, Stanford, CA 94305"
             placeholderTextColor="rgba(0, 0, 0, 0.4)"
             value={searchQuery}
             onChangeText={setSearchQuery}
