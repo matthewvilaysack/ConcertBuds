@@ -13,95 +13,97 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import Theme from "@/assets/theme";
 import { fetchConcerts } from "../utils/api";
 
-const SearchComponent = forwardRef(({ artist, setArtist, setConcerts }, ref) => {
-  const DETAILS_PATH = "/tabs/feed/searchresults";
-  const [searchQuery, setSearchQuery] = useState(artist);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [hasResults, setHasResults] = useState(false);
-  const router = useRouter();
+const SearchComponent = forwardRef(
+  ({ artist, setArtist, setConcerts }, ref) => {
+    const DETAILS_PATH = "/tabs/feed/searchresults";
+    const [searchQuery, setSearchQuery] = useState(artist);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState("");
+    const [hasResults, setHasResults] = useState(false);
+    const router = useRouter();
 
-  const handleSearch = (text) => {
-    setArtist(text);
-    setSearchQuery(text);
-    setError("");
-  };
+    const handleSearch = (text) => {
+      setArtist(text);
+      setSearchQuery(text);
+      setError("");
+    };
 
-  const searchOnEnter = async () => {
-    if (!searchQuery || searchQuery.trim().length < 2) {
-      setError("Please enter at least 2 characters to search");
-      setHasResults(false);
-      return;
-    }
-
-    setIsLoading(true);
-    setError("");
-
-    try {
-      const results = await fetchConcerts(searchQuery);
-      setConcerts(results);
-      setHasResults(results.length > 0);
-
-      // Only navigate if we have valid results
-      if (results.length > 0) {
-        router.push({
-          pathname: DETAILS_PATH,
-          params: { artist: searchQuery },
-        });
-      } else {
-        setError("No concerts found for this artist");
+    const searchOnEnter = async () => {
+      if (!searchQuery || searchQuery.trim().length < 2) {
+        setError("Please enter at least 2 characters to search");
+        setHasResults(false);
+        return;
       }
-    } catch (error) {
-      console.error("Search error:", error);
-      setConcerts([]);
-      setHasResults(false);
-      setError("Failed to fetch concerts. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
-  useImperativeHandle(ref, () => ({
-    clearSearch: () => {
-      setSearchQuery("");
-      setArtist("");
-    }
-  }));
+      setIsLoading(true);
+      setError("");
 
-  return (
-    <View style={styles.container}>
-      <View style={styles.searchWrapper}>
-        <BlurView
-          intensity={80}
-          tint="light"
-          style={styles.searchInputContainer}
-        >
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Search for artist, tour, etc."
-            placeholderTextColor="rgba(0, 0, 0, 0.4)"
-            value={searchQuery}
-            onChangeText={handleSearch}
-            onSubmitEditing={searchOnEnter}
-            returnKeyType="search"
+      try {
+        const results = await fetchConcerts(searchQuery);
+        setConcerts(results);
+        setHasResults(results.length > 0);
+
+        // Only navigate if we have valid results
+        if (results.length > 0) {
+          router.push({
+            pathname: DETAILS_PATH,
+            params: { artist: searchQuery },
+          });
+        } else {
+          setError("No concerts found for this artist");
+        }
+      } catch (error) {
+        console.error("Search error:", error);
+        setConcerts([]);
+        setHasResults(false);
+        setError("Failed to fetch concerts. Please try again.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    useImperativeHandle(ref, () => ({
+      clearSearch: () => {
+        setSearchQuery("");
+        setArtist("");
+      },
+    }));
+
+    return (
+      <View style={styles.container}>
+        <View style={styles.searchWrapper}>
+          <BlurView
+            intensity={80}
+            tint="light"
+            style={styles.searchInputContainer}
+          >
+            <TextInput
+              style={styles.searchInput}
+              placeholder="Search for artist, tour, etc."
+              placeholderTextColor="rgba(0, 0, 0, 0.4)"
+              value={searchQuery}
+              onChangeText={handleSearch}
+              onSubmitEditing={searchOnEnter}
+              returnKeyType="search"
+            />
+          </BlurView>
+          <TouchableOpacity style={styles.searchButton} onPress={searchOnEnter}>
+            <FontAwesome name="search" size={20} color="#FFFFFF" />
+          </TouchableOpacity>
+        </View>
+
+        {isLoading && (
+          <ActivityIndicator
+            size="large"
+            color={Theme.colors.iconHighlighted}
+            style={styles.loader}
           />
-        </BlurView>
-        <TouchableOpacity style={styles.searchButton} onPress={searchOnEnter}>
-          <FontAwesome name="search" size={20} color="#FFFFFF" />
-        </TouchableOpacity>
+        )}
+        {error && <Text style={styles.errorText}>{error}</Text>}
       </View>
-
-      {isLoading && (
-        <ActivityIndicator
-          size="large"
-          color={Theme.colors.iconHighlighted}
-          style={styles.loader}
-        />
-      )}
-      {error && <Text style={styles.errorText}>{error}</Text>}
-    </View>
-  );
-});
+    );
+  }
+);
 
 const styles = StyleSheet.create({
   container: {
@@ -118,8 +120,8 @@ const styles = StyleSheet.create({
   searchInputContainer: {
     flex: 1,
     height: 57.42,
-    borderTopLeftRadius: 10,
-    borderBottomLeftRadius: 10,
+    borderTopLeftRadius: 20,
+    borderBottomLeftRadius: 20,
     overflow: "hidden",
     backgroundColor: "rgba(255, 255, 255, 0.6)",
   },
@@ -135,8 +137,8 @@ const styles = StyleSheet.create({
     width: 63,
     height: 57.42,
     backgroundColor: "#846AE3",
-    borderTopRightRadius: 10,
-    borderBottomRightRadius: 10,
+    borderTopRightRadius: 20,
+    borderBottomRightRadius: 20,
     alignItems: "center",
     justifyContent: "center",
   },

@@ -295,7 +295,7 @@ const styles = StyleSheet.create({
   searchInput: {
     flex: 1,
     paddingHorizontal: 19,
-    fontSize: 15,
+    fontSize: 13,
     color: "#1A1A1A",
     height: "100%",
     fontFamily: "Doppio",
