@@ -12,7 +12,7 @@ import { useRouter } from "expo-router";
 import supabase from "@/lib/supabase";
 import { unRSVPFromConcert } from "@/lib/concert-db";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { formatDate } from '../utils/getDate';
+import { formatDate } from "../utils/getDate";
 
 const windowWidth = Dimensions.get("window").width;
 
@@ -25,7 +25,7 @@ const ConcertItem = ({
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   if (!item) return null;
-// 
+  //
   // console.log("CONCERTITEM PARAMS", item);
 
   const { name, dates, _embedded, formattedData } = item || {};
@@ -33,7 +33,7 @@ const ConcertItem = ({
   const city = venue?.city?.name || "San Jose";
   const state = venue?.state?.stateCode;
   const artist = formattedData?.artist;
-// 
+  //
   console.log("FORMATTED DATA", formattedData);
 
   const eventDate = dates?.start?.localDate
@@ -124,9 +124,15 @@ const ConcertItem = ({
           <Text style={styles.day}>{day}</Text>
         </View>
         <View style={styles.contentContainer}>
-          <View style={styles.headerContainer}> 
+          <View style={styles.headerContainer}>
             <Text style={styles.location}>{locationText}</Text>
-            <Text style={styles.artistName}>{name || "Event Name TBD"}</Text>
+            <Text
+              numberOfLines={1}
+              ellipsizeMode="tail"
+              style={styles.artistName}
+            >
+              {name || "Event Name TBD"}
+            </Text>
           </View>
 
           <View style={styles.actionsContainer}>
@@ -203,6 +209,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "flex-start",
+    maxWidth: "60%",
   },
   location: {
     fontSize: 18,
