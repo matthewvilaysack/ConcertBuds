@@ -30,6 +30,7 @@ const Feed = ({ concerts, destination, onRSVPChange }) => {
               formattedData: {
                 artist: item.artist_name,
                 concertName: item.concert_name,
+                concertRawTime: item.concert_raw_time,
                 time: item.concert_time,
                 dayOfWeek: item.concert_date ? new Date(item.concert_date).toLocaleString("en-US", { weekday: "long" }) : "",
                 concertTime: item.concert_time,
