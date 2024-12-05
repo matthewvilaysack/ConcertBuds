@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { StyleSheet, View, Image, Dimensions } from "react-native";
+import { StyleSheet, Text, View, Image, Dimensions } from "react-native";
 import { useFocusEffect } from '@react-navigation/native';
 import { StatusBar } from "expo-status-bar";
 import Theme from "@/assets/theme";
@@ -76,6 +76,9 @@ export default function Page() {
           setArtist={setArtist}
           setConcerts={() => {}} 
         />
+              <View style={styles.headingContainer}>
+        <Text style={styles.heading}>UPCOMING SHOWS</Text>
+      </View>
         <Feed
           concerts={userConcerts}
           destination={"/tabs/feed/concertbuds"}
@@ -93,6 +96,19 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: Theme.colors.backgroundPrimary,
   },
+  headingContainer: {
+    width: '100%',
+    paddingHorizontal: 24,  // Increased from 8 to match other content padding
+    marginTop: 10,  // Added to reduce space between search and heading
+  },
+  
+  heading: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: Theme.colors.text.white,
+    letterSpacing: 1,
+    fontFamily: 'Doppio One',
+  },
   background: {
     position: "absolute",
     width: "100%",
@@ -103,7 +119,8 @@ const styles = StyleSheet.create({
     top: 200, 
     alignItems: "center",
     width: "100%",
-    padding: 20,
+    paddingBottom: 90, // Add padding to account for tab bar
+    height: '100%', // Set explicit height
   },
   infoText: {
     fontSize: 15,
@@ -113,4 +130,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     lineHeight: 22,
   },
+  feed: {
+    marginBottom: 70, // Add margin to ensure content doesn't overlap with tabs
+  }
 });

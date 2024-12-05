@@ -12,7 +12,7 @@ import Theme from "../assets/theme";
 import { useRouter } from "expo-router";
 import supabase from "@/lib/supabase";
 import timeAgo from "@/utils/timeAgo";
-import Images from "../assets/Images"; // Updated import
+import Images from "../assets/Images"; 
 
 const windowWidth = Dimensions.get("window").width;
 

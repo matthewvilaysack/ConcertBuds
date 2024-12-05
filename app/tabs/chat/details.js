@@ -21,13 +21,13 @@ const windowHeight = Dimensions.get("window").height;
 const Details = () => {
   const params = useLocalSearchParams();
   const CURRENT_TAB_DETAILS = "/tabs/chat/details";
-  // console.log("PARAMS", params);
   return (
     <View style={styles.container}>
       <Image source={Images.background} style={styles.background} />
       <StatusBar style="light" />
       <View style={styles.contentWrapper}>
         <ChatHeader
+          // artistName={params.name}
           concertName={params.concert_name}
           location={params.concert_location}
           date={params.concert_date}

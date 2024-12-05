@@ -27,7 +27,7 @@ const ChatScreen = () => {
       <StatusBar style="light" />
       <View style={styles.contentWrapper}>
         <Text style={styles.title}>Buddy Chats</Text>
-        <BuddyChats currentTab="/tabs/chat/details" uuid={session.user.id} />
+        {/* <BuddyChats currentTab="/tabs/chat/details" uuid={session.user.id} /> */}
         <Text style={styles.title}>Concert Chats</Text>
         <ConcertChats currentTab="/tabs/chat/details" uuid={session.user.id} />
       </View>
