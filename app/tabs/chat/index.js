@@ -26,7 +26,7 @@ const ChatScreen = () => {
       <Image source={Images.background} style={styles.background} />
       <StatusBar style="light" />
       <View style={styles.contentWrapper}>
-        <Text style={styles.title}>Buddy Chats</Text>
+        {/* <Text style={styles.title}>Buddy Chats</Text> */}
         {/* <View style={styles.emptyStateContainer}>
             <Text style={styles.emptyStateText}>
               Your buddy chats will show here.
