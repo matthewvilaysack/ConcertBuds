@@ -28,7 +28,7 @@ const ChatHeader = ({ concertName, address, location, date, numUsers }) => {
   return (
     <View style={styles.ConcertChatHeaderContainer}>
       <View style={styles.ConcertChatHeaderRow}>
-        <Text numberOfLines={1} style={styles.ConcertName}>{concertName}</Text>
+        <Text numberOfLines={1} style={styles.ConcertName}>{concertName.split(":")[0]}</Text>
         <TouchableOpacity style={styles.infoIcon} onPress={toggleModal}>
           <Image 
             source={Images.info_icon}
