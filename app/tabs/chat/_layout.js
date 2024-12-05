@@ -38,7 +38,7 @@ export default function Layout() {
               }}
             >
               <Text style={{ color: "#fff", fontSize: 18, fontWeight: "bold" }}>
-                Chat
+                {/* Chat */}
               </Text>
             </View>
           ),
