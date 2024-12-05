@@ -8,8 +8,13 @@ export const fetchConcerts = async (query, page = 0) => {
         apikey: ENV.TICKETMASTER_API_KEY,
         page: page,
         size: 20, 
+        sort: 'date,asc',
+        classificationName: "Music", // Filter for music events
+        segmentName: "Music", // Further ensure we get music events
+        includeFamily: "no" // Exclude family events to focus on main tour
       },
     });
+    console.log("responses", response.data._embedded?.events);
     return response.data._embedded?.events || [];
   } catch (error) {
     console.error("Error fetching concerts:", error);

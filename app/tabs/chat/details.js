@@ -43,7 +43,6 @@ const Details = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingBottom: 4, // Added to lift from bottom navigation
     backgroundColor: Theme.colors.backgroundPrimary,
   },
   background: {
