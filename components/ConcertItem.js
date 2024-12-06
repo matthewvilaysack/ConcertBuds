@@ -88,7 +88,7 @@ const ConcertItem = ({
   const getAdditionalDetails = (item) => ({
     imageUrl: formattedData?.imageUrl,
     timezone: formattedData?.timezone,
-    address: item.address,
+    address: formattedData?.address,
   });
 
   const handleUnRSVP = async (e) => {
