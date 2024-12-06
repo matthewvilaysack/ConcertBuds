@@ -110,6 +110,7 @@ export default function ConcertBudsScreen() {
       // console.log("num users:", chatRoom.num_users);
       console.log("ChatRoom", chatRoom);
       console.log("ChatRoom Num Users", chatRoom.num_users);
+      console.log("LOCATION", concert.location);
 
       router.push({
         pathname: "/tabs/chat/details",

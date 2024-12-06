@@ -45,12 +45,12 @@ import { useState } from "react";
       <View style={styles.container}>
         <StatusBar style="light" />
         <View style={styles.splash}>
-          <MaterialCommunityIcons
+          {/* <MaterialCommunityIcons
             size={64}
             name="bee-flower"
             color={Theme.colors.iconHighlighted}
-          />
-          <Text style={styles.splashText}>Buzz</Text>
+          /> */}
+          {/* <Text style={styles.splashText}>Buzz</Text> */}
         </View>
         <TextInput
           onChangeText={(text) => setEmail(text)}

@@ -29,13 +29,12 @@ export default function Layout() {
                 justifyContent: "center",
               }}
             >
-              <MaterialCommunityIcons
+              {/* <MaterialCommunityIcons
                 size={32}
                 name="bee"
                 color={theme.colors.iconHighlighted}
-              />
+              /> */}
               <Text style={{ color: "#fff", fontSize: 18, fontWeight: "bold" }}>
-                Buzz
               </Text>
             </View>
           ),

@@ -101,7 +101,7 @@ export default function Avatar({ url, size = 150, onUpload }) {
       </View>
       <View style={styles.buttonContainer}>
         <Button
-          title={uploading ? 'Uploading ...' : 'Upload'}
+          title={uploading ? 'Uploading ...' : 'Update Picture'}
           onPress={uploadAvatar}
           disabled={uploading}
         />

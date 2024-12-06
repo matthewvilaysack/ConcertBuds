@@ -12,7 +12,7 @@ export const fetchConcerts = async (query, page = 0) => {
         classificationName: "Music", // Filter for music events
         segmentName: "Music", // Further ensure we get music events
         includeFamily: "yes", // Exclude family events to focus on main tours
-
+        countryCode: "US", // Filter for events in the USA
       },
     });
     console.log("responses", response.data._embedded?.events);
