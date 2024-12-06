@@ -16,8 +16,11 @@ import { getUserConcerts } from "@/lib/concert-db";
 import supabase from "@/lib/supabase";
 import Theme from "@/assets/theme";
 import { router } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 
 const App = () => {
+  const params = useLocalSearchParams();
+  console.log("params: ", params);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -25,6 +28,7 @@ const App = () => {
       setIsLoading(false);
       router.push({
         pathname: "/tabs/map/nav",
+        params: params,
       });
     }, 3000); // 10 seconds
 
@@ -34,6 +38,7 @@ const App = () => {
   const handleNavigate = () => {
     router.push({
       pathname: "/tabs/map/nav",
+      params: params,
     });
   };
 
