@@ -9,7 +9,7 @@ export default function Layout() {
         headerStyle: {
           backgroundColor: theme.colors.backgroundPrimary,
         },
-        headerTintColor: "#fff",
+        headerTintColor: theme.colors.backgroundPrimary,
         headerTitleStyle: {
           backgroundColor: "transparent",
           fontWeight: "bold",
@@ -49,7 +49,7 @@ export default function Layout() {
         options={{
           headerTitle: "",
           headerTitleAlign: "center",
-          headerBackTitleVisible: false,
+          headerBackTitleVisible: false, // Set to false to display the back button
           headerStyle: {
             position: "absolute",
             backgroundColor: "transparent",

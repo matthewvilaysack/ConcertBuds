@@ -30,7 +30,7 @@ const Details = () => {
         <ChatHeader
           artistName={params.artist_name}
           concertName={params.concert_name}
-          location={params.concert_location}
+          location={params.location}
           date={params.concert_date}
           numUsers={params.num_users}
           address={params.address}

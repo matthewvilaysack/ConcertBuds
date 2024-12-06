@@ -149,7 +149,7 @@ const ConcertChats = ({ currentTab, uuid }) => {
       params: {
         concert_id: concert.concert_id,
         concert_name: concert.concert_name,
-        concert_location: concert.location,
+        location: concert.location,
         artist_name: concert.artist_name,
         address: concert.address,
         concert_date: concert.concert_date,
