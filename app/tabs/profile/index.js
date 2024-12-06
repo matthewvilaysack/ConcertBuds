@@ -133,14 +133,14 @@ export default function Profile() {
           }}
         />
             </View>
-
+{/* 
             <View style={styles.userInfoContainer}>
               <Text style={styles.emailLabel}>Email:</Text>
               <Text style={styles.emailText}>{session?.user?.email}</Text>
               
               <Text style={styles.usernameLabel}>Username:</Text>
               <Text style={styles.usernameText}>{username || "No username set"}</Text>
-            </View>
+            </View> */}
           </View>
 
           {/* Genres Section */}
