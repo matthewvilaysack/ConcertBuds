@@ -59,6 +59,7 @@ const App = () => {
       const response = await fetch(url);
       const data = await response.json();
       if (data.results && data.results.length > 0) {
+        console.log("working", data.results);
         const { lat, lng } = data.results[0].geometry.location;
         return { latitude: lat, longitude: lng };
       } else {

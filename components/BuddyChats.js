@@ -68,6 +68,7 @@ const BuddyChats = ({ currentTab, uuid }) => {
       const { data: chatRooms, error: chatRoomsError } = await supabase
         .from("chat_rooms")
         .select("concert_id, num_users")
+        .eq("general_chat", false)
         .in("concert_id", concertIds);
 
       console.log("Chat rooms data:", chatRooms);

@@ -26,12 +26,12 @@ const ChatScreen = () => {
       <Image source={Images.background} style={styles.background} />
       <StatusBar style="light" />
       <View style={styles.contentWrapper}>
-        {/* <Text style={styles.title}>Buddy Chats</Text> */}
-        {/* <View style={styles.emptyStateContainer}>
+        <Text style={styles.title}>Buddy Chats</Text>
+        <View style={styles.emptyStateContainer}>
             <Text style={styles.emptyStateText}>
               Your buddy chats will show here.
             </Text>
-          </View> */}
+          </View>
         {/* <BuddyChats currentTab="/tabs/chat/details" uuid={session.user.id} /> */}
         <Text style={styles.title}>Concert Chats</Text>
         <ConcertChats currentTab="/tabs/chat/details" uuid={session.user.id} />
@@ -52,16 +52,15 @@ const styles = StyleSheet.create({
   },
   contentWrapper: {
     position: "absolute",
-    top: "11%",
+    top: "8%",
     width: "100%",
     height: "89%",
     padding: 20,
   },
   title: {
-    fontSize: 24,
-    fontWeight: "bold",
+    fontSize: 36,
+    marginBottom: 12, 
     color: Theme.colors.text.white,
-    marginBottom: 16,
     fontFamily: Theme.typography.fontFamilies.primary,
   },
   emptyStateContainer: {

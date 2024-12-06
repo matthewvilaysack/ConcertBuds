@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { StyleSheet, Text, View, TextInput } from "react-native";
-import { useNavigation } from "@react-navigation/native"; // To access the navigation object
 import { useRouter } from "expo-router";
 import HeaderButton from "../../../components/HeaderButton"; // Path to your custom HeaderButton component
 import Theme from "@/assets/theme";
@@ -13,7 +12,6 @@ export default function NewPost() {
   const [inputText, setInputText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [submitDisabled, setSubmitDisabled] = useState(true);
-  const navigation = useNavigation();
   const router = useRouter();
 
   const submitPost = async () => {
@@ -40,18 +38,18 @@ export default function NewPost() {
   }, [inputText]);
 
   // const submitDisabled = isLoading || inputText.length === 0;
-  useEffect(() => {
-    navigation.setOptions({
-      headerRight: () => (
-        <HeaderButton
-          title="Submit"
-          onPress={submitPost}
-          disabled={submitDisabled}
-          colors={[Theme.colors.textHighlighted, Theme.colors.textSecondary]}
-        />
-      ),
-    });
-  }, [navigation, submitDisabled, inputText]);
+  // useEffect(() => {
+  //   navigation.setOptions({
+  //     headerRight: () => (
+  //       <HeaderButton
+  //         title="Submit"
+  //         onPress={submitPost}
+  //         disabled={submitDisabled}
+  //         colors={[Theme.colors.textHighlighted, Theme.colors.textSecondary]}
+  //       />
+  //     ),
+  //   });
+  // }, [navigation, submitDisabled, inputText]);
 
   return (
     <View style={styles.container}>

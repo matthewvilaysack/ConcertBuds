@@ -35,6 +35,7 @@ const MarkGoing = () => {
     timezone: params.timezone,
   };
 
+  console.log("Concert data in MarkGoing", concertData);
   return (
     <View style={styles.container}>
       <Image source={Images.background} style={styles.background} />

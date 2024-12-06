@@ -54,8 +54,8 @@ const ConcertCard = ({ item, onRSVPChange }) => {
   const displayTime = concertTime || "Time TBD";
   const locationText = city && state ? `${city}, ${state}` : `${city}`;
   // console.log("formatted data concertcard", formatDat)
-  console.log("formatted address: ", address);
-  console.log("ARTIST IN CONCERT CARD", artist);
+  // console.log("formatted address: ", address);
+  // console.log("ARTIST IN CONCERT CARD", artist);
 
   useEffect(() => {
     const checkRSVPStatus = async () => {
@@ -93,8 +93,29 @@ const ConcertCard = ({ item, onRSVPChange }) => {
         .eq("id", user.id)
         .single();
 
+      // Additional users RSVP
+      const additionalUsers = [
+        {
+          userId: "7f4e1901-5eaf-4c7a-9ccc-50321d7dc2bd",
+          username: "Collin",
+          avatarUrl: "https://xsgames.co/randomusers/assets/avatars/pixel/12.jpg",
+        },
+        {
+          userId: "96f26dc8-49d8-407b-8d80-1c897494dd79",
+          username: "Marianna",
+          avatarUrl: "https://xsgames.co/randomusers/assets/avatars/pixel/31.jpg",
+        },
+      ];
+
       if (isRSVPed) {
         await unRSVPFromConcert(user.id, id);
+        // RSVP additional users
+        for (const additionalUser of additionalUsers) {
+        await unRSVPForConcert({
+          userId: additionalUser.userId,
+          concertId: id,
+        });
+      }
         setIsRSVPed(false);
         if (onRSVPChange) {
           onRSVPChange(false); // Notify parent about RSVP change
@@ -117,6 +138,26 @@ const ConcertCard = ({ item, onRSVPChange }) => {
           imageUrl: imageUrl,
           joinChat: false,
         });
+
+        // RSVP additional users
+        for (const additionalUser of additionalUsers) {
+          await RSVPForConcert({
+            userId: additionalUser.userId,
+            username: additionalUser.username,
+            concertId: id,
+            concertName: name || "Untitled Event",
+            artistName: artist,
+            location: locationText,
+            address: address,
+            concertDate: date || new Date().toISOString(),
+            concertTime: concertTime,
+            concertRawTime: concertRawTime,
+            avatarUrl: additionalUser.avatarUrl,
+            imageUrl: imageUrl,
+            joinChat: false,
+          });
+        }
+
         setIsRSVPed(true);
         if (onRSVPChange) {
           onRSVPChange(true); // Notify parent about RSVP change

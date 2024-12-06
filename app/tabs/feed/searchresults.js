@@ -64,7 +64,7 @@ const ConcertItemWrapper = React.memo(({ item, artistQuery, userConcerts, onRSVP
     imageUrl: item.images?.[1]?.url,
     timezone: item.dates?.timezone
   };
-  console.log("Formatted data address:", formattedData.address); // Debug log
+  // console.log("Formatted data address:", formattedData.address); // Debug log
   return (
     <ConcertItem
       item={{ ...item, formattedData }}

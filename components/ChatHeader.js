@@ -3,7 +3,9 @@ import { View, Image, Text, StyleSheet, TouchableOpacity, Modal, Dimensions, Pla
 import Theme from "@/assets/theme";
 import Images from "@/assets/Images";
 import { formatDate } from "../utils/getDate";
-
+import { useRouter } from 'expo-router';
+import {leaveChatRoom} from "@/lib/concert-db";
+import useSession from '../utils/useSession';
 // Get screen dimensions
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -18,18 +20,26 @@ const normalize = (size) => {
   }
   return Math.round(newSize);
 };
-
-const ChatHeader = ({ artistName, concertName, address, location, date, numUsers }) => {
+const ChatHeader = ({ user_id, artistName, concertName, address, location, date, numUsers, concertId }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const { dayOfWeek, month, day } = formatDate(date);
+  const router = useRouter();
+  const session = useSession();
 
-    console.log("location", location);
-    console.log("artist name", artistName);
+  console.log("ARTIST NAME", artistName)
+
   const toggleModal = () => setModalVisible(!modalVisible);
+  console.log("ARTIST NAME", artistName)
+  const handleLeave = () => {
+    leaveChatRoom(user_id, concertId);
+    toggleModal();
+    router.push(`/tabs/chat`);
+  };
+
   return (
     <View style={styles.ConcertChatHeaderContainer}>
       <View style={styles.ConcertChatHeaderRow}>
-      <Text numberOfLines={1} style={styles.ConcertName}>{artistName}</Text>
+      <Text numberOfLines={1} style={styles.ConcertName}>{artistName.toUpperCase()}</Text>
       <TouchableOpacity style={styles.infoIcon} onPress={toggleModal}>
           <Image 
             source={Images.info_icon}
@@ -58,10 +68,15 @@ const ChatHeader = ({ artistName, concertName, address, location, date, numUsers
       >
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalText}>Info about this chat or artist</Text>
-            <TouchableOpacity style={styles.closeButton} onPress={toggleModal}>
-              <Text style={styles.closeButtonText}>Close</Text>
-            </TouchableOpacity>
+            <Text style={styles.modalText}>Do you want to leave the chat?</Text>
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity style={styles.closeButton} onPress={toggleModal}>
+                <Text style={styles.closeButtonText}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.closeButton} onPress={handleLeave}>
+                <Text style={styles.closeButtonText}>Leave</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </Modal>
@@ -142,7 +157,8 @@ const styles = StyleSheet.create({
 
   modalContent: {
     width: SCREEN_WIDTH * 0.8,
-    backgroundColor: "white",
+    fontFamily: Theme.typography.fontFamilies.primary,
+    backgroundColor: Theme.colors.text.white,
     borderRadius: normalize(10),
     padding: normalize(20),
     alignItems: "center",
@@ -150,6 +166,7 @@ const styles = StyleSheet.create({
   },
 
   modalText: {
+    fontFamily: Theme.typography.fontFamilies.primary,
     fontSize: normalize(16),
     color: "#000",
     marginBottom: normalize(20),
@@ -157,14 +174,21 @@ const styles = StyleSheet.create({
   },
 
   closeButton: {
-    backgroundColor: Theme.colors.primary,
+    backgroundColor: Theme.colors.background.primary,
     padding: normalize(10),
     borderRadius: normalize(5),
   },
 
   closeButtonText: {
-    color: "#fff",
+    color:  Theme.colors.text.white,
     fontSize: normalize(14),
+    fontFamily: Theme.typography.fontFamilies.primary,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '100%',
+    marginTop: normalize(20),
   },
 });
 

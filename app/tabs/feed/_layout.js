@@ -44,8 +44,11 @@ export default function Layout() {
               <Text
                 style={{
                   color: "#fff",
-                  fontSize: 18,
+                  fontSize: 36,
+                  fontWeight: '600',
+                  // letterSpacing: 1,
                   fontWeight: "bold",
+                  fontFamily: theme.typography.fontFamilies.primary // Add Doppio One font
                 }}
               >
                 ConcertBuds

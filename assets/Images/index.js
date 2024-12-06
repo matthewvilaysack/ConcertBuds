@@ -13,6 +13,8 @@ const Images = {
   members_icon: require("./members-icon.png"),
   send_icon: require("./send-icon.png"),
   active_status: require("./active_status.png"),
+  pencil_icon: require("./pencil_icon.png"),
+  settings_icon: require("./settings_icon.png"),
 };
 
 export default Images;
