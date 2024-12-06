@@ -13,8 +13,11 @@ import ENV from "@/utils/env";
 import Images from "@/assets/Images";
 import TransitOptions from "@/components/TransitOptions";
 import * as Location from "expo-location";
+import { useLocalSearchParams } from "expo-router";
+import { router } from "expo-router";
 
 const App = () => {
+  const params = useLocalSearchParams();
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
   const [originCoordinates, setOriginCoordinates] = useState(null);
@@ -24,11 +27,24 @@ const App = () => {
   const [accepted, setAccepted] = useState(false);
 
   const [transitSteps, setTransitSteps] = useState([]);
-  const originAddress = "459 Lagunita Dr, Stanford, CA 94305"; // Replace with actual address
-  const destinationAddress = "525 W Santa Clara St, San Jose, CA 95113"; // Replace with actual address
-  const origin2Address = "566 Governor's Ave, Stanford, CA 94305"; // Replace with actual address
-  const origin3Address = "400 Reservoir Rd, Stanford, CA 94305"; // Replace with actual address
-  
+  const JAMES_PHOTO =
+    "https://hci.stanford.edu/courses/cs147/2024/au/img/staff/Landay.jpg";
+  const ELI_PHOTO =
+    "https://hci.stanford.edu/courses/cs147/2024/au/img/staff/Eli.jpg";
+  const SARAH_PHOTO =
+    "https://adobe.design/stories/community/media_1c16716150c58f613fabac586a799f543bd967c70.jpeg?width=750&format=jpeg&optimize=medium";
+
+  const originAddress = params.startLocation; // Replace with actual address
+  const destinationAddress = params.address + ", " + params.location; // Replace with actual address
+  const arrivalDateTime = new Date(params.chosenDate);
+  console.log(params.chosenDate);
+  const formattedDate = new Intl.DateTimeFormat("en-US", {
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(arrivalDateTime);
+
   const GOOGLE_MAPS_API_KEY = ENV.MAPS_API_KEY; // Replace with your API key
   const handleAccept = () => {
     setAccepted(true);
@@ -46,7 +62,9 @@ const App = () => {
         const { lat, lng } = data.results[0].geometry.location;
         return { latitude: lat, longitude: lng };
       } else {
-        console.error("Geocoding failed for:", address);
+        alert(
+          "Geocoding failed for the given address. Please check that it is a valid address and try again."
+        );
         return null;
       }
     } catch (error) {
@@ -78,7 +96,6 @@ const App = () => {
       const response = await fetch(url);
       const data = await response.json();
       if (data.routes && data.routes[0].legs[0].steps) {
-        console.log("data routes: ", data.routes[0].legs[0].steps);
         setTransitSteps(data.routes[0].legs[0].steps);
       } else {
         console.error("No transit steps found");
@@ -86,6 +103,14 @@ const App = () => {
     } catch (error) {
       console.error("Error fetching transit options", error);
     }
+  };
+
+  const calculateOffsetCoordinates = (origin, offset) => {
+    const { latitude, longitude } = origin;
+    return [
+      { latitude: latitude + offset, longitude: longitude + offset }, // Offset in both directions
+      { latitude: latitude - offset, longitude: longitude - offset }, // Negative offset
+    ];
   };
 
   useEffect(() => {
@@ -109,12 +134,13 @@ const App = () => {
 
       // Geocode addresses
       const origin = await geocodeAddress(originAddress);
-      const origin2 = await geocodeAddress(origin2Address);
-      const origin3 = await geocodeAddress(origin3Address);
-
       const destination = await geocodeAddress(destinationAddress);
+      if (origin && destination) {
+        const offset = 0.001;
+        const newAddresses = calculateOffsetCoordinates(origin, offset);
+        const origin2 = newAddresses[0];
+        const origin3 = newAddresses[1];
 
-      if (origin && origin2 && origin3 && destination) {
         setOriginCoordinates(origin);
         setOrigin2Coordinates(origin2);
         setOrigin3Coordinates(origin3);
@@ -129,7 +155,7 @@ const App = () => {
   if (!originCoordinates || !destinationCoordinates) {
     return (
       <View style={styles.errorContainer}>
-        <Text>Unable to fetch coordinates for the provided addresses.</Text>
+        <Image source={Images.background} style={styles.background} />
       </View>
     );
   }
@@ -138,7 +164,9 @@ const App = () => {
     <View style={styles.container}>
       <Image source={Images.background} style={styles.background} />
       <View style={styles.headerContainer}>
-        <Text style={styles.acceptText}>Rogers Arena · 7 PM</Text>
+        <Text style={styles.acceptText}>
+          {params.address} · {formattedDate}
+        </Text>
       </View>
       <View style={styles.mapContainer}>
         <MapView
@@ -167,7 +195,7 @@ const App = () => {
               source={
                 accepted
                   ? {
-                      uri: "https://mdaofsauhonoqzdzmazx.supabase.co/storage/v1/object/public/avatars/1732834512600-zkr3xa.jpg",
+                      uri: ELI_PHOTO,
                     }
                   : Images.profile_icon_2
               }
@@ -187,7 +215,7 @@ const App = () => {
               source={
                 accepted
                   ? {
-                      uri: "https://adobe.design/stories/community/media_1c16716150c58f613fabac586a799f543bd967c70.jpeg?width=750&format=jpeg&optimize=medium",
+                      uri: JAMES_PHOTO,
                     }
                   : Images.profile_icon_2
               }
@@ -204,7 +232,7 @@ const App = () => {
           <Marker coordinate={origin3Coordinates} title="Origin">
             <Image
               source={{
-                uri: "https://hci.stanford.edu/courses/cs147/2024/au/img/staff/Eli.jpg",
+                uri: SARAH_PHOTO,
               }}
               style={[styles.markerImage, { borderColor: "purple" }]}
             />
@@ -217,6 +245,13 @@ const App = () => {
             strokeColor="purple"
           />
         </MapView>
+        <TouchableOpacity
+          style={styles.mapButton}
+          numberOfLines={2}
+          onPress={handleAccept}
+        >
+          <Text style={styles.mapText}>Open in Maps</Text>
+        </TouchableOpacity>
       </View>
       <TransitOptions transitSteps={transitSteps}></TransitOptions>
       <View style={styles.footerContainer}>
@@ -225,22 +260,22 @@ const App = () => {
             <View style={styles.profileContainer}>
               <Image
                 source={{
-                  uri: "https://adobe.design/stories/community/media_1c16716150c58f613fabac586a799f543bd967c70.jpeg?width=750&format=jpeg&optimize=medium",
+                  uri: JAMES_PHOTO,
                 }} // Replace with your image URL
-                style={styles.markerImage}
+                style={[styles.markerImage, { borderColor: "orange" }]}
               />
               <Text numberOfLines={2} style={styles.concertbudsText}>
-                Sarah
+                James
               </Text>
             </View>
             <View style={styles.profileContainer}>
               <Image
                 source={{
-                  uri: "https://mdaofsauhonoqzdzmazx.supabase.co/storage/v1/object/public/avatars/1732834512600-zkr3xa.jpg",
+                  uri: ELI_PHOTO,
                 }} // Replace with your image URL
                 style={[styles.markerImage, { borderColor: "hotpink" }]}
               />
-              <Text style={styles.concertbudsText}>James</Text>
+              <Text style={styles.concertbudsText}>Eli</Text>
             </View>
           </View>
         ) : (
@@ -296,7 +331,7 @@ const styles = StyleSheet.create({
   profileContainer: {
     flexDirection: "column",
     justifyContent: "center",
-    alignContent: "center",
+    alignItems: "center",
   },
   profilesContainer: {
     flex: 1,
@@ -354,6 +389,22 @@ const styles = StyleSheet.create({
     fontFamily: "Doppio",
     fontSize: 18,
     color: "#FFFFFF",
+    textAlign: "center",
+  },
+  mapButton: {
+    position: "absolute",
+    bottom: 10,
+    right: 10,
+    backgroundColor: "#FFFFFF",
+    borderRadius: 40,
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 10,
+  },
+  mapText: {
+    fontFamily: "Doppio",
+    fontSize: 18,
+    color: "#000000",
     textAlign: "center",
   },
 });
