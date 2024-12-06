@@ -15,8 +15,8 @@ const Theme = {
     },
 
     background: {
-      primary: '#FFFFFF',
-      secondary: '#F1F1F2',
+      primary: '#846AE3',
+      secondary: '#6F52CF',
       gradient: 'radial-gradient(227.69% 155.46% at 49.87% -55.46%, #554ACD 0%, #898FCA 35%, #CBD1CD 66.5%, #F1F1F2 99.99%)',
       overlay: 'rgba(217, 217, 217, 0.58)',
       blurred: 'rgba(255, 255, 255, 0.5)'

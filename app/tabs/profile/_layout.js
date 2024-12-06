@@ -14,27 +14,33 @@ export default function Layout() {
         },
         headerTintColor: theme.colors.textPrimary,
         headerTitleStyle: {
+          backgroundColor: "transparent", // Transparent header background
           fontWeight: "bold",
         },
+        headerTransparent: true, // Enables true header transparency
       }}
     >
       <Stack.Screen
         name="index"
         options={{
+          headerStyle: {
+            position: "absolute",
+            backgroundColor: "transparent",
+            elevation: 0,
+            shadowOpacity: 0,
+            borderBottomWidth: 0,
+          },
+          headerTransparent: true,
           headerTitle: () => (
             <View
               style={{
+                backgroundColor: "transparent",
                 flexDirection: "row",
                 alignItems: "center",
                 justifyContent: "center",
               }}
             >
-              {/* <MaterialCommunityIcons
-                size={32}
-                name="bee"
-                color={theme.colors.iconHighlighted}
-              /> */}
-              <Text style={{ color: "#fff", fontSize: 18, fontWeight: "bold" }}>
+              <Text style={{ color: "#fff", fontSize: 18, fontWeight: "bold",}}>
               </Text>
             </View>
           ),

@@ -3,6 +3,7 @@ import { FlatList, View, StyleSheet, Text } from "react-native";
 import supabase from "@/lib/supabase";
 import Theme from "@/assets/theme";
 import ChatMessage from "@/components/ChatMessage";
+import Loading from './Loading';
 
 const ConcertChatFeed = ({ concertId }) => {
   const [messages, setMessages] = useState([]);
@@ -85,9 +86,7 @@ const ConcertChatFeed = ({ concertId }) => {
   }, [concertId]);
   if (isLoading) {
     return (
-      <View style={styles.loadingContainer}>
-        <Text style={styles.loadingText}>Loading messages...</Text>
-      </View>
+      <Loading />
     );
   }
 

@@ -37,8 +37,8 @@ export default function Layout() {
                 justifyContent: "center",
               }}
             >
-              <Text style={{ color: "#fff", fontSize: 18, fontWeight: "bold" }}>
-                {/* Chat */}
+              <Text style={{ color: "#fff", fontSize: 36, fontWeight: "bold",  fontFamily: theme.typography.fontFamilies.primary // Add Doppio One font
+ }}>
               </Text>
             </View>
           ),

@@ -147,6 +147,7 @@ const ConcertChats = ({ currentTab, uuid }) => {
     router.push({
       pathname: "/tabs/chat/details",
       params: {
+        user_id: uuid,
         concert_id: concert.concert_id,
         concert_name: concert.concert_name,
         location: concert.location,

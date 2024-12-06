@@ -34,7 +34,7 @@ const ConcertItem = ({
   const state = venue?.state?.stateCode;
   const artist = formattedData?.artist;
   //
-  console.log("FORMATTED DATA", formattedData);
+  // console.log("FORMATTED DATA", formattedData);
 
   const eventDate = dates?.start?.localDate
     ? new Date(dates.start.localDate + "T00:00:00")

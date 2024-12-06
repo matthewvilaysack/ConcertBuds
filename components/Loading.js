@@ -5,7 +5,7 @@ import Theme from "@/assets/theme";
 export default function Loading() {
   return (
     <View style={styles.container}>
-      <ActivityIndicator size="large" />
+      <ActivityIndicator size="large"  color="#846AE3"/>
     </View>
   );
 }
@@ -15,6 +15,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: Theme.colors.backgroundPrimary,
+    // backgroundColor: Theme.colors.background.primary,
   },
 });
