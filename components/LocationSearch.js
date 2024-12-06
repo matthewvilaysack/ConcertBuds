@@ -15,8 +15,6 @@ const LocationSearch = () => {
         fetchDetails={true} // Fetch full place details
         onPress={(data, details = null) => {
           // Handle selected location here
-          console.log("Selected data:", data);
-          console.log("Full details:", details);
         }}
         query={{
           key: GOOGLE_MAPS_API_KEY,
