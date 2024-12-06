@@ -118,7 +118,7 @@ export default function ConcertBudsScreen() {
           user_id: userId,
           concert_id: concert.concert_id,
           concert_name: concert.concert_name,
-          concert_artist: concert.artist,
+          artist_name: concert.artist,
           concert_raw_time: concert.concert_raw_time,
           location: concert.location,
           address: concert.address,
