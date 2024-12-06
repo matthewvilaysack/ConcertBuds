@@ -44,7 +44,7 @@ const CommutePreferences = ({ item, onRSVPChange }) => {
     imageUrl,
     timezone,
   } = item || {};
-  // console.log("item in commutepreferences: ", item);
+  console.log("item in commutepreferences: ", item);
 
   // // Format the date correctly
   const eventDate = dates.start.localDate
@@ -53,7 +53,7 @@ const CommutePreferences = ({ item, onRSVPChange }) => {
 
   const month = eventDate.toLocaleString("en-US", { month: "short" });
   const day = eventDate.getDate();
-  const [searchQuery, setSearchQuery] = useState(artist);
+  const [startLocation, setStartLocation] = useState(artist);
   const [chosenDate, setChosenDate] = useState(eventDate);
   const [modes, setModes] = useState([]);
   const [selectedModes, setSelectedModes] = useState([]);
@@ -96,7 +96,7 @@ const CommutePreferences = ({ item, onRSVPChange }) => {
   const handleNavigate = () => {
     router.push({
       pathname: "/tabs/map/matching",
-      params: item,
+      params: { address, startLocation, chosenDate, location },
     });
   };
 
@@ -133,8 +133,8 @@ const CommutePreferences = ({ item, onRSVPChange }) => {
             style={styles.searchInput}
             placeholder="e.g. 459 Lagunita Dr, Stanford, CA 94305"
             placeholderTextColor="rgba(0, 0, 0, 0.4)"
-            value={searchQuery}
-            onChangeText={setSearchQuery}
+            value={startLocation}
+            onChangeText={setStartLocation}
             returnKeyType="search"
           />
         </View>
@@ -248,7 +248,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 36,
   },
   goingContainer: {
-    // backgroundColor: "rgba(255, 255, 255, 0.5)",
     marginTop: 25,
     borderBottomRightRadius: 20,
     borderBottomLeftRadius: 20,
@@ -257,7 +256,7 @@ const styles = StyleSheet.create({
     alignSelf: "stretch",
     paddingBottom: "8%",
     position: "absolute",
-    top: 410,
+    top: 395,
     right: 0,
   },
   goingButton: {

@@ -3,10 +3,7 @@ import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import { View, Text, StyleSheet, FlatList, Image } from "react-native";
 
 const TransitOptions = ({ transitSteps }) => {
-  console.log(JSON.stringify(transitSteps, null, 2));
-
   const getIconForTransitMode = (mode, transitDetails) => {
-    console.log("mode: ", mode);
     if (mode === "TRANSIT" && transitDetails && transitDetails.line) {
       const vehicleType = transitDetails.line.vehicle.name; // e.g., "Train" or "Bus"
       switch (vehicleType) {
