@@ -11,7 +11,8 @@ export const fetchConcerts = async (query, page = 0) => {
         sort: 'date,asc',
         classificationName: "Music", // Filter for music events
         segmentName: "Music", // Further ensure we get music events
-        includeFamily: "no" // Exclude family events to focus on main tour
+        includeFamily: "yes", // Exclude family events to focus on main tours
+
       },
     });
     console.log("responses", response.data._embedded?.events);

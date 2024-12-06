@@ -28,7 +28,7 @@ const Details = () => {
       <StatusBar style="light" />
       <View style={styles.contentWrapper}>
         <ChatHeader
-          // artistName={params.name}
+          artistName={params.artist_name}
           concertName={params.concert_name}
           location={params.concert_location}
           date={params.concert_date}

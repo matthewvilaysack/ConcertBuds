@@ -19,17 +19,18 @@ const normalize = (size) => {
   return Math.round(newSize);
 };
 
-const ChatHeader = ({ concertName, address, location, date, numUsers }) => {
+const ChatHeader = ({ artistName, concertName, address, location, date, numUsers }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const { dayOfWeek, month, day } = formatDate(date);
 
     console.log("location", location);
+    console.log("artist name", artistName);
   const toggleModal = () => setModalVisible(!modalVisible);
   return (
     <View style={styles.ConcertChatHeaderContainer}>
       <View style={styles.ConcertChatHeaderRow}>
-        <Text numberOfLines={1} style={styles.ConcertName}>{concertName.split(":")[0]}</Text>
-        <TouchableOpacity style={styles.infoIcon} onPress={toggleModal}>
+      <Text numberOfLines={1} style={styles.ConcertName}>{artistName}</Text>
+      <TouchableOpacity style={styles.infoIcon} onPress={toggleModal}>
           <Image 
             source={Images.info_icon}
             style={styles.infoIconImage}
@@ -38,7 +39,7 @@ const ChatHeader = ({ concertName, address, location, date, numUsers }) => {
       </TouchableOpacity>
       </View>
       <Text style={styles.ConcertDate}>{`${dayOfWeek}, ${month} ${day}`}</Text>
-      <Text numberOfLines={2} style={styles.ConcertDate}>@ {address} </Text>
+      <Text numberOfLines={2} style={styles.ConcertDate}>@ {address}, {location} </Text>
       {numUsers !== undefined && (
         <View style={styles.userCountContainer}>
           <Image 

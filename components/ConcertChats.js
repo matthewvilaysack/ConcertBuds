@@ -45,6 +45,7 @@ const ConcertChats = ({ currentTab, uuid }) => {
           `
           concert_id,
           concert_name,
+          artist_name,
           location,
           address,
           concert_date,
@@ -149,6 +150,7 @@ const ConcertChats = ({ currentTab, uuid }) => {
         concert_id: concert.concert_id,
         concert_name: concert.concert_name,
         concert_location: concert.location,
+        artist_name: concert.artist_name,
         address: concert.address,
         concert_date: concert.concert_date,
         num_users: concert.num_users,
