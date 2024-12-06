@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { StyleSheet, Text, View, TouchableOpacity, Alert, Image, ScrollView } from "react-native";
 import { useRouter } from "expo-router";
+import { StatusBar } from "expo-status-bar";
 import { LinearGradient } from "expo-linear-gradient";
 import Theme from "@/assets/theme";
 import Loading from "@/components/Loading";
@@ -111,36 +112,36 @@ export default function Profile() {
       setLoading(false);
     }
   };
+
+  if (!session || loading) {
+    return <Loading />;
+  }
+
   return (
-    <ScrollView style={styles.scrollContainer}>
-      <View style={styles.container}>
-        <Image source={Images.background} style={styles.background} />
-        
+    <View style={styles.container}>
+      <Image source={Images.background} style={styles.background} />
+      <StatusBar style="light" />
+      <TouchableOpacity style={styles.signOutButton} onPress={signOut}>
+        <Text style={styles.signOutText}>Sign out</Text>
+      </TouchableOpacity>
 
-        <TouchableOpacity style={styles.signOutButton} onPress={signOut}>
-          <Text style={styles.signOutText}>Sign out</Text>
-        </TouchableOpacity>
+      <View style={styles.contentWrapper}>
+        <View style={styles.headingContainer}>
+          <Text style={styles.heading}>MY PROFILE</Text>
+        </View>
 
-        <View style={styles.contentWrapper}>
+        <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
           {/* Profile Section */}
           <View style={styles.profileContainer}>
             <View style={styles.avatarContainer}>
-            <Avatar
-          size={150}
-          url={avatarUrl}
-          onUpload={(url) => {
-            setAvatarUrl(url)
-          }}
-        />
+              <Avatar
+                size={150}
+                url={avatarUrl}
+                onUpload={(url) => {
+                  setAvatarUrl(url)
+                }}
+              />
             </View>
-{/* 
-            <View style={styles.userInfoContainer}>
-              <Text style={styles.emailLabel}>Email:</Text>
-              <Text style={styles.emailText}>{session?.user?.email}</Text>
-              
-              <Text style={styles.usernameLabel}>Username:</Text>
-              <Text style={styles.usernameText}>{username || "No username set"}</Text>
-            </View> */}
           </View>
 
           {/* Genres Section */}
@@ -161,51 +162,53 @@ export default function Profile() {
             {pastShows.map((show) => (
               <View key={show.id} style={styles.showCard}>
                 <Text style={styles.showArtist}>{show.artist}</Text>
-                <Text style={styles.showDetails}>{new Date(show.date).toLocaleDateString()} • {show.venue}</Text>
+                <Text style={styles.showDetails}>
+                  {new Date(show.date).toLocaleDateString()} • {show.venue}
+                </Text>
               </View>
             ))}
           </View>
-        </View>
+        </ScrollView>
       </View>
-    </ScrollView>
+    </View>
   );
 }
 
-
-
 const styles = StyleSheet.create({
-  scrollContainer: {
-    flex: 1,
-    // backgroundColor: Theme.colors.backgroundPrimary,
-  },
   container: {
     flex: 1,
-    alignItems: "center",
-    // backgroundColor: Theme.colors.backgroundPrimary,
-    minHeight: '100%',
+    backgroundColor: Theme.colors.backgroundPrimary,
   },
   background: {
     position: "absolute",
     width: "100%",
     height: "100%",
   },
-  backgroundGradient: {
-    position: 'absolute',
+  headingContainer: {
     width: '100%',
-    height: '100%',
-    opacity: 0.8,
+    paddingHorizontal: 24,
+    marginTop: 10,
   },
-
-  // Content Wrapper
+  heading: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: Theme.colors.text.white,
+    letterSpacing: 1,
+    fontFamily: 'Doppio One',
+  },
   contentWrapper: {
-    width: "100%",
     alignItems: "center",
-    paddingTop: 80,
-    padding: 20,
+    width: "100%",
+    paddingBottom: 90,
+    height: '100%',
+  },
+  scrollView: {
+    width: '100%',
+  },
+  scrollContent: {
+    paddingHorizontal: 20,
     paddingBottom: 40,
   },
-
-  // Sign Out Button
   signOutButton: {
     position: "absolute",
     top: 40,
@@ -220,8 +223,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 16,
   },
-
-  // Profile Container
   profileContainer: {
     width: "100%",
     alignItems: "center",
@@ -231,93 +232,20 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 20,
   },
-  avatar: {
-    width: 150,
-    height: 150,
-    borderRadius: 75,
-    marginBottom: 15,
-    borderWidth: 3,
-    borderColor: 'rgba(255, 255, 255, 0.8)',
-  },
-  updateAvatarButton: {
-    backgroundColor: Theme.colors.textHighlighted,
-    padding: 12,
-    borderRadius: 8,
-    marginTop: 10,
-    minWidth: 200,
-    alignItems: 'center',
-  },
-  updateAvatarText: {
-    color: "white",
-    fontWeight: "bold",
-    fontSize: 16,
-  },
-
-  // User Info Container
-  userInfoContainer: {
-    width: "100%",
-    marginTop: 20,
-    backgroundColor: "rgba(255, 255, 255, 0.75)",
-    padding: 15,
-    borderRadius: 10,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  emailLabel: {
-    color: Theme.colors.textPrimary,
-    fontWeight: "bold",
-    marginBottom: 5,
-    fontSize: 16,
-  },
-  emailText: {
-    color: Theme.colors.textPrimary,
-    marginBottom: 15,
-    paddingLeft: 8,
-    fontSize: 16,
-  },
-  usernameLabel: {
-    color: Theme.colors.textPrimary,
-    fontWeight: "bold",
-    marginBottom: 5,
-    fontSize: 16,
-  },
-  usernameText: {
-    color: Theme.colors.textPrimary,
-    paddingLeft: 8,
-    fontSize: 16,
-  },
-
-  // Section Containers
   sectionContainer: {
     width: '100%',
-    // backgroundColor: 'rgba(255, 255, 255, 0.85)',
+    marginTop: 20,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
     borderRadius: 15,
     padding: 15,
-    marginTop: 20,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
   },
   sectionTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: Theme.colors.textPrimary,
+    color: Theme.colors.text.white,
     marginBottom: 15,
     paddingLeft: 5,
   },
-
-  // Genres Grid
   genresGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -329,58 +257,29 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 8,
     borderRadius: 20,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
-    elevation: 2,
   },
   genreText: {
     color: 'white',
     fontWeight: '500',
     fontSize: 14,
   },
-
-  // Show Cards
   showCard: {
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
     padding: 15,
     borderRadius: 10,
     marginBottom: 10,
     borderLeftWidth: 4,
     borderLeftColor: Theme.colors.textHighlighted,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 2,
   },
   showArtist: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: Theme.colors.textPrimary,
+    color: Theme.colors.text.white,
     marginBottom: 5,
   },
   showDetails: {
-    color: Theme.colors.textPrimary,
+    color: Theme.colors.text.white,
     opacity: 0.8,
     fontSize: 14,
-  },
-
-  // Title Styles
-  title: {
-    color: Theme.colors.textPrimary,
-    fontWeight: "bold",
-    fontSize: 18,
-  },
-  postTitle: {
-    padding: 12,
-    marginTop: 20,
   },
 });
