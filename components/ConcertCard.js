@@ -55,6 +55,7 @@ const ConcertCard = ({ item, onRSVPChange }) => {
   const locationText = city && state ? `${city}, ${state}` : `${city}`;
   // console.log("formatted data concertcard", formatDat)
   console.log("formatted address: ", address);
+  console.log("ARTIST IN CONCERT CARD", artist);
 
   useEffect(() => {
     const checkRSVPStatus = async () => {
@@ -100,6 +101,7 @@ const ConcertCard = ({ item, onRSVPChange }) => {
         }
       } else {
         console.log("profile", profile);
+        console.log("ARITST IN CONCERTCARD", artist);
         await RSVPForConcert({
           userId: user.id,
           username: profile?.username || user.email,
@@ -112,6 +114,7 @@ const ConcertCard = ({ item, onRSVPChange }) => {
           concertTime: concertTime,
           concertRawTime: concertRawTime,
           avatarUrl: profile?.avatar_url,
+          imageUrl: imageUrl,
           joinChat: false,
         });
         setIsRSVPed(true);

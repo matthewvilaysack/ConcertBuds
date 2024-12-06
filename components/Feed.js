@@ -8,7 +8,7 @@ import {
 import ConcertItem from "./ConcertItem";
 import Theme from "../assets/theme";
 
-const Feed = ({ concerts, destination, onRSVPChange }) => {
+const Feed = ({ concerts, destination, onRSVPChange, isMapFeed = false }) => {
 
   // Log concert IDs to identify duplicates
   console.log("Concert IDs:", concerts.map(concert => concert.concert_id));

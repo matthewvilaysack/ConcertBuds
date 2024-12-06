@@ -40,9 +40,12 @@ const ConcertItemWrapper = React.memo(({ item, artistQuery, userConcerts, onRSVP
     : "";
 
   const artist = item._embedded?.attractions?.[0]?.name || 
-                artistQuery || 
+                artist || 
                 item.name?.split(' at ')?.[0] || 
                 item.name;
+          
+  console.log("artist name", artist._embedded);
+  console.log("item", item._embedded);
   console.log("raw time", new Date(`${item.dates.start.localDate}T${item.dates.start.localTime}Z`));
   const formattedData = {
     id: item.id,
