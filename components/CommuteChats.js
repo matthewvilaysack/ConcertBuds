@@ -8,7 +8,6 @@ const CommuteChats = () => {
       <Text style={styles.chatTitle}>
         Your upcoming Commute Chats will display here.
       </Text>
-      {/* Add your commute chat UI components here */}
     </View>
   );
 };
