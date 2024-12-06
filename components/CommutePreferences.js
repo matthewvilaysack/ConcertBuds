@@ -44,7 +44,7 @@ const CommutePreferences = ({ item, onRSVPChange }) => {
     imageUrl,
     timezone,
   } = item || {};
-  console.log("item in commutepreferences: ", item);
+  // console.log("item in commutepreferences: ", item);
 
   // // Format the date correctly
   const eventDate = dates.start.localDate

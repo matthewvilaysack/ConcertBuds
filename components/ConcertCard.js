@@ -39,6 +39,7 @@ const ConcertCard = ({ item, onRSVPChange }) => {
     venue,
     imageUrl,
     timezone,
+    // formattedData
   } = item || {};
 
   // Format the date correctly
@@ -52,6 +53,8 @@ const ConcertCard = ({ item, onRSVPChange }) => {
   // Use the passed dayOfWeek and concertTime or format from date if not provided
   const displayTime = concertTime || "Time TBD";
   const locationText = city && state ? `${city}, ${state}` : `${city}`;
+  // console.log("formatted data concertcard", formatDat)
+  console.log("formatted address: ", address);
 
   useEffect(() => {
     const checkRSVPStatus = async () => {

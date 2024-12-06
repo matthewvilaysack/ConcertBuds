@@ -21,13 +21,15 @@ const App = () => {
     concert_raw_time: params.concertRawTime,
     location: `${params.city}, ${params.state}`,
     address: params.address,
+    city: params.city,
+    state: params.state,
     timezone: params.timezone,
     time: params.time,
     artist: params.name,
     imageUrl: params.imageUrl,
   };
 
-  console.log("params in preferences", params);
+  // console.log("params in preferences", params);
 
   return (
     <View style={styles.container}>
