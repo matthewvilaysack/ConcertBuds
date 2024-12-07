@@ -21,8 +21,8 @@ export default function Profile() {
   const [avatarUrl, setAvatarUrl] = useState("");
   const [genres, setGenres] = useState(['Rock', 'Pop', 'Jazz', 'Electronic']);
   const [pastShows, setPastShows] = useState([
-    { id: 1, artist: 'Taylor Swift', date: '2023-12-01', venue: 'Stadium' },
-    { id: 2, artist: 'Ed Sheeran', date: '2023-11-15', venue: 'Arena' },
+    { id: 1, artist: 'Weezer', date: '2023-12-01', venue: 'SAP Center, San Jose, CA' },
+    { id: 2, artist: 'Ed Sheeran', date: '2023-11-15', venue: 'Bill Graham Center, San Francisco, CA' },
   ]);
 
   useEffect(() => {
@@ -300,18 +300,18 @@ scrollView: {
   showArtist: {
     fontSize: 14,
     fontFamily: 'Doppio One',
-    color: '#000000',
+    // color: '#000000',
   },
 signOutButton: {
     position: "absolute",
-    top: Platform.OS === 'ios' ? 60 : 40, // Increased top padding
+    top: Platform.OS === 'ios' ? 60 : 40,
     right: 20,
     zIndex: Theme.zIndex.above,
     backgroundColor: Theme.colors.primary.main,
     paddingVertical: Theme.spacing.xs,
     paddingHorizontal: Theme.spacing.sm,
     borderRadius: Theme.borderRadius.sm,
-    marginTop: Platform.OS === 'ios' ? 40 : 20, // Added responsive margin for different devices
+    marginTop: Platform.OS === 'ios' ? 40 : 20, 
     shadowColor: Theme.colors.ui.shadow,
     shadowOffset: {
         width: 0,
