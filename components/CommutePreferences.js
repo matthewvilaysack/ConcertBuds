@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Alert,
   Dimensions,
+  FlatList,
 } from "react-native";
 import { router } from "expo-router";
 import supabase from "@/lib/supabase";
@@ -19,10 +20,13 @@ import {
 import Theme from "../assets/theme";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import DropDownPicker from "react-native-dropdown-picker";
-import { placeholder } from "deprecated-react-native-prop-types/DeprecatedTextInputPropTypes";
+import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+import ENV from "@/utils/env";
+import "react-native-get-random-values";
 
 const windowWidth = Dimensions.get("window").width;
 const CommutePreferences = ({ item, onRSVPChange }) => {
+  const GOOGLE_MAPS_API_KEY = ENV.MAPS_API_KEY; // Replace with your API key
   const [isRSVPed, setIsRSVPed] = useState(false);
   const [loading, setLoading] = useState(false);
   const {
@@ -55,8 +59,11 @@ const CommutePreferences = ({ item, onRSVPChange }) => {
   const day = eventDate.getDate();
   const [startLocation, setStartLocation] = useState(artist);
   const [chosenDate, setChosenDate] = useState(eventDate);
+  const [suggestions, setSuggestions] = useState([]);
   const [modes, setModes] = useState([]);
   const [selectedModes, setSelectedModes] = useState([]);
+  const [isTyping, setIsTyping] = useState(false);
+  const [dropdownVisible, setDropdownVisible] = useState(false);
 
   // Use the passed dayOfWeek and concertTime or format from date if not provided
   const displayTime = concertTime || "Time TBD";
@@ -128,14 +135,35 @@ const CommutePreferences = ({ item, onRSVPChange }) => {
 
       <View style={styles.preferencesContainer}>
         <Text style={styles.searchName}>Start Location:</Text>
-        <View style={styles.searchInputContainer}>
-          <TextInput
-            style={styles.searchInput}
-            placeholder="e.g. 459 Lagunita Dr, Stanford, CA 94305"
-            placeholderTextColor="rgba(0, 0, 0, 0.4)"
-            value={startLocation}
-            onChangeText={setStartLocation}
-            returnKeyType="search"
+        <View
+          style={[
+            styles.startContainer,
+            dropdownVisible && styles.expandedContainer,
+          ]}
+        >
+          <GooglePlacesAutocomplete
+            placeholder="Search for a location"
+            onPress={(data, details = null) => {
+              setStartLocation(data.description);
+              console.log("Selected location:", data, details);
+              setDropdownVisible(false); // Hide dropdown after selection
+            }}
+            onChangeText={(text) => {
+              console.log("Selected location:", text);
+              setIsTyping(text.length > 0); // Show dropdown only when user types
+            }}
+            query={{
+              key: GOOGLE_MAPS_API_KEY,
+              language: "en", // Language of the results
+            }}
+            fetchDetails // Fetch additional details for the location
+            onFocus={() => setDropdownVisible(true)} // Show dropdown on focus
+            onBlur={() => setDropdownVisible(false)} // Hide dropdown on blur
+            styles={{
+              textInput: styles.searchInput,
+              listView: styles.listView,
+            }}
+            debounce={200} // Debounce for API calls
           />
         </View>
         <Text style={styles.searchName}>Arrival Time:</Text>
@@ -248,7 +276,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 36,
   },
   goingContainer: {
-    marginTop: 25,
     borderBottomRightRadius: 20,
     borderBottomLeftRadius: 20,
     paddingHorizontal: "10%",
@@ -256,7 +283,7 @@ const styles = StyleSheet.create({
     alignSelf: "stretch",
     paddingBottom: "8%",
     position: "absolute",
-    top: 395,
+    bottom: 0,
     right: 0,
   },
   goingButton: {
@@ -321,6 +348,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     width: "100%",
     backgroundColor: "rgba(255, 255, 255, 0.6)",
+    marginBottom: 40,
   },
   dropdown: {
     borderWidth: 0, // Removes the black border around the dropdown trigger
@@ -333,6 +361,29 @@ const styles = StyleSheet.create({
   dropdownText: {
     fontSize: 16, // Adjust font size
     fontFamily: "Doppio", // Use a specific font family (system font or custom)
+  },
+  listViewVisible: {
+    position: "absolute",
+    top: 60, // Adjust as needed to match the height of the text input
+    left: 0,
+    right: 0,
+    zIndex: 1000, // Ensure it overlays other components
+    backgroundColor: "white",
+    borderWidth: 1,
+    borderColor: "#ccc",
+  },
+  listViewHidden: {
+    display: "none",
+  },
+  expandedContainer: {
+    flex: 2,
+  },
+  startContainer: {
+    height: 100,
+    borderRadius: 10,
+    overflow: "hidden",
+    width: "100%",
+    backgroundColor: "rgba(255, 255, 255, 0.6)",
   },
 });
 
