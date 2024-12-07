@@ -15,8 +15,10 @@ import TransitOptions from "@/components/TransitOptions";
 import * as Location from "expo-location";
 import { useLocalSearchParams } from "expo-router";
 import { router } from "expo-router";
+import { useNavigation } from "@react-navigation/native";
 
 const App = () => {
+  const navigation = useNavigation();
   const params = useLocalSearchParams();
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
@@ -66,6 +68,8 @@ const App = () => {
         alert(
           "Geocoding failed for the given address. Please check that it is a valid address and try again."
         );
+        navigation.goBack(); // Go back one screen
+        setTimeout(() => navigation.goBack(), 0); // Go back another screen
         return null;
       }
     } catch (error) {
@@ -184,11 +188,11 @@ const App = () => {
             latitudeDelta:
               Math.abs(
                 originCoordinates.latitude - destinationCoordinates.latitude
-              ) + 0.1, // Adjusted for a closer zoom level
+              ) + 0.002, // Adjusted for a closer zoom level
             longitudeDelta:
               Math.abs(
                 originCoordinates.longitude - destinationCoordinates.longitude
-              ) + 0.1, // Adjusted for a closer zoom level
+              ) + 0.002, // Adjusted for a closer zoom level
           }}
         >
           <Marker coordinate={originCoordinates} title="Origin">
