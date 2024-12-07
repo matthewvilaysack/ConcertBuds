@@ -104,6 +104,26 @@ const ConcertItem = ({
         return;
       }
       await unRSVPFromConcert(user.id, item.id);
+
+      const additionalUsers = [
+        {
+          userId: "7f4e1901-5eaf-4c7a-9ccc-50321d7dc2bd",
+          username: "Collin",
+          avatarUrl: "https://xsgames.co/randomusers/assets/avatars/pixel/12.jpg",
+        },
+        {
+          userId: "96f26dc8-49d8-407b-8d80-1c897494dd79",
+          username: "Marianna",
+          avatarUrl: "https://xsgames.co/randomusers/assets/avatars/pixel/31.jpg",
+        },
+      ];
+        // RSVP additional users
+        for (const additionalUser of additionalUsers) {
+          await unRSVPFromConcert({
+            userId: additionalUser.userId,
+            concertId: item.id,
+          })
+        };
       if (onRSVPChange) {
         onRSVPChange(item.id, false);
       }
