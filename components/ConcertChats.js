@@ -24,7 +24,7 @@ const ConcertChats = ({ currentTab, uuid }) => {
   // Add debugging for props
   useEffect(() => {
     console.log("ConcertChats mounted with uuid:", uuid);
-  }, []);
+  }, [concerts]);
 
   const fetchConcerts = async () => {
     console.log("Starting fetchConcerts...");
