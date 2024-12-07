@@ -119,7 +119,7 @@ const ConcertItem = ({
       ];
         // RSVP additional users
         for (const additionalUser of additionalUsers) {
-          await unRSVPFromConcert(additionalUser.userId,item.id)l
+          await unRSVPFromConcert(additionalUser.userId,item.id);
         };
       if (onRSVPChange) {
         onRSVPChange(item.id, false);
