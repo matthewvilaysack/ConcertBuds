@@ -108,13 +108,13 @@ const ConcertItem = ({
       const additionalUsers = [
         {
           userId: "7f4e1901-5eaf-4c7a-9ccc-50321d7dc2bd",
-          username: "Collin",
-          avatarUrl: "https://xsgames.co/randomusers/assets/avatars/pixel/12.jpg",
+          username: "James Landay",
+          avatarUrl: "https://hci.stanford.edu/courses/cs147/2024/au/img/staff/Landay.jpg",
         },
         {
           userId: "96f26dc8-49d8-407b-8d80-1c897494dd79",
-          username: "Marianna",
-          avatarUrl: "https://xsgames.co/randomusers/assets/avatars/pixel/31.jpg",
+          username: "Eli Waldman",
+          avatarUrl: "https://hci.stanford.edu/courses/cs147/2024/au/img/staff/Eli.jpg",
         },
       ];
         // RSVP additional users
