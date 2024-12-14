@@ -110,19 +110,19 @@ const ConcertCard = ({ item, onRSVPChange }) => {
       if (isRSVPed) {
         await unRSVPFromConcert(user.id, id);
         // RSVP additional users
-        for (const additionalUser of additionalUsers) {
-          await unRSVPFromConcert({
-            userId: additionalUser.userId,
-            concertId: id,
-          });
-      }
+      //   for (const additionalUser of additionalUsers) {
+      //     await unRSVPFromConcert({
+      //       userId: additionalUser.userId,
+      //       concertId: id,
+      //     });
+      // }
         setIsRSVPed(false);
         if (onRSVPChange) {
           onRSVPChange(false); // Notify parent about RSVP change
         }
       } else {
-        console.log("profile", profile);
-        console.log("ARITST IN CONCERTCARD", artist);
+        // console.log("profile", profile);
+        // console.log("ARITST IN CONCERTCARD", artist);
         await RSVPForConcert({
           userId: user.id,
           username: profile?.username || user.email,
@@ -140,23 +140,23 @@ const ConcertCard = ({ item, onRSVPChange }) => {
         });
 
         // RSVP additional users
-        for (const additionalUser of additionalUsers) {
-          await RSVPForConcert({
-            userId: additionalUser.userId,
-            username: additionalUser.username,
-            concertId: id,
-            concertName: name || "Untitled Event",
-            artistName: artist,
-            location: locationText,
-            address: address,
-            concertDate: date || new Date().toISOString(),
-            concertTime: concertTime,
-            concertRawTime: concertRawTime,
-            avatarUrl: additionalUser.avatarUrl,
-            imageUrl: imageUrl,
-            joinChat: false,
-          });
-        }
+        // for (const additionalUser of additionalUsers) {
+        //   await RSVPForConcert({
+        //     userId: additionalUser.userId,
+        //     username: additionalUser.username,
+        //     concertId: id,
+        //     concertName: name || "Untitled Event",
+        //     artistName: artist,
+        //     location: locationText,
+        //     address: address,
+        //     concertDate: date || new Date().toISOString(),
+        //     concertTime: concertTime,
+        //     concertRawTime: concertRawTime,
+        //     avatarUrl: additionalUser.avatarUrl,
+        //     imageUrl: imageUrl,
+        //     joinChat: false,
+        //   });
+        // }
 
         setIsRSVPed(true);
         if (onRSVPChange) {

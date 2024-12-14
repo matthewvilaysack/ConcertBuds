@@ -36,37 +36,37 @@ const Button = ({
 // Styles
 const styles = StyleSheet.create({
   primaryButton: {
-    backgroundColor: Theme.colors.primary, // Use primary color from theme
+    backgroundColor: Theme.colors.primary.main, // Use primary main color from theme
     paddingVertical: 12,
     paddingHorizontal: 25,
     borderRadius: 5,
     alignItems: "center",
   },
   secondaryButton: {
-    backgroundColor: Theme.colors.secondary, // Use secondary color from theme
+    backgroundColor: Theme.colors.secondary.pink, // Use secondary pink color from theme
     paddingVertical: 12,
     paddingHorizontal: 25,
     borderRadius: 5,
     alignItems: "center",
   },
   dangerButton: {
-    backgroundColor: Theme.colors.danger, // Use danger color from theme
+    backgroundColor: Theme.colors.ui.buttonDanger, // Use button danger color from theme
     paddingVertical: 12,
     paddingHorizontal: 25,
     borderRadius: 5,
     alignItems: "center",
   },
   disabledButton: {
-    backgroundColor: Theme.colors.disabled, // Use disabled color from theme
+    backgroundColor: Theme.colors.ui.inputBackground, // Use input background color from theme
   },
   buttonText: {
-    color: Theme.colors.text.button, // Use button text color from theme
+    color: Theme.colors.text.white, // Use white text color from theme
     fontSize: 16,
     textAlign: "center",
     fontFamily: "Arial",
   },
   disabledText: {
-    color: Theme.colors.text.disabled, // Use disabled text color from theme
+    color: Theme.colors.text.medium, // Use medium text color from theme
   },
 });
 
