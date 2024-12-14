@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Alert, StyleSheet, View, AppState } from 'react-native'
 import { supabase } from '@/lib/supabase'
 import { Button, Input } from '@rneui/themed'
+import Theme from '../assets/theme';
 
 // Tells Supabase Auth to continuously refresh the session automatically if
 // the app is in the foreground. When this is added, you will continue to receive
@@ -60,6 +61,7 @@ export default function Auth() {
           value={email}
           placeholder="email@address.com"
           autoCapitalize={'none'}
+          inputStyle={{ color: Theme.colors.text.white }} // Set input text color to white
         />
       </View>
       <View style={styles.verticallySpaced}>
@@ -71,6 +73,7 @@ export default function Auth() {
           secureTextEntry={true}
           placeholder="Password"
           autoCapitalize={'none'}
+          inputStyle={{ color: Theme.colors.text.white }} // Set input text color to white
         />
       </View>
       <View style={[styles.verticallySpaced, styles.mt20]}>
@@ -78,15 +81,42 @@ export default function Auth() {
     title="Sign in"
     disabled={loading}
     onPress={() => signInWithEmail()}
-    variant="primary"
+    buttonStyle={{
+      backgroundColor: Theme.colors.ui.buttonPrimary,
+      borderRadius: Theme.borderRadius.sm,
+      padding: Theme.spacing.sm
+    }}
+    titleStyle={{
+      color: Theme.colors.text.white,
+      fontFamily: Theme.typography.fontFamilies.primary,
+      fontSize: Theme.typography.sizes.base
+    }}
+    disabledStyle={{
+      backgroundColor: Theme.colors.primary.light,
+      opacity: 0.7
+    }}
   />
 </View>
+
 <View style={styles.verticallySpaced}>
   <Button
-    title="Sign up" 
+    title="Sign up"
     disabled={loading}
     onPress={() => signUpWithEmail()}
-    variant="secondary"
+    buttonStyle={{
+      backgroundColor:Theme.colors.ui.buttonPrimary,
+      borderRadius: Theme.borderRadius.sm,
+      padding: Theme.spacing.sm
+    }}
+    titleStyle={{
+      color: Theme.colors.text.white,
+      fontFamily: Theme.typography.fontFamilies.primary,
+      fontSize: Theme.typography.sizes.base
+    }}
+    disabledStyle={{
+      backgroundColor: Theme.colors.primary.light,
+      opacity: 0.7
+    }}
   />
 </View>
     </View>
