@@ -31,6 +31,9 @@ const App = () => {
     loadUserConcerts();
   }, [userConcerts]);
   console.log("USER CONCERTS IN MAP", userConcerts);
+  const handleRSVPChange = (concertId) => {
+    setUserConcerts((prevConcerts) => prevConcerts.filter(concert => concert.concert_id !== concertId));
+  };
   return (
     <View style={styles.container}>
       <Image source={Images.background} style={styles.background} />
@@ -39,6 +42,7 @@ const App = () => {
           concerts={userConcerts}
           destination={"/tabs/map/preferences"}
           style={styles.feed}
+          onRSVPChange={handleRSVPChange}
         />
       </View>
     </View>

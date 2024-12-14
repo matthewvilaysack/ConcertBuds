@@ -61,7 +61,6 @@ export default function Auth() {
           value={email}
           placeholder="email@address.com"
           autoCapitalize={'none'}
-          inputStyle={{ color: Theme.colors.text.white }} // Set input text color to white
         />
       </View>
       <View style={styles.verticallySpaced}>
@@ -73,7 +72,6 @@ export default function Auth() {
           secureTextEntry={true}
           placeholder="Password"
           autoCapitalize={'none'}
-          inputStyle={{ color: Theme.colors.text.white }} // Set input text color to white
         />
       </View>
       <View style={[styles.verticallySpaced, styles.mt20]}>
@@ -103,20 +101,7 @@ export default function Auth() {
     title="Sign up"
     disabled={loading}
     onPress={() => signUpWithEmail()}
-    buttonStyle={{
-      backgroundColor:Theme.colors.ui.buttonPrimary,
-      borderRadius: Theme.borderRadius.sm,
-      padding: Theme.spacing.sm
-    }}
-    titleStyle={{
-      color: Theme.colors.text.white,
-      fontFamily: Theme.typography.fontFamilies.primary,
-      fontSize: Theme.typography.sizes.base
-    }}
-    disabledStyle={{
-      backgroundColor: Theme.colors.primary.light,
-      opacity: 0.7
-    }}
+    variant="secondary"
   />
 </View>
     </View>

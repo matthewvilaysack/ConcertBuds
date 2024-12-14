@@ -143,7 +143,7 @@ const ConcertChats = ({ currentTab, uuid }) => {
     }
   }, [uuid]);
   const handleNavigate = (concert) => {
-    console.log("ADDRESS OF CONCERT IN CONCERTCHATS", concert);
+    // console.log("ADDRESS OF CONCERT IN CONCERTCHATS", concert);
     router.push({
       pathname: "/tabs/chat/details",
       params: {
