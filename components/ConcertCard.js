@@ -139,24 +139,24 @@ const ConcertCard = ({ item, onRSVPChange }) => {
           joinChat: false,
         });
 
-        // RSVP additional users
-        for (const additionalUser of additionalUsers) {
-          await RSVPForConcert({
-            userId: additionalUser.userId,
-            username: additionalUser.username,
-            concertId: id,
-            concertName: name || "Untitled Event",
-            artistName: artist,
-            location: locationText,
-            address: address,
-            concertDate: date || new Date().toISOString(),
-            concertTime: concertTime,
-            concertRawTime: concertRawTime,
-            avatarUrl: additionalUser.avatarUrl,
-            imageUrl: imageUrl,
-            joinChat: false,
-          });
-        }
+        // // RSVP additional users
+        // for (const additionalUser of additionalUsers) {
+        //   await RSVPForConcert({
+        //     userId: additionalUser.userId,
+        //     username: additionalUser.username,
+        //     concertId: id,
+        //     concertName: name || "Untitled Event",
+        //     artistName: artist,
+        //     location: locationText,
+        //     address: address,
+        //     concertDate: date || new Date().toISOString(),
+        //     concertTime: concertTime,
+        //     concertRawTime: concertRawTime,
+        //     avatarUrl: additionalUser.avatarUrl,
+        //     imageUrl: imageUrl,
+        //     joinChat: false,
+        //   });
+        // }
 
         setIsRSVPed(true);
         if (onRSVPChange) {

@@ -101,7 +101,20 @@ export default function Auth() {
     title="Sign up"
     disabled={loading}
     onPress={() => signUpWithEmail()}
-    variant="secondary"
+    buttonStyle={{
+      backgroundColor: Theme.colors.ui.buttonPrimary,
+      borderRadius: Theme.borderRadius.sm,
+      padding: Theme.spacing.sm
+    }}
+    titleStyle={{
+      color: Theme.colors.text.white,
+      fontFamily: Theme.typography.fontFamilies.primary,
+      fontSize: Theme.typography.sizes.base
+    }}
+    disabledStyle={{
+      backgroundColor: Theme.colors.primary.light,
+      opacity: 0.7
+    }}
   />
 </View>
     </View>
