@@ -58,7 +58,8 @@ To set up ConcertBuds locally:
    ```
 
 ## Demo and Website
-- **Demo Video**: [Watch on YouTube](https://www.youtube.com/watch?v=Fqpg8nmeKhM)
+- **Demo Video**: [![Watch the video](https://img.youtube.com/vi/Fqpg8nmeKhM/0.jpg)](https://www.youtube.com/watch?v=Fqpg8nmeKhM)
+
 - **Website**: [ConcertBuds](https://web.stanford.edu/class/cs147/projects/Designing-for-Movement/ConcertBuds/)
 
 ## Challenges & Issues
