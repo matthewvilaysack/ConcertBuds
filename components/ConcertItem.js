@@ -117,10 +117,6 @@ const ConcertItem = ({
           avatarUrl: "https://hci.stanford.edu/courses/cs147/2024/au/img/staff/Eli.jpg",
         },
       ];
-        // // RSVP additional users
-        // for (const additionalUser of additionalUsers) {
-        //   await unRSVPFromConcert(additionalUser.userId,item.id);
-        // };
       if (onRSVPChange) {
         onRSVPChange(item.id, false);
       }

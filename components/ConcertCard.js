@@ -93,36 +93,16 @@ const ConcertCard = ({ item, onRSVPChange }) => {
         .eq("id", user.id)
         .single();
 
-      // Additional users RSVP
-      const additionalUsers = [
-        {
-          userId: "7f4e1901-5eaf-4c7a-9ccc-50321d7dc2bd",
-          username: "James Landay",
-          avatarUrl: "https://hci.stanford.edu/courses/cs147/2024/au/img/staff/Landay.jpg",
-        },
-        {
-          userId: "96f26dc8-49d8-407b-8d80-1c897494dd79",
-          username: "Eli Waldman",
-          avatarUrl: "https://hci.stanford.edu/courses/cs147/2024/au/img/staff/Eli.jpg",
-        },
-      ];
+   
 
       if (isRSVPed) {
         await unRSVPFromConcert(user.id, id);
-        // RSVP additional users
-      //   for (const additionalUser of additionalUsers) {
-      //     await unRSVPFromConcert({
-      //       userId: additionalUser.userId,
-      //       concertId: id,
-      //     });
-      // }
         setIsRSVPed(false);
         if (onRSVPChange) {
           onRSVPChange(false); // Notify parent about RSVP change
         }
       } else {
-        // console.log("profile", profile);
-        // console.log("ARITST IN CONCERTCARD", artist);
+
         await RSVPForConcert({
           userId: user.id,
           username: profile?.username || user.email,
@@ -139,7 +119,11 @@ const ConcertCard = ({ item, onRSVPChange }) => {
           joinChat: false,
         });
 
+<<<<<<< HEAD
         // // RSVP additional users
+=======
+        // RSVP additional users
+>>>>>>> 24701b1 (new)
         // for (const additionalUser of additionalUsers) {
         //   await RSVPForConcert({
         //     userId: additionalUser.userId,

@@ -18,8 +18,6 @@ import { supabase } from "@/lib/supabase";
 import {
   getUserConcerts,
   getConcertAttendees,
-  createChatRoom,
-  joinChatRoom,
   createOrJoinChatRoom,
 } from "@/lib/concert-db";
 import Theme from "@/assets/theme";

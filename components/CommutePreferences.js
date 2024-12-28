@@ -13,7 +13,6 @@ import { router } from "expo-router";
 import supabase from "@/lib/supabase";
 import {
   RSVPForConcert,
-  unRSVPFromConcert,
   getUserConcerts,
   checkUserRSVPStatus,
 } from "@/lib/concert-db"; // Update this import
