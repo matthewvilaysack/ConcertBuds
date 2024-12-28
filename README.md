@@ -61,12 +61,11 @@ To set up ConcertBuds locally:
 - **Demo Video**: [Watch on YouTube](https://www.youtube.com/watch?v=Fqpg8nmeKhM)
 - **Website**: [ConcertBuds](https://web.stanford.edu/class/cs147/projects/Designing-for-Movement/ConcertBuds/)
 
-## Challenges we faced
-- Creating intuitive, user-friendly designs to encourage connections.
-- Balancing privacy and safety with the need for social interaction.
-- Optimizing the commute-matching algorithm for shared transportation.
+## Challenges & Issues
+- Balancing privacy and safety with the need for social interaction
+- Optimizing the commute-matching algorithm for shared transportation
 
-## What's next for ConcertBuds
+## Possible Future Features
 - **Enhanced Matching**: AI-powered algorithms for better user matching.
 - **Safety Features**: Integrating reporting and moderation tools.
 - **Expanded Features**: Adding a BuddyChat feature and past concert highlights.
